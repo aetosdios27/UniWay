@@ -7,99 +7,44 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
   cancel-in-progress: true
 
-env:
-  NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
-  NEON_PROJECT_ID: ${{ secrets.NEON_PROJECT_ID }}
-
 jobs:
   spatial-validation:
+    # Preserve the existing check name used by branch protection.
     name: Spatial Queries against Neon
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgis/postgis:16-3.4
+        env:
+          POSTGRES_DB: uniway_ci
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: local-ci-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d uniway_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    env:
+      DATABASE_URL: postgres://postgres:local-ci-only@127.0.0.1:5432/uniway_ci
     steps:
       - uses: actions/checkout@v4
-
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-
-      - run: bun install
-
-      - name: Check Neon secrets
-        id: check-secrets
-        if: github.event_name == 'pull_request'
-        run: |
-          if [ -z "${{ secrets.NEON_API_KEY }}" ] || [ -z "${{ secrets.NEON_PROJECT_ID }}" ]; then
-            echo "NEON_API_KEY or NEON_PROJECT_ID not set — skipping spatial tests"
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "skip=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Create ephemeral Neon branch
-        id: neon-branch
-        if: github.event_name == 'pull_request' && steps.check-secrets.outputs.skip != 'true'
-        run: |
-          BRANCH_NAME="pr-${{ github.event.pull_request.number }}"
-          RESPONSE=$(curl -sf -X POST \
-            "https://console.neon.tech/api/v2/projects/${NEON_PROJECT_ID}/branches" \
-            -H "Accept: application/json" \
-            -H "Authorization: Bearer ${NEON_API_KEY}" \
-            -H "Content-Type: application/json" \
-            -d "$(cat <<-JSON
-          {
-            "endpoints": [{"type": "read_write"}],
-            "branch": {"name": "${BRANCH_NAME}"}
-          }
-          JSON
-          )")
-
-          BRANCH_ID=$(echo "$RESPONSE" | jq -r '.branch.id')
-          echo "branch_id=${BRANCH_ID}" >> "$GITHUB_OUTPUT"
-
-          # Poll each operation until finished
-          for op_id in $(echo "$RESPONSE" | jq -r '.operations[] | .id'); do
-            for i in $(seq 1 30); do
-              OP=$(curl -sf "https://console.neon.tech/api/v2/projects/${NEON_PROJECT_ID}/operations/${op_id}" \
-                -H "Accept: application/json" \
-                -H "Authorization: Bearer ${NEON_API_KEY}")
-              STATUS=$(echo "$OP" | jq -r '.operation.status')
-              case "$STATUS" in
-                finished) break ;;
-                failed|error) echo "Operation ${op_id} failed"; exit 1 ;;
-              esac
-              sleep 2
-            done
-          done
-
-          CONNECTION_URI=$(echo "$RESPONSE" | jq -r '.connection_uris[0].connection_uri')
-          echo "connection_uri=${CONNECTION_URI}" >> "$GITHUB_OUTPUT"
-
+      - run: bun install --frozen-lockfile
       - name: Run migrations
-        if: steps.check-secrets.outputs.skip != 'true' || github.event_name == 'push'
         run: bun run migrate
-        env:
-          DATABASE_URL: ${{ steps.neon-branch.outputs.connection_uri || secrets.DATABASE_URL }}
-
-      - name: Seed data
-        if: steps.check-secrets.outputs.skip != 'true' || github.event_name == 'push'
+      - name: Seed disposable database
         run: bun run db:seed
-        env:
-          DATABASE_URL: ${{ steps.neon-branch.outputs.connection_uri || secrets.DATABASE_URL }}
-
       - name: Validate PostGIS spatial queries
-        if: steps.check-secrets.outputs.skip != 'true' || github.event_name == 'push'
         run: bun run validate:spatial
-        env:
-          DATABASE_URL: ${{ steps.neon-branch.outputs.connection_uri || secrets.DATABASE_URL }}
-
-      - name: Cleanup ephemeral Neon branch
-        if: always() && steps.check-secrets.outputs.skip == 'false' && steps.neon-branch.outputs.branch_id != ''
-        run: |
-          curl -sf -X DELETE \
-            "https://console.neon.tech/api/v2/projects/${NEON_PROJECT_ID}/branches/${{ steps.neon-branch.outputs.branch_id }}" \
-            -H "Accept: application/json" \
-            -H "Authorization: Bearer ${NEON_API_KEY}"
