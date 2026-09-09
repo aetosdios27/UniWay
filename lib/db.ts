@@ -59,9 +59,10 @@ const RETRYABLE_CONNECTION_CODES = new Set([
 ]);
 // 5 retries at these bounds bridge Neon's documented "hundreds of ms" scale-to-zero cold start
 // (2.3s minimum, ~4.6s worst case, before giving up) without leaving a truly-dead DB hanging long.
-const MAX_CONNECTION_RETRIES = 5;
-const RETRY_BASE_DELAY_MS = 150;
-const RETRY_MAX_DELAY_MS = 3_000;
+// Env-configurable (defaults unchanged) so tests can shrink the budget instead of running slow.
+const MAX_CONNECTION_RETRIES = parseInt(process.env.DATABASE_RETRY_MAX || "", 10) || 5;
+const RETRY_BASE_DELAY_MS = parseInt(process.env.DATABASE_RETRY_BASE_MS || "", 10) || 150;
+const RETRY_MAX_DELAY_MS = parseInt(process.env.DATABASE_RETRY_MAX_MS || "", 10) || 3_000;
 
 function isRetryableConnectionError(error: unknown): boolean {
   return typeof error === "object" && error !== null && "code" in error
