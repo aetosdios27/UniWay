@@ -11,7 +11,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   try {
     const { id } = await params;
     if (!z.string().uuid().safeParse(id).success) return badRequest("Invalid campus ID", undefined, undefined, request);
-    return successResponse(await fetchRoutingDestinations(id));
+    // Destinations only change on QGIS import (an admin operation), same cacheability as
+    // buildings/rooms/pois below — this was the one GET route missing the header they all share.
+    return successResponse(await fetchRoutingDestinations(id), 200, 300);
   } catch (error) {
     return apiError(error, "Failed to fetch destinations", request);
   }
