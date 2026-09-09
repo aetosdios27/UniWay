@@ -3,12 +3,12 @@
 > **Agent Instruction:** You are acting as the AI pair programmer for Track B. Read this document to understand your specific domain, architectural constraints, and deliverables. Do not touch files related to Track A (Database/SQL).
 
 ## Domain Objective
-Your goal is to build the in-memory graph engine that powers UniWay's routing. You are responsible for loading edges into `graphology`, running Dijkstra shortest-path calculations, caching results, and assembling GeoJSON.
+Your goal is to build the in-memory graph engine that powers UniWay's routing. You are responsible for loading edges into `graphology`, running Dijkstra shortest-path calculations, and assembling GeoJSON.
 
 ## Architecture Constraints
 1. **Engine:** Use `graphology` and `graphology-shortest-path`.
 2. **Database Access:** ZERO database access. You will build your logic around the `RoutingEdge` interface and use mocked arrays of edges for testing until Track A finishes their SQL functions.
-3. **Caching:** Route computations must be cached in memory (LRU) with a 24-hour TTL to prevent redundant Dijkstra runs.
+3. **Freshness:** Reload current edges on each request so obstruction changes are visible across application instances. Do not restore process-local route caching without shared invalidation/versioning.
 
 ## Deliverables
 
@@ -20,9 +20,9 @@ Your goal is to build the in-memory graph engine that powers UniWay's routing. Y
 - Implement the shortest-path logic.
 - Crucially, it must accept an `accessibilityRequired: boolean` flag. If `true`, the pathfinding must drop/ignore any edge where `is_accessible` is `false` (i.e., routing around stairs).
 
-### 3. Cache Layer (`lib/cache.ts`)
-- Build a lightweight LRU cache.
-- Cache keys should be in the format: `${sourceId}:${targetId}:${accessibilityRequired}`.
+### 3. Route Freshness
+- The former 24-hour process-local cache was removed because it could return blocked routes.
+- Add shared versioned caching only if measured routing latency warrants it.
 
 ### 4. GeoJSON Assembly (`lib/routing/route-assembly.ts`)
 - The output of the Dijkstra algorithm is a sequence of node IDs.

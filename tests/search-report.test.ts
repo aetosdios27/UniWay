@@ -158,6 +158,7 @@ describe("GET /api/campus/[id]/reports", () => {
     expect(response.status).toBe(200);
     expect(json.data).toHaveLength(1);
     expect(json.data[0].status).toBe("open");
+    expect(response.headers.get("Cache-Control")).toBe("no-store");
     expect(json.pagination).toEqual({ offset: 0, limit: 20, total: 1 });
   });
 

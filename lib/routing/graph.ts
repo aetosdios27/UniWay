@@ -2,7 +2,6 @@ import { UndirectedGraph } from "graphology";
 import { dijkstra } from "graphology-shortest-path";
 import { fetchEdgesFromCampus } from "@/lib/spatial/edges";
 import { fetchRoomCentroidsForCampus, getCampusIdForRoom } from "@/lib/spatial/rooms";
-import { routeCache } from "@/lib/cache";
 import { assembleRoute, type GeoJSONLineStringFeature } from "./route-assembly";
 import type { RoutingEdge } from "@/lib/schemas/db";
 
@@ -36,12 +35,7 @@ export async function findShortestPath(
   toRoomId: string,
   accessible: boolean
 ): Promise<GeoJSONLineStringFeature | null> {
-  const cacheKey = `${startRoomId}:${toRoomId}:${accessible}`;
-  const cachedRoute = routeCache.get(cacheKey);
-  if (cachedRoute) {
-    return cachedRoute;
-  }
-
+  // ponytail: read current obstructions each request; use shared versioned caching only if routing latency requires it.
   const campusId = await getCampusIdForRoom(startRoomId);
   if (!campusId) {
     return null;
@@ -55,14 +49,13 @@ export async function findShortestPath(
   const graph = buildGraph(edges, accessible);
 
   if (startRoomId === toRoomId) {
-    const singleNodePath = [startRoomId];
-    const route = assembleRoute(singleNodePath, coordMap, 0);
-    if (route) {
-      routeCache.set(cacheKey, route);
-    }
-    return route;
+    return assembleRoute([startRoomId], coordMap, 0);
   }
 
+  return routeFromGraph(graph, startRoomId, toRoomId, coordMap);
+}
+
+function routeFromGraph(graph: UndirectedGraph, startRoomId: string, toRoomId: string, coordMap: Map<string, [number, number]>) {
   if (!graph.hasNode(startRoomId) || !graph.hasNode(toRoomId)) {
     return null;
   }
@@ -72,20 +65,7 @@ export async function findShortestPath(
     return null;
   }
 
-  let totalDistance = 0;
-  for (let i = 0; i < path.length - 1; i++) {
-    const u = path[i];
-    const v = path[i + 1];
-    const edge = graph.edge(u, v);
-    if (edge !== undefined) {
-      totalDistance += graph.getEdgeAttribute(edge, "distance_meters");
-    }
-  }
-
-  const routeFeature = assembleRoute(path, coordMap, totalDistance);
-  if (routeFeature) {
-    routeCache.set(cacheKey, routeFeature);
-  }
-
-  return routeFeature;
+  const totalDistance = path.slice(1).reduce((sum, node, index) =>
+    sum + graph.getEdgeAttribute(path[index], node, "distance_meters"), 0);
+  return assembleRoute(path, coordMap, totalDistance);
 }

@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { buildGraph, findShortestPath } from "./graph";
 import { sql } from "@/lib/db";
 import { fetchEdgesFromCampus } from "@/lib/spatial/edges";
-import { routeCache } from "@/lib/cache";
 import type { RoutingEdge } from "@/lib/schemas/db";
 
 // Mock dependencies
@@ -45,7 +44,6 @@ describe("Graph routing engine", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    routeCache.clear();
   });
 
   describe("buildGraph", () => {
@@ -76,7 +74,7 @@ describe("Graph routing engine", () => {
 
     beforeEach(() => {
       // Mock the getCampusIdForRoom query
-      (sql as unknown as ReturnType<typeof vi.fn>).mockImplementation(async (strings, ...values) => {
+      (sql as unknown as ReturnType<typeof vi.fn>).mockImplementation(async (strings) => {
         const query = strings ? strings.join("") : "";
         if (query.includes("centroid")) {
           return [
@@ -130,20 +128,15 @@ describe("Graph routing engine", () => {
       ]);
     });
 
-    it("should leverage cache for subsequent requests", async () => {
-      // First run (uncached)
+    it("reloads edges after an obstruction opens or resolves", async () => {
       const res1 = await findShortestPath("room-a", "room-c", false);
-      expect(res1).not.toBeNull();
-      expect(sql).toHaveBeenCalled();
-
-      vi.clearAllMocks();
-
-      // Second run (cached)
+      expect(res1?.properties.distance_meters).toBe(15);
+      vi.mocked(fetchEdgesFromCampus).mockResolvedValueOnce([mockEdges[2]]);
       const res2 = await findShortestPath("room-a", "room-c", false);
-      expect(res2).toEqual(res1);
-      // Verify no DB queries or edge queries were made
-      expect(sql).not.toHaveBeenCalled();
-      expect(fetchEdgesFromCampus).not.toHaveBeenCalled();
+      expect(res2?.properties.distance_meters).toBe(20);
+      const res3 = await findShortestPath("room-a", "room-c", false);
+      expect(res3?.properties.distance_meters).toBe(15);
+      expect(fetchEdgesFromCampus).toHaveBeenCalledTimes(3);
     });
 
     it("should return null if start room campus is not found", async () => {

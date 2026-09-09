@@ -77,6 +77,10 @@ describe("Spatial Queries - Reports", () => {
     expect(reports).toHaveLength(2);
     expect(reports[0].status).toBe("open");
     expect(reports[1].description).toBe("Corridor blocked");
+    for (const [strings] of (sql as unknown as ReturnType<typeof vi.fn>).mock.calls) {
+      expect(strings.join("")).toContain("LEFT JOIN routing_edges e ON r.edge_id = e.id");
+      expect(strings.join("")).toContain("OR edge_building.campus_id");
+    }
   });
 
   it("returns empty when no reports match", async () => {

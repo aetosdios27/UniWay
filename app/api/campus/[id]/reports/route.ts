@@ -18,7 +18,9 @@ export async function GET(
     const status = searchParams.get("status") ?? "open";
 
     const { reports, total } = await fetchCampusReports(campusId, status, pagination.offset, pagination.limit);
-    return paginatedResponse(reports, total, pagination);
+    const response = paginatedResponse(reports, total, pagination);
+    response.headers.set("Cache-Control", "no-store");
+    return response;
   } catch (error) {
     return apiError(error, "Failed to fetch campus reports", request);
   }
