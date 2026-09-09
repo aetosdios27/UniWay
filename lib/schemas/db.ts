@@ -39,12 +39,12 @@ const RoutingPositionSchema = z.tuple([
   z.number().finite().min(-90).max(90),
 ]);
 
-const RoutingPointSchema = z.object({
+export const RoutingPointSchema = z.object({
   type: z.literal("Point"),
   coordinates: RoutingPositionSchema,
 });
 
-const RoutingLineStringSchema = z.object({
+export const RoutingLineStringSchema = z.object({
   type: z.literal("LineString"),
   coordinates: z.array(RoutingPositionSchema).min(2),
 });

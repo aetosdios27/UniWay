@@ -1,0 +1,3857 @@
+{
+  "type": "FeatureCollection",
+  "name": "routing_paths",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00001",
+        "source_node_id": "OUT_GATE_0_001",
+        "target_node_id": "OUT_GATE_0_002",
+        "distance_meters": 7.922621726605308,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5642576,
+            26.8415617
+          ],
+          [
+            75.5642274,
+            26.8416279
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00002",
+        "source_node_id": "OUT_GATE_0_002",
+        "target_node_id": "OUT_AB1_0_003",
+        "distance_meters": 8.568190209114292,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5642274,
+            26.8416279
+          ],
+          [
+            75.5641946,
+            26.8416995
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00003",
+        "source_node_id": "OUT_AB1_0_003",
+        "target_node_id": "OUT_AB1_0_004",
+        "distance_meters": 23.544323933196527,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5641946,
+            26.8416995
+          ],
+          [
+            75.5641046,
+            26.8418961
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00004",
+        "source_node_id": "OUT_AB1_0_004",
+        "target_node_id": "OUT_AB1_0_005",
+        "distance_meters": 14.417385922328243,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5641046,
+            26.8418961
+          ],
+          [
+            75.5640494,
+            26.8420165
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00005",
+        "source_node_id": "OUT_AB1_0_005",
+        "target_node_id": "OUT_AB1_0_006",
+        "distance_meters": 12.671740300322103,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5640494,
+            26.8420165
+          ],
+          [
+            75.564001,
+            26.8421223
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00006",
+        "source_node_id": "OUT_AB1_0_006",
+        "target_node_id": "OUT_AB1_0_007",
+        "distance_meters": 3.0957597822613288,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.564001,
+            26.8421223
+          ],
+          [
+            75.5639892,
+            26.8421482
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00007",
+        "source_node_id": "OUT_AB1_0_007",
+        "target_node_id": "OUT_AB1_0_008",
+        "distance_meters": 25.893302048122806,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5639892,
+            26.8421482
+          ],
+          [
+            75.5638902,
+            26.8423644
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00008",
+        "source_node_id": "OUT_AB1_0_008",
+        "target_node_id": "OUT_AB1_0_009",
+        "distance_meters": 40.76530617149587,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5638902,
+            26.8423644
+          ],
+          [
+            75.5637343,
+            26.8427049
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00009",
+        "source_node_id": "OUT_AB1_0_009",
+        "target_node_id": "OUT_AB1_0_010",
+        "distance_meters": 38.826996198677385,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5637343,
+            26.8427049
+          ],
+          [
+            75.5635858,
+            26.8430292
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00010",
+        "source_node_id": "OUT_AB1_0_010",
+        "target_node_id": "OUT_AB1_0_011",
+        "distance_meters": 127.62401105444438,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5635858,
+            26.8430292
+          ],
+          [
+            75.5647835,
+            26.8434455
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00011",
+        "source_node_id": "OUT_ADM_0_012",
+        "target_node_id": "OUT_AB1_0_013",
+        "distance_meters": 7.78165263804428,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5653714,
+            26.8421145
+          ],
+          [
+            75.5653425,
+            26.8421798
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00012",
+        "source_node_id": "OUT_AB1_0_013",
+        "target_node_id": "OUT_AB1_0_014",
+        "distance_meters": 16.66158533728023,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5653425,
+            26.8421798
+          ],
+          [
+            75.5652808,
+            26.8423197
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00013",
+        "source_node_id": "OUT_AB1_0_014",
+        "target_node_id": "OUT_AB1_0_015",
+        "distance_meters": 26.353716392840163,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5652808,
+            26.8423197
+          ],
+          [
+            75.5651831,
+            26.8425409
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00014",
+        "source_node_id": "OUT_AB1_0_015",
+        "target_node_id": "OUT_EAT_0_016",
+        "distance_meters": 38.36783177765715,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5651831,
+            26.8425409
+          ],
+          [
+            75.5650408,
+            26.8428629
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00015",
+        "source_node_id": "OUT_EAT_0_016",
+        "target_node_id": "OUT_AB1_0_017",
+        "distance_meters": 34.13894749652016,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5650408,
+            26.8428629
+          ],
+          [
+            75.5649143,
+            26.8431495
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00016",
+        "source_node_id": "OUT_AB1_0_017",
+        "target_node_id": "OUT_AB1_0_011",
+        "distance_meters": 35.271402143778836,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5649143,
+            26.8431495
+          ],
+          [
+            75.5647835,
+            26.8434455
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00017",
+        "source_node_id": "OUT_AB1_0_011",
+        "target_node_id": "OUT_AB3_0_018",
+        "distance_meters": 19.071807157054838,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5647835,
+            26.8434455
+          ],
+          [
+            75.5647131,
+            26.8436057
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00018",
+        "source_node_id": "OUT_AB3_0_018",
+        "target_node_id": "OUT_AB3_0_019",
+        "distance_meters": 23.09938275745132,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5647131,
+            26.8436057
+          ],
+          [
+            75.5646278,
+            26.8437997
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00019",
+        "source_node_id": "OUT_AB3_0_019",
+        "target_node_id": "OUT_AB3_0_020",
+        "distance_meters": 19.115024553951027,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5646278,
+            26.8437997
+          ],
+          [
+            75.5645572,
+            26.8439603
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00020",
+        "source_node_id": "OUT_AB3_0_020",
+        "target_node_id": "OUT_AB3_0_021",
+        "distance_meters": 28.93848391614553,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5645572,
+            26.8439603
+          ],
+          [
+            75.5644503,
+            26.8442033
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00021",
+        "source_node_id": "OUT_AB3_0_021",
+        "target_node_id": "OUT_AB3_0_022",
+        "distance_meters": 47.594350209458284,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5644503,
+            26.8442033
+          ],
+          [
+            75.5642746,
+            26.8446031
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00022",
+        "source_node_id": "OUT_AB3_0_022",
+        "target_node_id": "OUT_SPC_0_023",
+        "distance_meters": 29.904892031600593,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5642746,
+            26.8446031
+          ],
+          [
+            75.5641642,
+            26.8448542
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00023",
+        "source_node_id": "OUT_GATE_0_001",
+        "target_node_id": "OUT_ADM_0_024",
+        "distance_meters": 58.37896001142769,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5642576,
+            26.8415617
+          ],
+          [
+            75.5648071,
+            26.8417484
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00024",
+        "source_node_id": "OUT_ADM_0_024",
+        "target_node_id": "OUT_ADM_0_026",
+        "distance_meters": 17.058129419453827,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5648071,
+            26.8417484
+          ],
+          [
+            75.5649715,
+            26.8417039
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00025",
+        "source_node_id": "OUT_ADM_0_026",
+        "target_node_id": "OUT_ADM_0_027",
+        "distance_meters": 69.04504564755307,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5649715,
+            26.8417039
+          ],
+          [
+            75.5656623,
+            26.8417712
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00026",
+        "source_node_id": "OUT_ADM_0_027",
+        "target_node_id": "OUT_ADM_0_025",
+        "distance_meters": 21.254837742447446,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5656623,
+            26.8417712
+          ],
+          [
+            75.5658142,
+            26.8419064
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00027",
+        "source_node_id": "OUT_ADM_0_025",
+        "target_node_id": "OUT_ADM_0_029",
+        "distance_meters": 21.923253501971647,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5658142,
+            26.8419064
+          ],
+          [
+            75.5660348,
+            26.8419028
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00028",
+        "source_node_id": "OUT_ADM_0_029",
+        "target_node_id": "OUT_LIB_0_028",
+        "distance_meters": 62.48021085754184,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5660348,
+            26.8419028
+          ],
+          [
+            75.566526,
+            26.842255
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00029",
+        "source_node_id": "OUT_ADM_0_024",
+        "target_node_id": "OUT_ADM_0_030",
+        "distance_meters": 9.649588959179104,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5648071,
+            26.8417484
+          ],
+          [
+            75.5648976,
+            26.8417801
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00030",
+        "source_node_id": "OUT_ADM_0_030",
+        "target_node_id": "OUT_ADM_0_031",
+        "distance_meters": 108.96962948419657,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5648976,
+            26.8417801
+          ],
+          [
+            75.5659195,
+            26.8421374
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00031",
+        "source_node_id": "OUT_ADM_0_031",
+        "target_node_id": "OUT_ADM_0_032",
+        "distance_meters": 44.39460173343536,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5659195,
+            26.8421374
+          ],
+          [
+            75.5663358,
+            26.8422829
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00032",
+        "source_node_id": "OUT_ADM_0_032",
+        "target_node_id": "OUT_LIB_0_028",
+        "distance_meters": 19.14716355803481,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5663358,
+            26.8422829
+          ],
+          [
+            75.566526,
+            26.842255
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00033",
+        "source_node_id": "OUT_AB1_0_003",
+        "target_node_id": "OUT_AB1_0_033",
+        "distance_meters": 3.5642990035931117,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5641946,
+            26.8416995
+          ],
+          [
+            75.564228,
+            26.8417112
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00034",
+        "source_node_id": "OUT_AB1_0_033",
+        "target_node_id": "OUT_ADM_0_034",
+        "distance_meters": 64.75415791962082,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.564228,
+            26.8417112
+          ],
+          [
+            75.5648345,
+            26.8419252
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00035",
+        "source_node_id": "OUT_ADM_0_034",
+        "target_node_id": "OUT_ADM_0_012",
+        "distance_meters": 57.31604714568919,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5648345,
+            26.8419252
+          ],
+          [
+            75.5653714,
+            26.8421145
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00036",
+        "source_node_id": "OUT_ADM_0_012",
+        "target_node_id": "OUT_ADM_0_035",
+        "distance_meters": 11.697832627338583,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5653714,
+            26.8421145
+          ],
+          [
+            75.5654809,
+            26.8421534
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00037",
+        "source_node_id": "OUT_ADM_0_035",
+        "target_node_id": "OUT_ADM_0_036",
+        "distance_meters": 39.73867970213191,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5654809,
+            26.8421534
+          ],
+          [
+            75.5658527,
+            26.8422854
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00038",
+        "source_node_id": "OUT_ADM_0_036",
+        "target_node_id": "OUT_ADM_0_037",
+        "distance_meters": 12.434932132129639,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5658527,
+            26.8422854
+          ],
+          [
+            75.5659691,
+            26.8423267
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00039",
+        "source_node_id": "OUT_ADM_0_037",
+        "target_node_id": "OUT_LIB_0_039",
+        "distance_meters": 30.895409115860318,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5659691,
+            26.8423267
+          ],
+          [
+            75.5662544,
+            26.8424378
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00040",
+        "source_node_id": "OUT_LIB_0_039",
+        "target_node_id": "OUT_LIB_0_038",
+        "distance_meters": 20.721015190846224,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5662544,
+            26.8424378
+          ],
+          [
+            75.566387,
+            26.8425822
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00041",
+        "source_node_id": "OUT_ADM_0_037",
+        "target_node_id": "OUT_AB2_0_040",
+        "distance_meters": 7.545583007084571,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5659691,
+            26.8423267
+          ],
+          [
+            75.5659403,
+            26.8423897
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00042",
+        "source_node_id": "OUT_AB2_0_040",
+        "target_node_id": "OUT_AB2_0_041",
+        "distance_meters": 18.34810153036737,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5659403,
+            26.8423897
+          ],
+          [
+            75.5658701,
+            26.8425429
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00043",
+        "source_node_id": "OUT_AB2_0_041",
+        "target_node_id": "OUT_AB2_0_042",
+        "distance_meters": 14.041855351590035,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5658701,
+            26.8425429
+          ],
+          [
+            75.5658164,
+            26.8426602
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00044",
+        "source_node_id": "OUT_AB2_0_042",
+        "target_node_id": "OUT_EAT_0_043",
+        "distance_meters": 48.200316862441,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5658164,
+            26.8426602
+          ],
+          [
+            75.5656364,
+            26.8430643
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00045",
+        "source_node_id": "OUT_EAT_0_043",
+        "target_node_id": "OUT_AB2_0_044",
+        "distance_meters": 47.55987616292231,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5656364,
+            26.8430643
+          ],
+          [
+            75.5654587,
+            26.843463
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00046",
+        "source_node_id": "OUT_AB2_0_044",
+        "target_node_id": "OUT_AB2_0_045",
+        "distance_meters": 22.48544432383752,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5654587,
+            26.843463
+          ],
+          [
+            75.5653747,
+            26.8436515
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00047",
+        "source_node_id": "OUT_AB2_0_045",
+        "target_node_id": "OUT_LHC_0_046",
+        "distance_meters": 19.895078449606057,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5653747,
+            26.8436515
+          ],
+          [
+            75.5653012,
+            26.8438186
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00048",
+        "source_node_id": "OUT_LHC_0_046",
+        "target_node_id": "OUT_LHC_0_047",
+        "distance_meters": 42.406174855662954,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5653012,
+            26.8438186
+          ],
+          [
+            75.5651443,
+            26.8441747
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00049",
+        "source_node_id": "OUT_LHC_0_047",
+        "target_node_id": "OUT_SPC_0_048",
+        "distance_meters": 105.43538700808213,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5651443,
+            26.8441747
+          ],
+          [
+            75.5647543,
+            26.84506
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00050",
+        "source_node_id": "OUT_AB1_0_049",
+        "target_node_id": "OUT_AB1_0_050",
+        "distance_meters": 25.26144694651722,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5636886,
+            26.8429326
+          ],
+          [
+            75.5637823,
+            26.8427205
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00051",
+        "source_node_id": "OUT_AB1_0_050",
+        "target_node_id": "OUT_AB1_0_051",
+        "distance_meters": 40.74180972705711,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5637823,
+            26.8427205
+          ],
+          [
+            75.5639333,
+            26.8423786
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00052",
+        "source_node_id": "OUT_AB1_0_051",
+        "target_node_id": "OUT_AB1_0_052",
+        "distance_meters": 28.93346825922174,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5639333,
+            26.8423786
+          ],
+          [
+            75.5640405,
+            26.8421357
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00053",
+        "source_node_id": "OUT_AB1_0_052",
+        "target_node_id": "OUT_AB1_0_053",
+        "distance_meters": 27.006548191057966,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5640405,
+            26.8421357
+          ],
+          [
+            75.5641406,
+            26.841909
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00054",
+        "source_node_id": "OUT_AB1_0_053",
+        "target_node_id": "OUT_AB1_0_054",
+        "distance_meters": 16.890369329725086,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5641406,
+            26.841909
+          ],
+          [
+            75.5642033,
+            26.8417672
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00055",
+        "source_node_id": "OUT_AB1_0_054",
+        "target_node_id": "OUT_AB1_0_033",
+        "distance_meters": 6.670161912864447,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5642033,
+            26.8417672
+          ],
+          [
+            75.564228,
+            26.8417112
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00056",
+        "source_node_id": "OUT_AB1_0_054",
+        "target_node_id": "OUT_AB1_0_055",
+        "distance_meters": 12.164882699293296,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5642033,
+            26.8417672
+          ],
+          [
+            75.5643168,
+            26.8418083
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00057",
+        "source_node_id": "OUT_AB1_0_055",
+        "target_node_id": "OUT_AB1_0_056",
+        "distance_meters": 52.628294791219496,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5643168,
+            26.8418083
+          ],
+          [
+            75.564808,
+            26.8419862
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00058",
+        "source_node_id": "OUT_AB1_0_056",
+        "target_node_id": "OUT_AB1_0_057",
+        "distance_meters": 46.25337971046599,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.564808,
+            26.8419862
+          ],
+          [
+            75.5652396,
+            26.8421425
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00059",
+        "source_node_id": "OUT_AB1_0_057",
+        "target_node_id": "OUT_AB1_0_058",
+        "distance_meters": 16.457572817563285,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5652396,
+            26.8421425
+          ],
+          [
+            75.5651767,
+            26.84228
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00060",
+        "source_node_id": "OUT_AB1_0_058",
+        "target_node_id": "OUT_AB1_0_059",
+        "distance_meters": 45.96211201553152,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5651767,
+            26.84228
+          ],
+          [
+            75.5647471,
+            26.8421262
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00061",
+        "source_node_id": "OUT_AB1_0_059",
+        "target_node_id": "OUT_AB1_0_060",
+        "distance_meters": 52.6282331126393,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5647471,
+            26.8421262
+          ],
+          [
+            75.5642552,
+            26.84195
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00062",
+        "source_node_id": "OUT_AB1_0_060",
+        "target_node_id": "OUT_AB1_0_053",
+        "distance_meters": 12.250562377803693,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5642552,
+            26.84195
+          ],
+          [
+            75.5641406,
+            26.841909
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00063",
+        "source_node_id": "OUT_AB1_0_053",
+        "target_node_id": "OUT_AB1_0_004",
+        "distance_meters": 3.8591766525510898,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5641406,
+            26.841909
+          ],
+          [
+            75.5641046,
+            26.8418961
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00064",
+        "source_node_id": "OUT_AB1_0_006",
+        "target_node_id": "OUT_AB1_0_052",
+        "distance_meters": 4.1990504546507,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.564001,
+            26.8421223
+          ],
+          [
+            75.5640405,
+            26.8421357
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00065",
+        "source_node_id": "OUT_AB1_0_052",
+        "target_node_id": "OUT_AB1_0_061",
+        "distance_meters": 12.38851438190669,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5640405,
+            26.8421357
+          ],
+          [
+            75.5641571,
+            26.8421753
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00066",
+        "source_node_id": "OUT_AB1_0_055",
+        "target_node_id": "OUT_AB1_0_060",
+        "distance_meters": 16.84332154496845,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5643168,
+            26.8418083
+          ],
+          [
+            75.5642552,
+            26.84195
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00067",
+        "source_node_id": "OUT_AB1_0_060",
+        "target_node_id": "OUT_AB1_0_061",
+        "distance_meters": 26.79070346339082,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5642552,
+            26.84195
+          ],
+          [
+            75.5641571,
+            26.8421753
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00068",
+        "source_node_id": "OUT_AB1_0_061",
+        "target_node_id": "OUT_AB1_0_062",
+        "distance_meters": 28.64409201652173,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5641571,
+            26.8421753
+          ],
+          [
+            75.56405,
+            26.8424154
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00069",
+        "source_node_id": "OUT_AB1_0_062",
+        "target_node_id": "OUT_AB1_0_063",
+        "distance_meters": 41.01158925538714,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.56405,
+            26.8424154
+          ],
+          [
+            75.5638966,
+            26.8427592
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00070",
+        "source_node_id": "OUT_AB1_0_063",
+        "target_node_id": "OUT_AB1_0_065",
+        "distance_meters": 29.401159874916367,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5638966,
+            26.8427592
+          ],
+          [
+            75.5637866,
+            26.8430056
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00071",
+        "source_node_id": "OUT_AB1_0_065",
+        "target_node_id": "OUT_AB1_0_066",
+        "distance_meters": 98.38809089612091,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5637866,
+            26.8430056
+          ],
+          [
+            75.564708,
+            26.843331
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00072",
+        "source_node_id": "OUT_AB1_0_066",
+        "target_node_id": "OUT_AB1_0_064",
+        "distance_meters": 26.22903178975265,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.564708,
+            26.843331
+          ],
+          [
+            75.564806,
+            26.8431112
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00073",
+        "source_node_id": "OUT_AB1_0_064",
+        "target_node_id": "OUT_AB1_0_067",
+        "distance_meters": 38.57971175673449,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.564806,
+            26.8431112
+          ],
+          [
+            75.5649503,
+            26.8427878
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00074",
+        "source_node_id": "OUT_AB1_0_067",
+        "target_node_id": "OUT_AB1_0_068",
+        "distance_meters": 33.992261150108305,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5649503,
+            26.8427878
+          ],
+          [
+            75.5650773,
+            26.8425028
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00075",
+        "source_node_id": "OUT_AB1_0_068",
+        "target_node_id": "OUT_AB1_0_058",
+        "distance_meters": 26.587348871635445,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5650773,
+            26.8425028
+          ],
+          [
+            75.5651767,
+            26.84228
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00076",
+        "source_node_id": "OUT_AB1_0_009",
+        "target_node_id": "OUT_AB1_0_050",
+        "distance_meters": 5.0741498639850064,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5637343,
+            26.8427049
+          ],
+          [
+            75.5637823,
+            26.8427205
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00077",
+        "source_node_id": "OUT_AB1_0_050",
+        "target_node_id": "OUT_AB1_0_063",
+        "distance_meters": 12.132970974378427,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5637823,
+            26.8427205
+          ],
+          [
+            75.5638966,
+            26.8427592
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00078",
+        "source_node_id": "OUT_AB1_0_008",
+        "target_node_id": "OUT_AB1_0_051",
+        "distance_meters": 4.563220123073846,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5638902,
+            26.8423644
+          ],
+          [
+            75.5639333,
+            26.8423786
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00079",
+        "source_node_id": "OUT_AB1_0_051",
+        "target_node_id": "OUT_AB1_0_062",
+        "distance_meters": 12.291048429303832,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5639333,
+            26.8423786
+          ],
+          [
+            75.56405,
+            26.8424154
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00080",
+        "source_node_id": "OUT_AB1_0_010",
+        "target_node_id": "OUT_AB3_0_069",
+        "distance_meters": 18.76862037301748,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5635858,
+            26.8430292
+          ],
+          [
+            75.5636173,
+            26.8431962
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00081",
+        "source_node_id": "OUT_AB3_0_069",
+        "target_node_id": "OUT_AB3_0_070",
+        "distance_meters": 5.326999347406773,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5636173,
+            26.8431962
+          ],
+          [
+            75.5636539,
+            26.8432314
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00082",
+        "source_node_id": "OUT_AB3_0_070",
+        "target_node_id": "OUT_AB3_0_018",
+        "distance_meters": 113.10885599588032,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5636539,
+            26.8432314
+          ],
+          [
+            75.5647131,
+            26.8436057
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00083",
+        "source_node_id": "OUT_AB1_0_062",
+        "target_node_id": "OUT_AB1_0_071",
+        "distance_meters": 20.888775544904327,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.56405,
+            26.8424154
+          ],
+          [
+            75.5642056,
+            26.8424639
+          ],
+          [
+            75.5642485,
+            26.8424776
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00084",
+        "source_node_id": "OUT_AB1_0_071",
+        "target_node_id": "OUT_EAT_0_072",
+        "distance_meters": 17.904484609235897,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5642485,
+            26.8424776
+          ],
+          [
+            75.5643112,
+            26.8426291
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00085",
+        "source_node_id": "OUT_EAT_0_072",
+        "target_node_id": "OUT_EAT_0_073",
+        "distance_meters": 32.402820250797184,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5643112,
+            26.8426291
+          ],
+          [
+            75.5646358,
+            26.8426572
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00086",
+        "source_node_id": "OUT_EAT_0_073",
+        "target_node_id": "OUT_AB1_0_067",
+        "distance_meters": 34.46599886492858,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5646358,
+            26.8426572
+          ],
+          [
+            75.5647532,
+            26.8427138
+          ],
+          [
+            75.5649503,
+            26.8427878
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00087",
+        "source_node_id": "OUT_AB1_0_068",
+        "target_node_id": "OUT_AB1_0_015",
+        "distance_meters": 11.317970752589286,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5650773,
+            26.8425028
+          ],
+          [
+            75.5651831,
+            26.8425409
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00088",
+        "source_node_id": "OUT_AB1_0_058",
+        "target_node_id": "OUT_AB1_0_014",
+        "distance_meters": 11.231615126949972,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5651767,
+            26.84228
+          ],
+          [
+            75.5652808,
+            26.8423197
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00089",
+        "source_node_id": "OUT_AB1_0_017",
+        "target_node_id": "OUT_AB1_0_064",
+        "distance_meters": 11.562900948554653,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5649143,
+            26.8431495
+          ],
+          [
+            75.564806,
+            26.8431112
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00090",
+        "source_node_id": "OUT_EAT_0_043",
+        "target_node_id": "OUT_EAT_0_074",
+        "distance_meters": 16.115338228823834,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5656364,
+            26.8430643
+          ],
+          [
+            75.5654855,
+            26.8430109
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00091",
+        "source_node_id": "OUT_EAT_0_016",
+        "target_node_id": "OUT_EAT_0_075",
+        "distance_meters": 16.23863153458126,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5650408,
+            26.8428629
+          ],
+          [
+            75.5651937,
+            26.8429148
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00092",
+        "source_node_id": "OUT_EAT_0_043",
+        "target_node_id": "OUT_AB2_0_076",
+        "distance_meters": 22.410605514503196,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5656364,
+            26.8430643
+          ],
+          [
+            75.5658478,
+            26.8431347
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00093",
+        "source_node_id": "OUT_AB2_0_042",
+        "target_node_id": "OUT_AB2_0_077",
+        "distance_meters": 22.790971599217546,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5658164,
+            26.8426602
+          ],
+          [
+            75.5660278,
+            26.8427402
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00094",
+        "source_node_id": "OUT_AB2_0_044",
+        "target_node_id": "OUT_AB2_0_078",
+        "distance_meters": 13.408627885331736,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5654587,
+            26.843463
+          ],
+          [
+            75.5655841,
+            26.8435078
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00095",
+        "source_node_id": "OUT_AB1_0_011",
+        "target_node_id": "OUT_AB2_0_045",
+        "distance_meters": 63.016227778180735,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5647835,
+            26.8434455
+          ],
+          [
+            75.5653747,
+            26.8436515
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00096",
+        "source_node_id": "OUT_AB2_0_045",
+        "target_node_id": "OUT_AB2_0_079",
+        "distance_meters": 60.04390106366221,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5653747,
+            26.8436515
+          ],
+          [
+            75.5659366,
+            26.8438511
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00097",
+        "source_node_id": "OUT_AB2_0_079",
+        "target_node_id": "OUT_AB2_0_080",
+        "distance_meters": 63.19488660869026,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5659366,
+            26.8438511
+          ],
+          [
+            75.566528,
+            26.8440612
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00098",
+        "source_node_id": "OUT_AB2_0_080",
+        "target_node_id": "OUT_AB2_0_081",
+        "distance_meters": 5.5048153330373335,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.566528,
+            26.8440612
+          ],
+          [
+            75.5665795,
+            26.8440795
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00099",
+        "source_node_id": "OUT_AB2_0_081",
+        "target_node_id": "OUT_LHC_0_082",
+        "distance_meters": 20.068880170750543,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5665795,
+            26.8440795
+          ],
+          [
+            75.5665052,
+            26.844248
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00100",
+        "source_node_id": "OUT_LIB_0_038",
+        "target_node_id": "OUT_LIB_0_116",
+        "distance_meters": 12.126824401252502,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.566387,
+            26.8425822
+          ],
+          [
+            75.5664796,
+            26.8426534
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00101",
+        "source_node_id": "OUT_LIB_0_116",
+        "target_node_id": "OUT_AB2_0_084",
+        "distance_meters": 68.68490030272702,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5664796,
+            26.8426534
+          ],
+          [
+            75.5664796,
+            26.8426535
+          ],
+          [
+            75.5671197,
+            26.8428876
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00102",
+        "source_node_id": "OUT_AB2_0_084",
+        "target_node_id": "OUT_AB2_0_109",
+        "distance_meters": 24.09517103280513,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5671197,
+            26.8428876
+          ],
+          [
+            75.5670284,
+            26.8430891
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00103",
+        "source_node_id": "OUT_AB2_0_109",
+        "target_node_id": "OUT_AB2_0_085",
+        "distance_meters": 46.27974264787941,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5670284,
+            26.8430891
+          ],
+          [
+            75.566853,
+            26.8434761
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00104",
+        "source_node_id": "OUT_AB2_0_085",
+        "target_node_id": "OUT_AB2_0_086",
+        "distance_meters": 48.56884278953804,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.566853,
+            26.8434761
+          ],
+          [
+            75.5666689,
+            26.8438824
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00105",
+        "source_node_id": "OUT_AB2_0_086",
+        "target_node_id": "OUT_AB2_0_081",
+        "distance_meters": 23.573624047677875,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5666689,
+            26.8438824
+          ],
+          [
+            75.5665795,
+            26.8440795
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00106",
+        "source_node_id": "OUT_AB3_0_018",
+        "target_node_id": "OUT_LHC_0_046",
+        "distance_meters": 63.00485843936164,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5647131,
+            26.8436057
+          ],
+          [
+            75.5653012,
+            26.8438186
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00107",
+        "source_node_id": "OUT_LHC_0_046",
+        "target_node_id": "OUT_LHC_0_082",
+        "distance_meters": 128.73618980226667,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5653012,
+            26.8438186
+          ],
+          [
+            75.5665052,
+            26.844248
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00108",
+        "source_node_id": "OUT_AB3_0_019",
+        "target_node_id": "OUT_AB3_0_087",
+        "distance_meters": 15.567262410904313,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5646278,
+            26.8437997
+          ],
+          [
+            75.5644819,
+            26.8437486
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00109",
+        "source_node_id": "OUT_AB3_0_021",
+        "target_node_id": "OUT_AB3_0_088",
+        "distance_meters": 22.726079789180744,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5644503,
+            26.8442033
+          ],
+          [
+            75.5643093,
+            26.8441519
+          ],
+          [
+            75.564238,
+            26.8441271
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00110",
+        "source_node_id": "OUT_AB3_0_022",
+        "target_node_id": "OUT_AB3_0_089",
+        "distance_meters": 23.448842818759598,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5642746,
+            26.8446031
+          ],
+          [
+            75.564057,
+            26.8445211
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00112",
+        "source_node_id": "OUT_AB1_0_014",
+        "target_node_id": "OUT_AB2_0_041",
+        "distance_meters": 63.56422342746498,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5652808,
+            26.8423197
+          ],
+          [
+            75.565816,
+            26.8425224
+          ],
+          [
+            75.5658701,
+            26.8425429
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00113",
+        "source_node_id": "OUT_LIB_0_028",
+        "target_node_id": "OUT_LIB_0_090",
+        "distance_meters": 18.400979744899054,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.566526,
+            26.842255
+          ],
+          [
+            75.56646,
+            26.8424103
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00114",
+        "source_node_id": "OUT_LIB_0_090",
+        "target_node_id": "OUT_LIB_0_038",
+        "distance_meters": 20.37634595545711,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.56646,
+            26.8424103
+          ],
+          [
+            75.566387,
+            26.8425822
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00115",
+        "source_node_id": "OUT_LIB_0_090",
+        "target_node_id": "OUT_LIB_0_091",
+        "distance_meters": 13.180043615084728,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.56646,
+            26.8424103
+          ],
+          [
+            75.5665828,
+            26.8424552
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00116",
+        "source_node_id": "OUT_ADM_0_025",
+        "target_node_id": "OUT_ADM_0_092",
+        "distance_meters": 31.866125634974235,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5658142,
+            26.8419064
+          ],
+          [
+            75.565927,
+            26.8416371
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00117",
+        "source_node_id": "OUT_AB1_0_059",
+        "target_node_id": "OUT_AB1_0_056",
+        "distance_meters": 16.63787105873872,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5647471,
+            26.8421262
+          ],
+          [
+            75.564808,
+            26.8419862
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00118",
+        "source_node_id": "OUT_AB1_0_056",
+        "target_node_id": "OUT_ADM_0_034",
+        "distance_meters": 7.258002745050802,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.564808,
+            26.8419862
+          ],
+          [
+            75.5648345,
+            26.8419252
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00119",
+        "source_node_id": "OUT_ADM_0_034",
+        "target_node_id": "OUT_ADM_0_030",
+        "distance_meters": 17.25140741885578,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5648345,
+            26.8419252
+          ],
+          [
+            75.5648976,
+            26.8417801
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00120",
+        "source_node_id": "OUT_AB1_0_057",
+        "target_node_id": "OUT_AB1_0_013",
+        "distance_meters": 11.025494759371858,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5652396,
+            26.8421425
+          ],
+          [
+            75.5653425,
+            26.8421798
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00121",
+        "source_node_id": "OUT_AB1_0_005",
+        "target_node_id": "OUT_GATE_0_093",
+        "distance_meters": 11.874045141313333,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5640494,
+            26.8420165
+          ],
+          [
+            75.5639395,
+            26.8419744
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00122",
+        "source_node_id": "OUT_GATE_0_094",
+        "target_node_id": "OUT_AB1_0_007",
+        "distance_meters": 13.993905347606873,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5638587,
+            26.8421006
+          ],
+          [
+            75.5639892,
+            26.8421482
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00123",
+        "source_node_id": "OUT_GATE_0_002",
+        "target_node_id": "OUT_GATE_0_095",
+        "distance_meters": 6.1101129021036735,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5642274,
+            26.8416279
+          ],
+          [
+            75.5641703,
+            26.8416074
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00124",
+        "source_node_id": "OUT_ADM_0_035",
+        "target_node_id": "OUT_ADM_0_096",
+        "distance_meters": 17.2041260853105,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5654809,
+            26.8421534
+          ],
+          [
+            75.5655462,
+            26.8420095
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00125",
+        "source_node_id": "OUT_ADM_0_036",
+        "target_node_id": "OUT_ADM_0_031",
+        "distance_meters": 17.685347914306686,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5658527,
+            26.8422854
+          ],
+          [
+            75.5659195,
+            26.8421374
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00126",
+        "source_node_id": "OUT_EAT_0_097",
+        "target_node_id": "OUT_EAT_0_075",
+        "distance_meters": 4.647237314830938,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5651742,
+            26.8429529
+          ],
+          [
+            75.5651937,
+            26.8429148
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00127",
+        "source_node_id": "OUT_EAT_0_075",
+        "target_node_id": "OUT_EAT_0_099",
+        "distance_meters": 5.6657988160297945,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5651937,
+            26.8429148
+          ],
+          [
+            75.5652208,
+            26.8428697
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00128",
+        "source_node_id": "OUT_EAT_0_099",
+        "target_node_id": "OUT_EAT_0_098",
+        "distance_meters": 14.505233530684288,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5652208,
+            26.8428697
+          ],
+          [
+            75.5653568,
+            26.8429172
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00129",
+        "source_node_id": "OUT_EAT_0_098",
+        "target_node_id": "OUT_EAT_0_100",
+        "distance_meters": 15.847208349255183,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5653568,
+            26.8429172
+          ],
+          [
+            75.5655055,
+            26.8429691
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00130",
+        "source_node_id": "OUT_EAT_0_100",
+        "target_node_id": "OUT_EAT_0_074",
+        "distance_meters": 5.042549112880481,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5655055,
+            26.8429691
+          ],
+          [
+            75.5654855,
+            26.8430109
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00131",
+        "source_node_id": "OUT_EAT_0_074",
+        "target_node_id": "OUT_EAT_0_102",
+        "distance_meters": 5.5975490819710645,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5654855,
+            26.8430109
+          ],
+          [
+            75.5654619,
+            26.8430568
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00132",
+        "source_node_id": "OUT_EAT_0_102",
+        "target_node_id": "OUT_EAT_0_101",
+        "distance_meters": 15.410353468354291,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5654619,
+            26.8430568
+          ],
+          [
+            75.5653181,
+            26.8430048
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00133",
+        "source_node_id": "OUT_EAT_0_101",
+        "target_node_id": "OUT_EAT_0_097",
+        "distance_meters": 15.410353468462084,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5653181,
+            26.8430048
+          ],
+          [
+            75.5651742,
+            26.8429529
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00135",
+        "source_node_id": "OUT_AB1_0_013",
+        "target_node_id": "OUT_AB2_0_040",
+        "distance_meters": 63.77781040489562,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5653425,
+            26.8421798
+          ],
+          [
+            75.5659382,
+            26.842389
+          ],
+          [
+            75.5659403,
+            26.8423897
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00136",
+        "source_node_id": "OUT_AB2_0_040",
+        "target_node_id": "OUT_AB2_0_104",
+        "distance_meters": 30.38672899615294,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5659403,
+            26.8423897
+          ],
+          [
+            75.566226,
+            26.8424875
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00137",
+        "source_node_id": "OUT_AB2_0_104",
+        "target_node_id": "OUT_AB2_0_105",
+        "distance_meters": 26.705004558964568,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.566226,
+            26.8424875
+          ],
+          [
+            75.5663946,
+            26.8426752
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00138",
+        "source_node_id": "OUT_AB2_0_105",
+        "target_node_id": "OUT_AB2_0_106",
+        "distance_meters": 68.61044260227848,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5663946,
+            26.8426752
+          ],
+          [
+            75.5670371,
+            26.8429022
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00139",
+        "source_node_id": "OUT_AB2_0_106",
+        "target_node_id": "OUT_AB2_0_103",
+        "distance_meters": 19.650379177033493,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5670371,
+            26.8429022
+          ],
+          [
+            75.5669647,
+            26.8430673
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00140",
+        "source_node_id": "OUT_AB2_0_103",
+        "target_node_id": "OUT_AB2_0_107",
+        "distance_meters": 46.16377651926101,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5669647,
+            26.8430673
+          ],
+          [
+            75.5667944,
+            26.8434551
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00141",
+        "source_node_id": "OUT_AB2_0_107",
+        "target_node_id": "OUT_AB2_0_108",
+        "distance_meters": 48.54073252947332,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5667944,
+            26.8434551
+          ],
+          [
+            75.5666155,
+            26.8438629
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00142",
+        "source_node_id": "OUT_AB2_0_108",
+        "target_node_id": "OUT_AB2_0_080",
+        "distance_meters": 23.623127371046323,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5666155,
+            26.8438629
+          ],
+          [
+            75.5665379,
+            26.8440396
+          ],
+          [
+            75.566528,
+            26.8440612
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00143",
+        "source_node_id": "OUT_AB2_0_109",
+        "target_node_id": "OUT_AB2_0_083",
+        "distance_meters": 0.00496013001615314,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5670284,
+          26.8430891
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00144",
+        "source_node_id": "OUT_AB2_0_109",
+        "target_node_id": "OUT_AB2_0_103",
+        "distance_meters": 6.774086798499421,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5670284,
+            26.8430891
+          ],
+          [
+            75.5669647,
+            26.8430673
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00145",
+        "source_node_id": "OUT_AB2_0_103",
+        "target_node_id": "OUT_AB2_0_110",
+        "distance_meters": 15.434418527676273,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5669647,
+            26.8430673
+          ],
+          [
+            75.5668195,
+            26.8430177
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00146",
+        "source_node_id": "OUT_AB2_0_085",
+        "target_node_id": "OUT_AB2_0_107",
+        "distance_meters": 6.2627202136636795,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.566853,
+            26.8434761
+          ],
+          [
+            75.5667944,
+            26.8434551
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00147",
+        "source_node_id": "OUT_AB2_0_107",
+        "target_node_id": "OUT_AB2_0_111",
+        "distance_meters": 5.988251382820247,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5667944,
+            26.8434551
+          ],
+          [
+            75.5667383,
+            26.8434354
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00148",
+        "source_node_id": "OUT_AB2_0_086",
+        "target_node_id": "OUT_AB2_0_108",
+        "distance_meters": 5.726634862349866,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5666689,
+            26.8438824
+          ],
+          [
+            75.5666155,
+            26.8438629
+          ],
+          [
+            75.5666155,
+            26.8438629
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00149",
+        "source_node_id": "OUT_AB2_0_108",
+        "target_node_id": "OUT_AB2_0_112",
+        "distance_meters": 15.655549262525394,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5666155,
+            26.8438629
+          ],
+          [
+            75.5664681,
+            26.8438129
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00150",
+        "source_node_id": "OUT_AB2_0_079",
+        "target_node_id": "OUT_AB2_0_113",
+        "distance_meters": 22.542389107894845,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5659366,
+            26.8438511
+          ],
+          [
+            75.5660227,
+            26.8436629
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00151",
+        "source_node_id": "OUT_AB3_0_114",
+        "target_node_id": "OUT_AB3_0_115",
+        "distance_meters": 11.544898505658566,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5641439,
+            26.8434291
+          ],
+          [
+            75.5640952,
+            26.8435237
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00152",
+        "source_node_id": "OUT_AB3_0_020",
+        "target_node_id": "OUT_LHC_0_117",
+        "distance_meters": 31.490022964710953,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5645572,
+            26.8439603
+          ],
+          [
+            75.5648508,
+            26.8440675
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00153",
+        "source_node_id": "OUT_LHC_0_117",
+        "target_node_id": "OUT_LHC_0_047",
+        "distance_meters": 31.490022964710953,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5648508,
+            26.8440675
+          ],
+          [
+            75.5651443,
+            26.8441747
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00154",
+        "source_node_id": "OUT_EAT_0_101",
+        "target_node_id": "OUT_EAT_0_118",
+        "distance_meters": 5.2224151137614205,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5653181,
+            26.8430048
+          ],
+          [
+            75.5653374,
+            26.842961
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "edge_id": "E00155",
+        "source_node_id": "OUT_EAT_0_118",
+        "target_node_id": "OUT_EAT_0_098",
+        "distance_meters": 5.2224151138048045,
+        "is_accessible": true,
+        "floor_id": "0",
+        "edge_type": "walkway"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.5653374,
+            26.842961
+          ],
+          [
+            75.5653568,
+            26.8429172
+          ]
+        ]
+      }
+    }
+  ]
+}

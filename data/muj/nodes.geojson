@@ -1,0 +1,2136 @@
+{
+  "type": "FeatureCollection",
+  "name": "routing_nodes",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_SPC_0_048",
+        "loc": "SPC",
+        "nid": 48,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5647543,
+          26.84506
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_SPC_0_023",
+        "loc": "SPC",
+        "nid": 23,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5641642,
+          26.8448542
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB3_0_022",
+        "loc": "AB3",
+        "nid": 22,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5642746,
+          26.8446031
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB3_0_089",
+        "loc": "AB3",
+        "nid": 89,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.564057,
+          26.8445211
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_LHC_0_082",
+        "loc": "LHC",
+        "nid": 82,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5665052,
+          26.844248
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB3_0_021",
+        "loc": "AB3",
+        "nid": 21,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5644503,
+          26.8442033
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_LHC_0_047",
+        "loc": "LHC",
+        "nid": 47,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5651443,
+          26.8441747
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB3_0_088",
+        "loc": "AB3",
+        "nid": 88,
+        "node_type": "entrance",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.564238,
+          26.8441271
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_081",
+        "loc": "AB2",
+        "nid": 81,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5665795,
+          26.8440795
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_080",
+        "loc": "AB2",
+        "nid": 80,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.566528,
+          26.8440612
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB3_0_020",
+        "loc": "AB3",
+        "nid": 20,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5645572,
+          26.8439603
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_086",
+        "loc": "AB2",
+        "nid": 86,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5666689,
+          26.8438824
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_108",
+        "loc": "AB2",
+        "nid": 108,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5666155,
+          26.8438629
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_079",
+        "loc": "AB2",
+        "nid": 79,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5659366,
+          26.8438511
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_LHC_0_046",
+        "loc": "LHC",
+        "nid": 46,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5653012,
+          26.8438186
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_112",
+        "loc": "AB2",
+        "nid": 112,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5664681,
+          26.8438129
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB3_0_019",
+        "loc": "AB3",
+        "nid": 19,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5646278,
+          26.8437997
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB3_0_087",
+        "loc": "AB3",
+        "nid": 87,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5644819,
+          26.8437486
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_113",
+        "loc": "AB2",
+        "nid": 113,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5660227,
+          26.8436629
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_045",
+        "loc": "AB2",
+        "nid": 45,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5653747,
+          26.8436515
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB3_0_018",
+        "loc": "AB3",
+        "nid": 18,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5647131,
+          26.8436057
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB3_0_115",
+        "loc": "AB3",
+        "nid": 115,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5640952,
+          26.8435237
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_078",
+        "loc": "AB2",
+        "nid": 78,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5655841,
+          26.8435078
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_085",
+        "loc": "AB2",
+        "nid": 85,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.566853,
+          26.8434761
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_044",
+        "loc": "AB2",
+        "nid": 44,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5654587,
+          26.843463
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_107",
+        "loc": "AB2",
+        "nid": 107,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5667944,
+          26.8434551
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_011",
+        "loc": "AB1",
+        "nid": 11,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5647835,
+          26.8434455
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_111",
+        "loc": "AB2",
+        "nid": 111,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5667383,
+          26.8434354
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB3_0_114",
+        "loc": "AB3",
+        "nid": 114,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5641439,
+          26.8434291
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_066",
+        "loc": "AB1",
+        "nid": 66,
+        "node_type": "turn",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.564708,
+          26.843331
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB3_0_070",
+        "loc": "AB3",
+        "nid": 70,
+        "node_type": "turn",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5636539,
+          26.8432314
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB3_0_069",
+        "loc": "AB3",
+        "nid": 69,
+        "node_type": "turn",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5636173,
+          26.8431962
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_017",
+        "loc": "AB1",
+        "nid": 17,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5649143,
+          26.8431495
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_076",
+        "loc": "AB2",
+        "nid": 76,
+        "node_type": "entrance",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5658478,
+          26.8431347
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_064",
+        "loc": "AB1",
+        "nid": 64,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.564806,
+          26.8431112
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_109",
+        "loc": "AB2",
+        "nid": 109,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5670284,
+          26.8430891
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_083",
+        "loc": "AB2",
+        "nid": 83,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5670284,
+          26.8430891
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_103",
+        "loc": "AB2",
+        "nid": 103,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5669647,
+          26.8430673
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_EAT_0_043",
+        "loc": "EAT",
+        "nid": 43,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5656364,
+          26.8430643
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_EAT_0_102",
+        "loc": "EAT",
+        "nid": 102,
+        "node_type": "turn",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5654619,
+          26.8430568
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_110",
+        "loc": "AB2",
+        "nid": 110,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5668195,
+          26.8430177
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_010",
+        "loc": "AB1",
+        "nid": 10,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5635858,
+          26.8430292
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_EAT_0_074",
+        "loc": "EAT",
+        "nid": 74,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5654855,
+          26.8430109
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_EAT_0_101",
+        "loc": "EAT",
+        "nid": 101,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5653181,
+          26.8430048
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_065",
+        "loc": "AB1",
+        "nid": 65,
+        "node_type": "turn",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5637866,
+          26.8430056
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_EAT_0_100",
+        "loc": "EAT",
+        "nid": 100,
+        "node_type": "turn",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5655055,
+          26.8429691
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_EAT_0_097",
+        "loc": "EAT",
+        "nid": 97,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5651742,
+          26.8429529
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_049",
+        "loc": "AB1",
+        "nid": 49,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5636886,
+          26.8429326
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_EAT_0_098",
+        "loc": "EAT",
+        "nid": 98,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5653568,
+          26.8429172
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_EAT_0_075",
+        "loc": "EAT",
+        "nid": 75,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5651937,
+          26.8429148
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_106",
+        "loc": "AB2",
+        "nid": 106,
+        "node_type": "turn",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5670371,
+          26.8429022
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_084",
+        "loc": "AB2",
+        "nid": 84,
+        "node_type": "turn",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5671197,
+          26.8428876
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_EAT_0_099",
+        "loc": "EAT",
+        "nid": 99,
+        "node_type": "turn",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5652208,
+          26.8428697
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_EAT_0_016",
+        "loc": "EAT",
+        "nid": 16,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5650408,
+          26.8428629
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_067",
+        "loc": "AB1",
+        "nid": 67,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5649503,
+          26.8427878
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_063",
+        "loc": "AB1",
+        "nid": 63,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5638966,
+          26.8427592
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_077",
+        "loc": "AB2",
+        "nid": 77,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5660278,
+          26.8427402
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_050",
+        "loc": "AB1",
+        "nid": 50,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5637823,
+          26.8427205
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_009",
+        "loc": "AB1",
+        "nid": 9,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5637343,
+          26.8427049
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_105",
+        "loc": "AB2",
+        "nid": 105,
+        "node_type": "turn",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5663946,
+          26.8426752
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_042",
+        "loc": "AB2",
+        "nid": 42,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5658164,
+          26.8426602
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_LIB_0_116",
+        "loc": "LIB",
+        "nid": 116,
+        "node_type": "turn",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5664796,
+          26.8426534
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_EAT_0_073",
+        "loc": "EAT",
+        "nid": 73,
+        "node_type": "turn",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5646358,
+          26.8426572
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_EAT_0_072",
+        "loc": "EAT",
+        "nid": 72,
+        "node_type": "turn",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5643112,
+          26.8426291
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_LIB_0_038",
+        "loc": "LIB",
+        "nid": 38,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.566387,
+          26.8425822
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_041",
+        "loc": "AB2",
+        "nid": 41,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5658701,
+          26.8425429
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_015",
+        "loc": "AB1",
+        "nid": 15,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5651831,
+          26.8425409
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_068",
+        "loc": "AB1",
+        "nid": 68,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5650773,
+          26.8425028
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_104",
+        "loc": "AB2",
+        "nid": 104,
+        "node_type": "turn",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.566226,
+          26.8424875
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_071",
+        "loc": "AB1",
+        "nid": 71,
+        "node_type": "turn",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5642485,
+          26.8424776
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_LIB_0_091",
+        "loc": "LIB",
+        "nid": 91,
+        "node_type": "entrance",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5665828,
+          26.8424552
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_LIB_0_039",
+        "loc": "LIB",
+        "nid": 39,
+        "node_type": "turn",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5662544,
+          26.8424378
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_LIB_0_090",
+        "loc": "LIB",
+        "nid": 90,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.56646,
+          26.8424103
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_062",
+        "loc": "AB1",
+        "nid": 62,
+        "node_type": "entrance",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.56405,
+          26.8424154
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB2_0_040",
+        "loc": "AB2",
+        "nid": 40,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5659403,
+          26.8423897
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_051",
+        "loc": "AB1",
+        "nid": 51,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5639333,
+          26.8423786
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_008",
+        "loc": "AB1",
+        "nid": 8,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5638902,
+          26.8423644
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_ADM_0_037",
+        "loc": "ADM",
+        "nid": 37,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5659691,
+          26.8423267
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_014",
+        "loc": "AB1",
+        "nid": 14,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5652808,
+          26.8423197
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_ADM_0_036",
+        "loc": "ADM",
+        "nid": 36,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5658527,
+          26.8422854
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_ADM_0_032",
+        "loc": "ADM",
+        "nid": 32,
+        "node_type": "turn",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5663358,
+          26.8422829
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_058",
+        "loc": "AB1",
+        "nid": 58,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5651767,
+          26.84228
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_LIB_0_028",
+        "loc": "LIB",
+        "nid": 28,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.566526,
+          26.842255
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_013",
+        "loc": "AB1",
+        "nid": 13,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5653425,
+          26.8421798
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_061",
+        "loc": "AB1",
+        "nid": 61,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5641571,
+          26.8421753
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_ADM_0_035",
+        "loc": "ADM",
+        "nid": 35,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5654809,
+          26.8421534
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_007",
+        "loc": "AB1",
+        "nid": 7,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5639892,
+          26.8421482
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_057",
+        "loc": "AB1",
+        "nid": 57,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5652396,
+          26.8421425
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_ADM_0_031",
+        "loc": "ADM",
+        "nid": 31,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5659195,
+          26.8421374
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_052",
+        "loc": "AB1",
+        "nid": 52,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5640405,
+          26.8421357
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_059",
+        "loc": "AB1",
+        "nid": 59,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5647471,
+          26.8421262
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_006",
+        "loc": "AB1",
+        "nid": 6,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.564001,
+          26.8421223
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_ADM_0_012",
+        "loc": "ADM",
+        "nid": 12,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5653714,
+          26.8421145
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_GATE_0_094",
+        "loc": "GATE",
+        "nid": 94,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5638587,
+          26.8421006
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_005",
+        "loc": "AB1",
+        "nid": 5,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5640494,
+          26.8420165
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_ADM_0_096",
+        "loc": "ADM",
+        "nid": 96,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5655462,
+          26.8420095
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_056",
+        "loc": "AB1",
+        "nid": 56,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.564808,
+          26.8419862
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_GATE_0_093",
+        "loc": "GATE",
+        "nid": 93,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5639395,
+          26.8419744
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_060",
+        "loc": "AB1",
+        "nid": 60,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5642552,
+          26.84195
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_ADM_0_034",
+        "loc": "ADM",
+        "nid": 34,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5648345,
+          26.8419252
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_ADM_0_025",
+        "loc": "ADM",
+        "nid": 25,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5658142,
+          26.8419064
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_ADM_0_029",
+        "loc": "ADM",
+        "nid": 29,
+        "node_type": "turn",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5660348,
+          26.8419028
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_053",
+        "loc": "AB1",
+        "nid": 53,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5641406,
+          26.841909
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_004",
+        "loc": "AB1",
+        "nid": 4,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5641046,
+          26.8418961
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_055",
+        "loc": "AB1",
+        "nid": 55,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5643168,
+          26.8418083
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_ADM_0_030",
+        "loc": "ADM",
+        "nid": 30,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5648976,
+          26.8417801
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_ADM_0_027",
+        "loc": "ADM",
+        "nid": 27,
+        "node_type": "turn",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5656623,
+          26.8417712
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_054",
+        "loc": "AB1",
+        "nid": 54,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5642033,
+          26.8417672
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_ADM_0_024",
+        "loc": "ADM",
+        "nid": 24,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5648071,
+          26.8417484
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_033",
+        "loc": "AB1",
+        "nid": 33,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.564228,
+          26.8417112
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_ADM_0_026",
+        "loc": "ADM",
+        "nid": 26,
+        "node_type": "turn",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5649715,
+          26.8417039
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_AB1_0_003",
+        "loc": "AB1",
+        "nid": 3,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5641946,
+          26.8416995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_ADM_0_092",
+        "loc": "ADM",
+        "nid": 92,
+        "node_type": "entrance",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.565927,
+          26.8416371
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_GATE_0_002",
+        "loc": "GATE",
+        "nid": 2,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5642274,
+          26.8416279
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_GATE_0_095",
+        "loc": "GATE",
+        "nid": 95,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5641703,
+          26.8416074
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_GATE_0_001",
+        "loc": "GATE",
+        "nid": 1,
+        "node_type": "junction",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5642576,
+          26.8415617
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_LHC_0_117",
+        "loc": "LHC",
+        "nid": 117,
+        "node_type": "entrance",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5648508,
+          26.8440675
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "node_id": "OUT_EAT_0_118",
+        "loc": "EAT",
+        "nid": 118,
+        "node_type": "entrance",
+        "floor_id": "0",
+        "is_accessible": true
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5653374,
+          26.842961
+        ]
+      }
+    }
+  ]
+}

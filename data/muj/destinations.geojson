@@ -1,0 +1,118 @@
+{
+  "type": "FeatureCollection",
+  "name": "destinations",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "DEST_01",
+        "name": "Dome Building",
+        "type": "destination",
+        "routing_node_id": "OUT_ADM_0_092"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.565927,
+          26.8416371
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "DEST_02",
+        "name": "Library",
+        "type": "destination",
+        "routing_node_id": "OUT_LIB_0_091"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5665828,
+          26.8424552
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "DEST_03",
+        "name": "Academic Building 1",
+        "type": "destination",
+        "routing_node_id": "OUT_AB1_0_062"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.56405,
+          26.8424154
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "DEST_04",
+        "name": "Old Mess",
+        "type": "destination",
+        "routing_node_id": "OUT_EAT_0_118"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5653374,
+          26.842961
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "DEST_05",
+        "name": "Academic Building 2",
+        "type": "destination",
+        "routing_node_id": "OUT_AB2_0_076"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5658478,
+          26.8431347
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "DEST_06",
+        "name": "LHC",
+        "type": "destination",
+        "routing_node_id": "OUT_LHC_0_117"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5648508,
+          26.8440675
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "DEST_07",
+        "name": "Academic Building 3",
+        "type": "destination",
+        "routing_node_id": "OUT_AB3_0_088"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.564238,
+          26.8441271
+        ]
+      }
+    }
+  ]
+}
