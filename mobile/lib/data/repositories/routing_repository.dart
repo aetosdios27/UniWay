@@ -89,13 +89,26 @@ class RoutingRepository {
 
   Future<RoutingResult> getRoute({
     required String campusId,
-    required Destination origin,
+    Destination? origin,
+    double? fromLng,
+    double? fromLat,
     required Destination destination,
     bool accessible = false,
   }) async {
+    final startLng = fromLng ?? origin?.longitude;
+    final startLat = fromLat ?? origin?.latitude;
+
+    if (startLng == null || startLat == null) {
+      return const RoutingResult(
+        errorMessage: 'Origin location coordinates missing',
+        statusCode: 400,
+        latencyMs: 0,
+      );
+    }
+
     final queryParams = {
-      'fromLng': origin.longitude.toString(),
-      'fromLat': origin.latitude.toString(),
+      'fromLng': startLng.toString(),
+      'fromLat': startLat.toString(),
       'toNodeId': destination.routingNodeId,
       'floor': '0',
       if (accessible) 'accessible': 'true',

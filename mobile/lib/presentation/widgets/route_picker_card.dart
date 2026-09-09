@@ -5,6 +5,15 @@ import '../controllers/routing_controller.dart';
 class RoutePickerCard extends StatelessWidget {
   final RoutingController controller;
 
+  static const yourLocation = Destination(
+    id: 'YOUR_LOCATION',
+    routingNodeId: 'GPS',
+    name: 'Your Location',
+    category: 'gps',
+    latitude: 0,
+    longitude: 0,
+  );
+
   const RoutePickerCard({
     super.key,
     required this.controller,
@@ -16,103 +25,62 @@ class RoutePickerCard extends StatelessWidget {
     final destinations = controller.destinations;
     final hasRoute = controller.currentRoute != null;
 
+    final canSwap = controller.origin != null &&
+        controller.destination != null &&
+        controller.origin!.id != controller.destination!.id;
+
+    final isSameLocation = controller.origin != null &&
+        controller.destination != null &&
+        controller.origin!.id == controller.destination!.id;
+
     return Card(
-      elevation: 6,
+      elevation: 4,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(14),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (controller.isLoadingDestinations) ...[
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 4),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 14,
-                      height: 14,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      'Loading campus destinations...',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 8),
-            ] else if (controller.destinationsError != null) ...[
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                margin: const EdgeInsets.only(bottom: 8),
-                decoration: BoxDecoration(
-                  color: Colors.red.shade50,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.red.shade200),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.error_outline, size: 16, color: Colors.red.shade700),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        controller.destinationsError!,
-                        style: TextStyle(fontSize: 11, color: Colors.red.shade800),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: controller.loadDestinations,
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 6),
-                        visualDensity: VisualDensity.compact,
-                      ),
-                      child: const Text('Retry', style: TextStyle(fontSize: 11)),
-                    ),
-                  ],
-                ),
-              ),
-            ],
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
                   child: Column(
                     children: [
-                      _buildDestinationDropdown(
-                        context: context,
-                        label: 'From (Origin)',
-                        icon: Icons.my_location,
-                        iconColor: Colors.blue,
-                        value: controller.origin,
-                        items: destinations,
-                        onChanged: controller.setOrigin,
-                      ),
-                      const SizedBox(height: 12),
-                      _buildDestinationDropdown(
-                        context: context,
-                        label: 'To (Destination)',
-                        icon: Icons.location_on,
-                        iconColor: Colors.red,
-                        value: controller.destination,
-                        items: destinations,
-                        onChanged: controller.setDestination,
-                      ),
+                      _buildFromDropdown(context, destinations),
+                      const SizedBox(height: 10),
+                      _buildToDropdown(context, destinations),
                     ],
                   ),
                 ),
                 const SizedBox(width: 8),
                 IconButton.filledTonal(
-                  icon: const Icon(Icons.swap_vert),
-                  tooltip: 'Swap From & To',
-                  onPressed: controller.canGo ? controller.swap : null,
+                  icon: const Icon(Icons.swap_vert, size: 22),
+                  tooltip: 'Swap locations',
+                  onPressed: canSwap ? controller.swap : null,
+                  style: IconButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                 ),
               ],
             ),
+            if (isSameLocation)
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Text(
+                  'Start and destination must be different',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.orange.shade800,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
             if (hasRoute) ...[
               const SizedBox(height: 10),
               Container(
@@ -141,34 +109,43 @@ class RoutePickerCard extends StatelessWidget {
             ],
             const SizedBox(height: 12),
             SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: controller.isLoading
-                  ? const Center(
-                      child: SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(strokeWidth: 2.5),
+              height: 46,
+              child: (controller.isLoading || controller.isLocating)
+                  ? Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2.2),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            controller.isLocating ? 'Acquiring GPS...' : 'Routing...',
+                            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                          ),
+                        ],
                       ),
                     )
                   : hasRoute
                       ? FilledButton.tonalIcon(
                           onPressed: controller.clearRoute,
-                          icon: const Icon(Icons.close),
-                          label: const Text('Clear Route'),
+                          icon: const Icon(Icons.close, size: 18),
+                          label: const Text('Clear'),
                           style: FilledButton.styleFrom(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(10),
                             ),
                           ),
                         )
                       : FilledButton.icon(
                           onPressed: controller.canGo ? controller.fetchRoute : null,
-                          icon: const Icon(Icons.directions_walk),
-                          label: const Text('Go'),
+                          icon: const Icon(Icons.directions_walk, size: 18),
+                          label: const Text('Navigate'),
                           style: FilledButton.styleFrom(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(10),
                             ),
                           ),
                         ),
@@ -179,42 +156,115 @@ class RoutePickerCard extends StatelessWidget {
     );
   }
 
-  Widget _buildDestinationDropdown({
-    required BuildContext context,
-    required String label,
-    required IconData icon,
-    required Color iconColor,
-    required Destination? value,
-    required List<Destination> items,
-    required ValueChanged<Destination?> onChanged,
-  }) {
-    final effectiveValue = items.contains(value) ? value : null;
+  Widget _buildFromDropdown(BuildContext context, List<Destination> destinations) {
+    final fromOptions = [
+      yourLocation,
+      ...destinations,
+    ];
+
+    final isGps = controller.isGpsOrigin;
+    final selectedFrom = isGps
+        ? yourLocation
+        : destinations.firstWhere(
+            (d) => d.id == controller.origin?.id,
+            orElse: () => yourLocation,
+          );
 
     return DropdownButtonFormField<Destination>(
-      initialValue: effectiveValue,
+      initialValue: selectedFrom,
       decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: Icon(icon, color: iconColor, size: 20),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        labelText: 'From',
+        prefixIcon: Icon(
+          isGps ? Icons.my_location : Icons.place_outlined,
+          color: isGps ? Colors.blue.shade700 : Colors.indigo.shade600,
+          size: 20,
+        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         isDense: true,
       ),
       isExpanded: true,
-      hint: Text(
-        items.isEmpty ? 'No destinations' : 'Select $label',
-        style: const TextStyle(fontSize: 14),
-      ),
-      items: items.map((dest) {
+      items: fromOptions.map((dest) {
+        final isItemGps = dest.id == yourLocation.id;
         return DropdownMenuItem<Destination>(
           value: dest,
-          child: Text(
-            dest.name,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 14),
+          child: Row(
+            children: [
+              Icon(
+                isItemGps ? Icons.my_location : Icons.place_outlined,
+                color: isItemGps ? Colors.blue.shade700 : Colors.grey.shade700,
+                size: 16,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  dest.name,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: isItemGps ? FontWeight.w600 : FontWeight.normal,
+                    color: isItemGps ? Colors.blue.shade900 : null,
+                  ),
+                ),
+              ),
+              if (isItemGps && controller.userLatitude != null)
+                Text(
+                  'GPS',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue.shade700,
+                  ),
+                ),
+            ],
           ),
         );
       }).toList(),
-      onChanged: items.isEmpty ? null : onChanged,
+      onChanged: (selected) {
+        if (selected == null || selected.id == yourLocation.id) {
+          controller.setOrigin(null);
+        } else {
+          controller.setOrigin(selected);
+        }
+      },
+    );
+  }
+
+  Widget _buildToDropdown(BuildContext context, List<Destination> destinations) {
+    final effectiveValue = destinations.contains(controller.destination)
+        ? controller.destination
+        : null;
+
+    return DropdownButtonFormField<Destination>(
+      initialValue: effectiveValue,
+      decoration: InputDecoration(
+        labelText: 'To',
+        prefixIcon: Icon(Icons.place, color: Colors.blue.shade700, size: 20),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        isDense: true,
+      ),
+      isExpanded: true,
+      hint: const Text('Select destination', style: TextStyle(fontSize: 14)),
+      items: destinations.map((dest) {
+        return DropdownMenuItem<Destination>(
+          value: dest,
+          child: Row(
+            children: [
+              Icon(Icons.place_outlined, color: Colors.grey.shade700, size: 16),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  dest.name,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+      onChanged: controller.setDestination,
     );
   }
 }

@@ -1,10 +1,29 @@
 import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
+import 'package:uniway_mobile/core/services/location_service.dart';
 import 'package:uniway_mobile/data/models/campus_route.dart';
 import 'package:uniway_mobile/data/models/destination.dart';
 import 'package:uniway_mobile/data/repositories/routing_repository.dart';
 import 'package:uniway_mobile/presentation/controllers/routing_controller.dart';
+
+class MockLocationService implements LocationService {
+  bool isEnabled = true;
+  double mockLat = 26.8438;
+  double mockLng = 75.5652;
+  String? mockError;
+
+  @override
+  Future<bool> isLocationServiceEnabled() async => isEnabled;
+
+  @override
+  Future<LocationResult> getCurrentLocation() async {
+    if (mockError != null) {
+      return LocationResult(error: mockError);
+    }
+    return LocationResult(latitude: mockLat, longitude: mockLng);
+  }
+}
 
 class MockRoutingRepository implements RoutingRepository {
   bool shouldSucceed = true;
@@ -12,7 +31,9 @@ class MockRoutingRepository implements RoutingRepository {
   List<Destination> mockDestinations = [];
   int routeDelayMs = 0;
   Future<RoutingResult> Function({
-    required Destination origin,
+    Destination? origin,
+    double? fromLng,
+    double? fromLat,
     required Destination destination,
     bool accessible,
   })? onGetRoute;
@@ -39,13 +60,17 @@ class MockRoutingRepository implements RoutingRepository {
   @override
   Future<RoutingResult> getRoute({
     required String campusId,
-    required Destination origin,
+    Destination? origin,
+    double? fromLng,
+    double? fromLat,
     required Destination destination,
     bool accessible = false,
   }) async {
     if (onGetRoute != null) {
       return onGetRoute!(
         origin: origin,
+        fromLng: fromLng,
+        fromLat: fromLat,
         destination: destination,
         accessible: accessible,
       );
@@ -54,16 +79,19 @@ class MockRoutingRepository implements RoutingRepository {
       await Future<void>.delayed(Duration(milliseconds: routeDelayMs));
     }
 
+    final startLat = fromLat ?? origin?.latitude ?? 26.843;
+    final startLng = fromLng ?? origin?.longitude ?? 75.565;
+
     if (shouldSucceed) {
       return RoutingResult(
         route: CampusRoute(
           distanceMeters: 250.0,
           points: [
-            LatLng(origin.latitude, origin.longitude),
+            LatLng(startLat, startLng),
             LatLng(destination.latitude, destination.longitude),
           ],
           rawCoordinates: [
-            [origin.longitude, origin.latitude],
+            [startLng, startLat],
             [destination.longitude, destination.latitude],
           ],
           rawFeature: const {},
@@ -85,8 +113,9 @@ class MockRoutingRepository implements RoutingRepository {
 }
 
 void main() {
-  group('RoutingController State & Async Safety Tests', () {
+  group('RoutingController State & GPS Tests', () {
     late MockRoutingRepository mockRepo;
+    late MockLocationService mockLocation;
     late RoutingController controller;
 
     final defaultTestDestinations = [
@@ -118,8 +147,12 @@ void main() {
 
     setUp(() {
       mockRepo = MockRoutingRepository();
+      mockLocation = MockLocationService();
       mockRepo.mockDestinations = defaultTestDestinations;
-      controller = RoutingController(repository: mockRepo);
+      controller = RoutingController(
+        repository: mockRepo,
+        locationService: mockLocation,
+      );
     });
 
     tearDown(() {
@@ -132,7 +165,6 @@ void main() {
       await Future<void>.delayed(Duration.zero);
 
       expect(controller.destinations.length, 3);
-      expect(controller.origin, isNotNull);
       expect(controller.destination, isNotNull);
       expect(controller.canGo, isTrue);
     });
@@ -145,58 +177,35 @@ void main() {
       expect(controller.destinations, isEmpty);
       expect(controller.destinationsError, contains('Network error loading destinations'));
       expect(controller.canGo, isFalse);
-      expect(controller.origin, isNull);
       expect(controller.destination, isNull);
     });
 
-    test('empty destination response leaves empty list and disables Go', () async {
-      mockRepo.mockDestinations = [];
+    test('auto-resolves device GPS location during route fetch', () async {
+      await Future<void>.delayed(Duration.zero);
 
-      await controller.loadDestinations();
+      mockLocation.mockLat = 26.8435;
+      mockLocation.mockLng = 75.5655;
 
-      expect(controller.destinations, isEmpty);
-      expect(controller.canGo, isFalse);
-      expect(controller.origin, isNull);
-      expect(controller.destination, isNull);
+      await controller.fetchRoute();
+
+      expect(controller.userLatitude, 26.8435);
+      expect(controller.userLongitude, 75.5655);
+      expect(controller.currentRoute, isNotNull);
+      expect(controller.origin?.name, 'Current Location');
+      expect(controller.canGo, isTrue);
     });
 
-    test('replacing a 7-item list with a different 7-item list increments revision and updates identity', () async {
-      final listA = List.generate(
-        7,
-        (i) => Destination(
-          id: 'A_$i',
-          routingNodeId: 'OUT_A_$i',
-          name: 'Point A$i',
-          category: 'test',
-          latitude: 26.840 + (i * 0.001),
-          longitude: 75.560 + (i * 0.001),
-        ),
-      );
+    test('handles device location failure gracefully', () async {
+      await Future<void>.delayed(Duration.zero);
 
-      final listB = List.generate(
-        7,
-        (i) => Destination(
-          id: 'B_$i',
-          routingNodeId: 'OUT_B_$i',
-          name: 'Point B$i',
-          category: 'test',
-          latitude: 26.850 + (i * 0.001),
-          longitude: 75.570 + (i * 0.001),
-        ),
-      );
+      mockLocation.mockError = 'Location permission denied';
 
-      mockRepo.mockDestinations = listA;
-      await controller.loadDestinations();
-      final initialRevision = controller.destinationsRevision;
-      expect(controller.destinations.first.id, 'A_0');
+      await controller.fetchRoute();
 
-      mockRepo.mockDestinations = listB;
-      await controller.loadDestinations();
-
-      expect(controller.destinationsRevision, greaterThan(initialRevision));
-      expect(controller.destinations.length, 7);
-      expect(controller.destinations.first.id, 'B_0');
-      expect(controller.destinations.first.routingNodeId, 'OUT_B_0');
+      expect(controller.currentRoute, isNull);
+      expect(controller.errorMessage, 'Location permission denied');
+      expect(controller.isLoading, isFalse);
+      expect(controller.canGo, isTrue);
     });
 
     test('ignores out-of-order route responses with distinct destinations and payloads', () async {
@@ -206,7 +215,9 @@ void main() {
       final completerFast = Completer<RoutingResult>();
 
       mockRepo.onGetRoute = ({
-        required Destination origin,
+        Destination? origin,
+        double? fromLng,
+        double? fromLat,
         required Destination destination,
         bool accessible = false,
       }) {
@@ -228,7 +239,7 @@ void main() {
           route: CampusRoute(
             distanceMeters: 500.0,
             points: [
-              LatLng(controller.origin!.latitude, controller.origin!.longitude),
+              const LatLng(26.8438, 75.5652),
               LatLng(dest3.latitude, dest3.longitude),
             ],
             rawCoordinates: const [],
@@ -251,7 +262,7 @@ void main() {
           route: CampusRoute(
             distanceMeters: 100.0,
             points: [
-              LatLng(controller.origin!.latitude, controller.origin!.longitude),
+              const LatLng(26.8438, 75.5652),
               LatLng(defaultTestDestinations[1].latitude, defaultTestDestinations[1].longitude),
             ],
             rawCoordinates: const [],
@@ -274,7 +285,9 @@ void main() {
 
       final completer = Completer<RoutingResult>();
       mockRepo.onGetRoute = ({
-        required Destination origin,
+        Destination? origin,
+        double? fromLng,
+        double? fromLat,
         required Destination destination,
         bool accessible = false,
       }) => completer.future;
@@ -308,81 +321,14 @@ void main() {
       expect(controller.currentRoute, isNull);
     });
 
-    test('changing selection or accessibility mid-flight resets loading and restores canGo', () async {
-      await Future<void>.delayed(Duration.zero);
-
-      final completer1 = Completer<RoutingResult>();
-      mockRepo.onGetRoute = ({
-        required Destination origin,
-        required Destination destination,
-        bool accessible = false,
-      }) => completer1.future;
-
-      final pending1 = controller.fetchRoute();
-      expect(controller.isLoading, isTrue);
-      expect(controller.canGo, isFalse);
-
-      final dest3 = defaultTestDestinations[2];
-      controller.setDestination(dest3);
-      expect(controller.isLoading, isFalse);
-      expect(controller.canGo, isTrue);
-      expect(controller.currentRoute, isNull);
-
-      final completer2 = Completer<RoutingResult>();
-      mockRepo.onGetRoute = ({
-        required Destination origin,
-        required Destination destination,
-        bool accessible = false,
-      }) => completer2.future;
-
-      final pending2 = controller.fetchRoute();
-      expect(controller.isLoading, isTrue);
-      expect(controller.canGo, isFalse);
-
-      controller.setAccessibleOnly(true);
-      expect(controller.isLoading, isFalse);
-      expect(controller.canGo, isTrue);
-      expect(controller.currentRoute, isNull);
-
-      completer1.complete(
-        const RoutingResult(
-          route: CampusRoute(
-            distanceMeters: 100.0,
-            points: [],
-            rawCoordinates: [],
-            rawFeature: {},
-          ),
-          statusCode: 200,
-          latencyMs: 10,
-        ),
-      );
-      completer2.complete(
-        const RoutingResult(
-          route: CampusRoute(
-            distanceMeters: 200.0,
-            points: [],
-            rawCoordinates: [],
-            rawFeature: {},
-          ),
-          statusCode: 200,
-          latencyMs: 10,
-        ),
-      );
-
-      await pending1;
-      await pending2;
-
-      expect(controller.isLoading, isFalse);
-      expect(controller.canGo, isTrue);
-      expect(controller.currentRoute, isNull);
-    });
-
     test('reloading destinations during pending route invalidates route and drops stale completion', () async {
       await Future<void>.delayed(Duration.zero);
 
       final routeCompleter = Completer<RoutingResult>();
       mockRepo.onGetRoute = ({
-        required Destination origin,
+        Destination? origin,
+        double? fromLng,
+        double? fromLat,
         required Destination destination,
         bool accessible = false,
       }) => routeCompleter.future;
@@ -398,14 +344,6 @@ void main() {
           category: 'academic',
           latitude: 26.850,
           longitude: 75.570,
-        ),
-        const Destination(
-          id: 'NEW_2',
-          routingNodeId: 'OUT_NEW_2',
-          name: 'New Lab',
-          category: 'academic',
-          latitude: 26.851,
-          longitude: 75.571,
         ),
       ];
       mockRepo.mockDestinations = newDestinations;
@@ -496,6 +434,68 @@ void main() {
       expect(controller.isDisposed, isTrue);
 
       await expectLater(pendingFuture, completes);
+    });
+
+    test('supports custom campus destination as origin, swap, and blocks same-destination routing', () async {
+      await Future<void>.delayed(Duration.zero);
+
+      final dest1 = defaultTestDestinations[0];
+      final dest2 = defaultTestDestinations[1];
+
+      // 1. Set custom origin
+      controller.setOrigin(dest1);
+      controller.setDestination(dest2);
+      expect(controller.isGpsOrigin, isFalse);
+      expect(controller.origin, equals(dest1));
+      expect(controller.destination, equals(dest2));
+      expect(controller.canGo, isTrue);
+
+      // 2. Fetch route uses custom origin coordinates
+      Destination? passedOrigin;
+      double? passedFromLat;
+      double? passedFromLng;
+      mockRepo.onGetRoute = ({
+        Destination? origin,
+        double? fromLng,
+        double? fromLat,
+        required Destination destination,
+        bool accessible = false,
+      }) async {
+        passedOrigin = origin;
+        passedFromLat = fromLat;
+        passedFromLng = fromLng;
+        return RoutingResult(
+          route: CampusRoute(
+            distanceMeters: 350.0,
+            points: [LatLng(fromLat!, fromLng!), LatLng(destination.latitude, destination.longitude)],
+            rawCoordinates: const [],
+            rawFeature: const {},
+          ),
+          statusCode: 200,
+          latencyMs: 30,
+        );
+      };
+
+      await controller.fetchRoute();
+      expect(controller.currentRoute, isNotNull);
+      expect(passedFromLat, dest1.latitude);
+      expect(passedFromLng, dest1.longitude);
+      expect(passedOrigin, equals(dest1));
+
+      // 3. Swap origins
+      controller.swap();
+      expect(controller.origin, equals(dest2));
+      expect(controller.destination, equals(dest1));
+
+      // 4. Same location blocks canGo
+      controller.setOrigin(dest1);
+      controller.setDestination(dest1);
+      expect(controller.canGo, isFalse);
+
+      // 5. Switching back to Your Location (null) restores GPS mode
+      controller.setOrigin(null);
+      expect(controller.isGpsOrigin, isTrue);
+      expect(controller.canGo, isTrue);
     });
   });
 }

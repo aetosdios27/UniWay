@@ -71,7 +71,9 @@ class TestRoutingRepo implements RoutingRepository {
   @override
   Future<RoutingResult> getRoute({
     required String campusId,
-    required Destination origin,
+    Destination? origin,
+    double? fromLng,
+    double? fromLat,
     required Destination destination,
     bool accessible = false,
   }) async {

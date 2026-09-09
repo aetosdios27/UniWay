@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import '../../core/constants/map_constants.dart';
+import '../../core/services/location_service.dart';
 import '../../data/models/campus_route.dart';
 import '../../data/models/destination.dart';
 import '../controllers/routing_controller.dart';
@@ -254,6 +255,33 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
+  void _recenterUser() async {
+    if (_controller.userLatitude != null && _controller.userLongitude != null) {
+      _mapController?.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(_controller.userLatitude!, _controller.userLongitude!),
+            zoom: 17.5,
+          ),
+        ),
+      );
+    } else {
+      final loc = await LocationService().getCurrentLocation();
+      if (_disposed || !mounted) return;
+      if (loc.isSuccess && loc.latitude != null && loc.longitude != null) {
+        _controller.setUserLocation(loc.latitude!, loc.longitude!);
+        _mapController?.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: LatLng(loc.latitude!, loc.longitude!),
+              zoom: 17.5,
+            ),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -276,7 +304,7 @@ class _MapScreenState extends State<MapScreen> {
                   ),
                   onMapCreated: _onMapCreated,
                   onStyleLoadedCallback: _onStyleLoaded,
-                  myLocationEnabled: false,
+                  myLocationEnabled: true,
                   trackCameraPosition: true,
                   compassEnabled: true,
                 ),
@@ -295,6 +323,15 @@ class _MapScreenState extends State<MapScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    FloatingActionButton.small(
+                      heroTag: 'recenterUser',
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.blue.shade800,
+                      onPressed: _recenterUser,
+                      tooltip: 'My Location',
+                      child: const Icon(Icons.my_location),
+                    ),
+                    const SizedBox(height: 8),
                     FloatingActionButton.small(
                       heroTag: 'recenterMuj',
                       backgroundColor: Colors.white,
