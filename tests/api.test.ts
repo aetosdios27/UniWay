@@ -268,6 +268,22 @@ describe("API Routes", () => {
   });
 
   describe("GET /api/campus/[id]/nearby", () => {
+    it.each(["pois", "rooms"])("paginates %s without changing the total", async (type) => {
+      const items = Array.from({ length: 3 }, (_, i) => ({
+        id: `123e4567-e89b-12d3-a456-42661417400${i}`,
+        room_id: TEST_ROOM_ID, building_id: TEST_ROOM_ID, name: `Place ${i}`,
+        category: "lab", tags: [], floor: "0", geom: mockPolygon, centroid: mockPoint,
+      }));
+      mockSql.mockResolvedValueOnce(items);
+      const response = await getNearby(req(`http://localhost/api/campus/campus-1/nearby?lat=40.74&lng=-73.98&type=${type}&offset=1&limit=1`), params("campus-1"));
+      const json = await response.json();
+      expect(json.data.map((p: { name: string }) => p.name)).toEqual(["Place 1"]);
+      expect(json.pagination).toEqual({ offset: 1, limit: 1, total: 3 });
+      mockSql.mockResolvedValueOnce(items);
+      const beyond = await getNearby(req(`http://localhost/api/campus/campus-1/nearby?lat=40.74&lng=-73.98&type=${type}&offset=9&limit=1`), params("campus-1"));
+      expect((await beyond.json()).data).toEqual([]);
+    });
+
     it("returns 400 if missing lat/lng", async () => {
       const response = await getNearby(req(), params("campus-1"));
       expect(response.status).toBe(400);

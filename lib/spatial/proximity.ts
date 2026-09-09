@@ -30,7 +30,7 @@ export async function findRoomsWithinRadius(
             ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)::geography,
             ${maxRadiusMeters}
           )
-        ORDER BY r.centroid <-> ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)
+        ORDER BY r.centroid <-> ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326), r.id
       `
     : await sql`
         SELECT
@@ -48,7 +48,7 @@ export async function findRoomsWithinRadius(
             ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)::geography,
             ${maxRadiusMeters}
           )
-        ORDER BY r.centroid <-> ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)
+        ORDER BY r.centroid <-> ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326), r.id
       `;
 
   return z.array(RoomSchema).parse(result);
@@ -76,7 +76,7 @@ export async function findPoisWithinRadius(
             ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)::geography,
             ${maxRadiusMeters}
           )
-        ORDER BY r.centroid <-> ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)
+        ORDER BY r.centroid <-> ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326), p.id
       `
     : await sql`
         SELECT p.*
@@ -89,7 +89,7 @@ export async function findPoisWithinRadius(
             ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)::geography,
             ${maxRadiusMeters}
           )
-        ORDER BY r.centroid <-> ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)
+        ORDER BY r.centroid <-> ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326), p.id
       `;
 
   return z.array(POISchema).parse(result);

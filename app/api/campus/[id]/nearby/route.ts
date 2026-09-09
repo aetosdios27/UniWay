@@ -15,6 +15,19 @@ const NearbyQuerySchema = z.object({
   category: z.string().max(50).optional(),
 });
 
+async function nearbyResponse(campusId: string, query: z.infer<typeof NearbyQuerySchema>, searchParams: URLSearchParams) {
+  const { lat, lng, radius, type, floor, category } = query;
+  const pagination = parsePagination(searchParams, 20, 100);
+  const { offset, limit } = pagination;
+  // ponytail: slice campus-sized results in memory; move pagination into SQL if result sets grow.
+  if (type === "rooms") {
+    const rooms = await findRoomsWithinRadius(lng, lat, campusId, radius, floor);
+    return paginatedResponse(rooms.slice(offset, offset + limit), rooms.length, pagination);
+  }
+  const pois = await findPoisWithinRadius(lng, lat, campusId, radius, category);
+  return paginatedResponse(pois.slice(offset, offset + limit), pois.length, pagination);
+}
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -26,14 +39,7 @@ export async function GET(
     const { id: campusId } = await params;
     const { searchParams } = new URL(request.url);
 
-    const parsed = NearbyQuerySchema.safeParse({
-      lat: searchParams.get("lat") ?? "",
-      lng: searchParams.get("lng") ?? "",
-      radius: searchParams.get("radius") ?? undefined,
-      type: searchParams.get("type") ?? undefined,
-      floor: searchParams.get("floor") ?? undefined,
-      category: searchParams.get("category") ?? undefined,
-    });
+    const parsed = NearbyQuerySchema.safeParse(Object.fromEntries(searchParams));
 
     if (!parsed.success) {
       return badRequest("Validation failed", formatZodError(parsed.error), undefined, request);
@@ -44,16 +50,7 @@ export async function GET(
       return notFound("Location is outside campus bounds", undefined, request);
     }
 
-    const { lat, lng, radius, type, floor, category } = parsed.data;
-    const pagination = parsePagination(searchParams, 20, 100);
-
-    if (type === "rooms") {
-      const rooms = await findRoomsWithinRadius(lng, lat, campusId, radius, floor);
-      return paginatedResponse(rooms, rooms.length, pagination);
-    }
-
-    const pois = await findPoisWithinRadius(lng, lat, campusId, radius, category);
-    return paginatedResponse(pois, pois.length, pagination);
+    return await nearbyResponse(campusId, parsed.data, searchParams);
   } catch (error) {
     return apiError(error, "Failed to fetch nearby places", request);
   }
