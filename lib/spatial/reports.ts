@@ -43,33 +43,34 @@ export async function fetchCampusReports(
   offset = 0,
   limit = 20
 ): Promise<{ reports: ObstructionReport[]; total: number }> {
-  const [countRow] = await sql`
-    SELECT COUNT(*) AS total
-    FROM obstruction_reports r
-    LEFT JOIN rooms ON r.room_id = rooms.id
-    LEFT JOIN buildings ON rooms.building_id = buildings.id
-    LEFT JOIN routing_edges e ON r.edge_id = e.id
-    LEFT JOIN rooms edge_room ON e.source_node_id = edge_room.id
-    LEFT JOIN buildings edge_building ON edge_room.building_id = edge_building.id
-    WHERE (buildings.campus_id = ${campusId} OR edge_building.campus_id = ${campusId})
-      AND r.status = ${status}
-  `;
+  const [[countRow], result] = await Promise.all([
+    sql`
+      SELECT COUNT(*) AS total
+      FROM obstruction_reports r
+      LEFT JOIN rooms ON r.room_id = rooms.id
+      LEFT JOIN buildings ON rooms.building_id = buildings.id
+      LEFT JOIN routing_edges e ON r.edge_id = e.id
+      LEFT JOIN rooms edge_room ON e.source_node_id = edge_room.id
+      LEFT JOIN buildings edge_building ON edge_room.building_id = edge_building.id
+      WHERE (buildings.campus_id = ${campusId} OR edge_building.campus_id = ${campusId})
+        AND r.status = ${status}
+    `,
+    sql`
+      SELECT r.id, r.room_id, r.edge_id, r.description, r.status, r.reported_at, r.resolved_at
+      FROM obstruction_reports r
+      LEFT JOIN rooms ON r.room_id = rooms.id
+      LEFT JOIN buildings ON rooms.building_id = buildings.id
+      LEFT JOIN routing_edges e ON r.edge_id = e.id
+      LEFT JOIN rooms edge_room ON e.source_node_id = edge_room.id
+      LEFT JOIN buildings edge_building ON edge_room.building_id = edge_building.id
+      WHERE (buildings.campus_id = ${campusId} OR edge_building.campus_id = ${campusId})
+        AND r.status = ${status}
+      ORDER BY r.reported_at DESC, r.id
+      LIMIT ${limit}
+      OFFSET ${offset}
+    `,
+  ]);
   const total = Number(countRow.total);
-
-  const result = await sql`
-    SELECT r.id, r.room_id, r.edge_id, r.description, r.status, r.reported_at, r.resolved_at
-    FROM obstruction_reports r
-    LEFT JOIN rooms ON r.room_id = rooms.id
-    LEFT JOIN buildings ON rooms.building_id = buildings.id
-    LEFT JOIN routing_edges e ON r.edge_id = e.id
-    LEFT JOIN rooms edge_room ON e.source_node_id = edge_room.id
-    LEFT JOIN buildings edge_building ON edge_room.building_id = edge_building.id
-    WHERE (buildings.campus_id = ${campusId} OR edge_building.campus_id = ${campusId})
-      AND r.status = ${status}
-    ORDER BY r.reported_at DESC, r.id
-    LIMIT ${limit}
-    OFFSET ${offset}
-  `;
 
   const reports = result.map((row: Record<string, unknown>) => ObstructionReportSchema.parse(row));
   return { reports, total };

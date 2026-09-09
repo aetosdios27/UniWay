@@ -18,23 +18,24 @@ export async function fetchRooms(
 ): Promise<{ rooms: RoomListItem[]; total: number }> {
   const buildingFilter = buildingId ? sql`AND r.building_id = ${buildingId}` : sql``;
 
-  const [countRow] = await sql`
-    SELECT COUNT(*) AS total
-    FROM rooms r
-    JOIN buildings b ON r.building_id = b.id
-    WHERE b.campus_id = ${campusId} ${buildingFilter}
-  `;
+  const [[countRow], rows] = await Promise.all([
+    sql`
+      SELECT COUNT(*) AS total
+      FROM rooms r
+      JOIN buildings b ON r.building_id = b.id
+      WHERE b.campus_id = ${campusId} ${buildingFilter}
+    `,
+    sql`
+      SELECT r.id, r.building_id, r.floor, r.name
+      FROM rooms r
+      JOIN buildings b ON r.building_id = b.id
+      WHERE b.campus_id = ${campusId} ${buildingFilter}
+      ORDER BY r.floor ASC, r.name ASC
+      LIMIT ${limit}
+      OFFSET ${offset}
+    `,
+  ]);
   const total = Number(countRow?.total ?? 0);
-
-  const rows = await sql`
-    SELECT r.id, r.building_id, r.floor, r.name
-    FROM rooms r
-    JOIN buildings b ON r.building_id = b.id
-    WHERE b.campus_id = ${campusId} ${buildingFilter}
-    ORDER BY r.floor ASC, r.name ASC
-    LIMIT ${limit}
-    OFFSET ${offset}
-  `;
 
   const rooms = rows.map((row: Record<string, unknown>) => RoomListItemSchema.parse(row));
   return { rooms, total };

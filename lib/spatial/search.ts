@@ -22,44 +22,45 @@ export async function searchPois(
     return searchPoisWithCategory(campusId, trimmedQuery, boundedLimit, offset, category);
   }
 
-  const [countRow] = await sql`
-    SELECT COUNT(*) AS total
-    FROM pois p
-    JOIN rooms r ON p.room_id = r.id
-    JOIN buildings b ON r.building_id = b.id
-    WHERE b.campus_id = ${campusId}
-      AND (
-        p.search_vector @@ plainto_tsquery('english', ${trimmedQuery})
-        OR p.name % ${trimmedQuery}
-        OR r.name ILIKE ${"%" + trimmedQuery + "%"}
-      )
-  `;
+  const [[countRow], result] = await Promise.all([
+    sql`
+      SELECT COUNT(*) AS total
+      FROM pois p
+      JOIN rooms r ON p.room_id = r.id
+      JOIN buildings b ON r.building_id = b.id
+      WHERE b.campus_id = ${campusId}
+        AND (
+          p.search_vector @@ plainto_tsquery('english', ${trimmedQuery})
+          OR p.name % ${trimmedQuery}
+          OR r.name ILIKE ${"%" + trimmedQuery + "%"}
+        )
+    `,
+    sql`
+      SELECT
+        p.id,
+        p.room_id,
+        p.name,
+        p.category,
+        p.tags,
+        ts_rank(p.search_vector, plainto_tsquery('english', ${trimmedQuery})) AS rank,
+        r.floor,
+        b.id AS building_id,
+        b.name AS building_name
+      FROM pois p
+      JOIN rooms r ON p.room_id = r.id
+      JOIN buildings b ON r.building_id = b.id
+      WHERE b.campus_id = ${campusId}
+        AND (
+          p.search_vector @@ plainto_tsquery('english', ${trimmedQuery})
+          OR p.name % ${trimmedQuery}
+          OR r.name ILIKE ${"%" + trimmedQuery + "%"}
+        )
+      ORDER BY rank DESC, p.name ASC
+      LIMIT ${boundedLimit}
+      OFFSET ${offset}
+    `,
+  ]);
   const total = Number(countRow?.total ?? 0);
-
-  const result = await sql`
-    SELECT
-      p.id,
-      p.room_id,
-      p.name,
-      p.category,
-      p.tags,
-      ts_rank(p.search_vector, plainto_tsquery('english', ${trimmedQuery})) AS rank,
-      r.floor,
-      b.id AS building_id,
-      b.name AS building_name
-    FROM pois p
-    JOIN rooms r ON p.room_id = r.id
-    JOIN buildings b ON r.building_id = b.id
-    WHERE b.campus_id = ${campusId}
-      AND (
-        p.search_vector @@ plainto_tsquery('english', ${trimmedQuery})
-        OR p.name % ${trimmedQuery}
-        OR r.name ILIKE ${"%" + trimmedQuery + "%"}
-      )
-    ORDER BY rank DESC, p.name ASC
-    LIMIT ${boundedLimit}
-    OFFSET ${offset}
-  `;
 
   const results = result.map((row: Record<string, unknown>) => POISearchResultSchema.parse(row));
   return { results, total };
@@ -72,46 +73,47 @@ async function searchPoisWithCategory(
   offset: number,
   category: string
 ): Promise<{ results: POISearchResult[]; total: number }> {
-  const [countRow] = await sql`
-    SELECT COUNT(*) AS total
-    FROM pois p
-    JOIN rooms r ON p.room_id = r.id
-    JOIN buildings b ON r.building_id = b.id
-    WHERE b.campus_id = ${campusId}
-      AND (
-        p.search_vector @@ plainto_tsquery('english', ${trimmedQuery})
-        OR p.name % ${trimmedQuery}
-        OR r.name ILIKE ${"%" + trimmedQuery + "%"}
-      )
-      AND p.category = ${category}
-  `;
+  const [[countRow], result] = await Promise.all([
+    sql`
+      SELECT COUNT(*) AS total
+      FROM pois p
+      JOIN rooms r ON p.room_id = r.id
+      JOIN buildings b ON r.building_id = b.id
+      WHERE b.campus_id = ${campusId}
+        AND (
+          p.search_vector @@ plainto_tsquery('english', ${trimmedQuery})
+          OR p.name % ${trimmedQuery}
+          OR r.name ILIKE ${"%" + trimmedQuery + "%"}
+        )
+        AND p.category = ${category}
+    `,
+    sql`
+      SELECT
+        p.id,
+        p.room_id,
+        p.name,
+        p.category,
+        p.tags,
+        ts_rank(p.search_vector, plainto_tsquery('english', ${trimmedQuery})) AS rank,
+        r.floor,
+        b.id AS building_id,
+        b.name AS building_name
+      FROM pois p
+      JOIN rooms r ON p.room_id = r.id
+      JOIN buildings b ON r.building_id = b.id
+      WHERE b.campus_id = ${campusId}
+        AND (
+          p.search_vector @@ plainto_tsquery('english', ${trimmedQuery})
+          OR p.name % ${trimmedQuery}
+          OR r.name ILIKE ${"%" + trimmedQuery + "%"}
+        )
+        AND p.category = ${category}
+      ORDER BY rank DESC, p.name ASC
+      LIMIT ${limit}
+      OFFSET ${offset}
+    `,
+  ]);
   const total = Number(countRow?.total ?? 0);
-
-  const result = await sql`
-    SELECT
-      p.id,
-      p.room_id,
-      p.name,
-      p.category,
-      p.tags,
-      ts_rank(p.search_vector, plainto_tsquery('english', ${trimmedQuery})) AS rank,
-      r.floor,
-      b.id AS building_id,
-      b.name AS building_name
-    FROM pois p
-    JOIN rooms r ON p.room_id = r.id
-    JOIN buildings b ON r.building_id = b.id
-    WHERE b.campus_id = ${campusId}
-      AND (
-        p.search_vector @@ plainto_tsquery('english', ${trimmedQuery})
-        OR p.name % ${trimmedQuery}
-        OR r.name ILIKE ${"%" + trimmedQuery + "%"}
-      )
-      AND p.category = ${category}
-    ORDER BY rank DESC, p.name ASC
-    LIMIT ${limit}
-    OFFSET ${offset}
-  `;
 
   return {
     results: result.map((row: Record<string, unknown>) => POISearchResultSchema.parse(row)),

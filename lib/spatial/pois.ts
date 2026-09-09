@@ -12,25 +12,26 @@ export async function fetchPois(
     return fetchPoisWithCategory(campusId, offset, limit, category);
   }
 
-  const [countRow] = await sql`
-    SELECT COUNT(*) AS total
-    FROM pois p
-    JOIN rooms r ON p.room_id = r.id
-    JOIN buildings b ON r.building_id = b.id
-    WHERE b.campus_id = ${campusId}
-  `;
+  const [[countRow], rows] = await Promise.all([
+    sql`
+      SELECT COUNT(*) AS total
+      FROM pois p
+      JOIN rooms r ON p.room_id = r.id
+      JOIN buildings b ON r.building_id = b.id
+      WHERE b.campus_id = ${campusId}
+    `,
+    sql`
+      SELECT p.*
+      FROM pois p
+      JOIN rooms r ON p.room_id = r.id
+      JOIN buildings b ON r.building_id = b.id
+      WHERE b.campus_id = ${campusId}
+      ORDER BY p.name ASC
+      LIMIT ${limit}
+      OFFSET ${offset}
+    `,
+  ]);
   const total = Number(countRow?.total ?? 0);
-
-  const rows = await sql`
-    SELECT p.*
-    FROM pois p
-    JOIN rooms r ON p.room_id = r.id
-    JOIN buildings b ON r.building_id = b.id
-    WHERE b.campus_id = ${campusId}
-    ORDER BY p.name ASC
-    LIMIT ${limit}
-    OFFSET ${offset}
-  `;
 
   const pois = rows.map((row: Record<string, unknown>) => POISchema.parse(row));
   return { pois, total };
@@ -42,25 +43,26 @@ async function fetchPoisWithCategory(
   limit: number,
   category: string
 ): Promise<{ pois: POI[]; total: number }> {
-  const [countRow] = await sql`
-    SELECT COUNT(*) AS total
-    FROM pois p
-    JOIN rooms r ON p.room_id = r.id
-    JOIN buildings b ON r.building_id = b.id
-    WHERE b.campus_id = ${campusId} AND p.category = ${category}
-  `;
+  const [[countRow], rows] = await Promise.all([
+    sql`
+      SELECT COUNT(*) AS total
+      FROM pois p
+      JOIN rooms r ON p.room_id = r.id
+      JOIN buildings b ON r.building_id = b.id
+      WHERE b.campus_id = ${campusId} AND p.category = ${category}
+    `,
+    sql`
+      SELECT p.*
+      FROM pois p
+      JOIN rooms r ON p.room_id = r.id
+      JOIN buildings b ON r.building_id = b.id
+      WHERE b.campus_id = ${campusId} AND p.category = ${category}
+      ORDER BY p.name ASC
+      LIMIT ${limit}
+      OFFSET ${offset}
+    `,
+  ]);
   const total = Number(countRow?.total ?? 0);
-
-  const rows = await sql`
-    SELECT p.*
-    FROM pois p
-    JOIN rooms r ON p.room_id = r.id
-    JOIN buildings b ON r.building_id = b.id
-    WHERE b.campus_id = ${campusId} AND p.category = ${category}
-    ORDER BY p.name ASC
-    LIMIT ${limit}
-    OFFSET ${offset}
-  `;
 
   return { pois: rows.map((row: Record<string, unknown>) => POISchema.parse(row)), total };
 }
