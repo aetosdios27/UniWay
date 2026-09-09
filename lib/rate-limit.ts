@@ -12,11 +12,26 @@ const defaultConfig: RateLimitConfig = {
   windowMs: 60_000,
 };
 
+// Long-lived processes (self-hosted / warm serverless instances) otherwise accumulate one
+// Map entry per unique client forever. Sweeping is O(map size), so it's time-gated rather
+// than run on every request.
+const SWEEP_INTERVAL_MS = 60_000;
+let lastSweep = Date.now();
+
+function sweepExpired(now: number): void {
+  if (now - lastSweep < SWEEP_INTERVAL_MS) return;
+  lastSweep = now;
+  for (const [key, entry] of requestCounts) {
+    if (now > entry.resetAt) requestCounts.delete(key);
+  }
+}
+
 function checkRateLimit(
   key: string,
   config: RateLimitConfig = defaultConfig
 ): { allowed: boolean; remaining: number; resetAt: number } {
   const now = Date.now();
+  sweepExpired(now);
   const entry = requestCounts.get(key);
 
   if (!entry || now > entry.resetAt) {
