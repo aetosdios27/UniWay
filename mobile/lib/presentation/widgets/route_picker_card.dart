@@ -25,6 +25,59 @@ class RoutePickerCard extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            if (controller.isLoadingDestinations) ...[
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 14,
+                      height: 14,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'Loading campus destinations...',
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+            ] else if (controller.destinationsError != null) ...[
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                margin: const EdgeInsets.only(bottom: 8),
+                decoration: BoxDecoration(
+                  color: Colors.red.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.red.shade200),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.error_outline, size: 16, color: Colors.red.shade700),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        controller.destinationsError!,
+                        style: TextStyle(fontSize: 11, color: Colors.red.shade800),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: controller.loadDestinations,
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 6),
+                        visualDensity: VisualDensity.compact,
+                      ),
+                      child: const Text('Retry', style: TextStyle(fontSize: 11)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
             Row(
               children: [
                 Expanded(
@@ -56,7 +109,7 @@ class RoutePickerCard extends StatelessWidget {
                 IconButton.filledTonal(
                   icon: const Icon(Icons.swap_vert),
                   tooltip: 'Swap From & To',
-                  onPressed: controller.swap,
+                  onPressed: controller.canGo ? controller.swap : null,
                 ),
               ],
             ),
@@ -135,8 +188,10 @@ class RoutePickerCard extends StatelessWidget {
     required List<Destination> items,
     required ValueChanged<Destination?> onChanged,
   }) {
+    final effectiveValue = items.contains(value) ? value : null;
+
     return DropdownButtonFormField<Destination>(
-      initialValue: value,
+      initialValue: effectiveValue,
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon, color: iconColor, size: 20),
@@ -145,6 +200,10 @@ class RoutePickerCard extends StatelessWidget {
         isDense: true,
       ),
       isExpanded: true,
+      hint: Text(
+        items.isEmpty ? 'No destinations' : 'Select $label',
+        style: const TextStyle(fontSize: 14),
+      ),
       items: items.map((dest) {
         return DropdownMenuItem<Destination>(
           value: dest,
@@ -155,7 +214,7 @@ class RoutePickerCard extends StatelessWidget {
           ),
         );
       }).toList(),
-      onChanged: onChanged,
+      onChanged: items.isEmpty ? null : onChanged,
     );
   }
 }
