@@ -70,7 +70,7 @@ export async function fetchCampusReports(
       OFFSET ${offset}
     `,
   ]);
-  const total = Number(countRow.total);
+  const total = Number(countRow?.total ?? 0);
 
   const reports = result.map((row: Record<string, unknown>) => ObstructionReportSchema.parse(row));
   return { reports, total };
