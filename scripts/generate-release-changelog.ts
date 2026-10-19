@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { validateDatasetDirectory } from "../lib/spatial/dataset-validation";
 
 const CHANGELOG_PATH = "CHANGELOG.md";
@@ -90,11 +90,15 @@ export function mergeChangelog(existing: string, markdown: string, version: stri
 }
 
 export function upsertChangelog(markdown: string, version: string): void {
-  if (!existsSync(CHANGELOG_PATH)) {
+  let existing: string;
+  try {
+    existing = readFileSync(CHANGELOG_PATH, "utf8");
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
     writeFileSync(CHANGELOG_PATH, `${CHANGELOG_INTRO}\n${markdown}`, "utf8");
     return;
   }
-  writeFileSync(CHANGELOG_PATH, mergeChangelog(readFileSync(CHANGELOG_PATH, "utf8"), markdown, version), "utf8");
+  writeFileSync(CHANGELOG_PATH, mergeChangelog(existing, markdown, version), "utf8");
 }
 
 function main() {
