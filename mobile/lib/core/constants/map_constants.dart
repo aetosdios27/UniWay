@@ -11,6 +11,12 @@ class MapConstants {
 
   static const String campusGeometrySourceId = 'uniway-campus-geometry-source';
   static const String campusBuildingsLayerId = 'uniway-campus-buildings-layer';
+  static const String campusBuildings3dLayerId =
+      'uniway-campus-buildings-3d-layer';
+  static const String campusBuildingsLabelLayerId =
+      'uniway-campus-buildings-label-layer';
+  static const String supplementaryGeoJsonAssetPath =
+      'assets/geo/supplementary_layer.geojson';
 
   static const String destinationsSourceId = 'uniway-destinations-source';
   static const String destinationsLayerId = 'uniway-destinations-layer';
