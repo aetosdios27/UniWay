@@ -5,6 +5,7 @@ import '../../core/services/location_service.dart';
 import '../../data/models/campus_route.dart';
 import '../../data/models/destination.dart';
 import '../controllers/routing_controller.dart';
+import '../map/supplementary_layers.dart';
 import '../widgets/debug_panel.dart';
 import '../widgets/route_picker_card.dart';
 import '../widgets/route_status_banner.dart';
@@ -70,6 +71,10 @@ class _MapScreenState extends State<MapScreen> {
 
   void _onStyleLoaded() {
     _styleLoaded = true;
+    final map = _mapController;
+    if (map != null) {
+      addSupplementaryLayers(map).catchError((_) {});
+    }
     _syncMapWithState().catchError((_) {});
   }
 

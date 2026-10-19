@@ -42,3 +42,9 @@ QGIS_IMPORT_TEST=1 bun scripts/check-qgis-import.ts
 ```
 
 This creates two temporary test campuses and removes only those campuses afterward.
+
+## Supplementary Layers
+
+`data/muj/supplementary_layer.geojson` contains supplementary campus features such as the library (`MUJ_LIBRARY_001`, "Knowledge Center"), an approximate outline traced from a user-provided georeferenced screenshot.
+It is rendered client-side on the map, is not imported to the database, and is ignored by `scripts/check-campus-data.ts` and `scripts/import-qgis.ts`.
+The mobile app uses a copy at `mobile/assets/geo/supplementary_layer.geojson`, which must be kept in sync.
