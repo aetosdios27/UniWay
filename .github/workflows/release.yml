@@ -1,0 +1,27 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Validate dataset and publish release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install
+      - name: Validate campus dataset
+        run: bun scripts/check-campus-data.ts
+      - name: Generate release notes
+        run: bun scripts/generate-release-changelog.ts --version "${{ github.ref_name }}" --output release-notes.md
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${{ github.ref_name }}" --title "UniWay ${{ github.ref_name }}" --notes-file release-notes.md
