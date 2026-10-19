@@ -17,6 +17,8 @@ jobs:
         with:
           bun-version: latest
       - run: bun install
+      - name: Run lint, typecheck and tests
+        run: bun run lint && bun run typecheck && bun run test:run
       - name: Validate campus dataset
         run: bun scripts/check-campus-data.ts
       - name: Generate release notes

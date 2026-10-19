@@ -6,6 +6,7 @@ export interface FileCorruptionResult {
   file: string;
   corrupted: boolean;
   error?: string;
+  data?: unknown;
 }
 
 export interface DatasetValidationReport {
@@ -56,17 +57,19 @@ export function checkDirectoryJsonIntegrity(dirPath: string): FileCorruptionResu
   const entries = readdirSync(dirPath);
 
   for (const entry of entries) {
+    if (entry.startsWith(".")) continue;
     const fullPath = join(dirPath, entry);
     const stat = statSync(fullPath);
 
     if (stat.isDirectory()) {
       results.push(...checkDirectoryJsonIntegrity(fullPath));
     } else if (entry.endsWith(".json") || entry.endsWith(".geojson")) {
-      const { error } = safeReadJson(fullPath);
+      const { data, error } = safeReadJson(fullPath);
       results.push({
         file: fullPath,
         corrupted: Boolean(error),
         error,
+        data,
       });
     }
   }
@@ -84,7 +87,9 @@ export function validateDatasetDirectory(directory: string): DatasetValidationRe
   const edgesFile = join(directory, "edges.geojson");
   const destinationsFile = join(directory, "destinations.geojson");
 
-  const corruptedFiles = checkDirectoryJsonIntegrity(directory).filter(f => f.corrupted);
+  const integrity = checkDirectoryJsonIntegrity(directory);
+  const corruptedFiles = integrity.filter(f => f.corrupted);
+  const dataOf = (file: string) => integrity.find(f => f.file === file)?.data;
   const errors: string[] = [];
   const warnings: string[] = [];
 
@@ -122,26 +127,10 @@ export function validateDatasetDirectory(directory: string): DatasetValidationRe
     };
   }
 
-  const nodesRead = safeReadJson(nodesFile);
-  const edgesRead = safeReadJson(edgesFile);
-  const destRead = safeReadJson(destinationsFile);
-
-  if (nodesRead.error || edgesRead.error || destRead.error) {
-    return {
-      valid: false,
-      directory,
-      files: { nodesFile, edgesFile, destinationsFile },
-      corruptedFiles,
-      errors,
-      warnings,
-      stats: emptyStats,
-    };
-  }
-
   const parsed = QgisDatasetSchema.safeParse({
-    nodes: nodesRead.data,
-    edges: edgesRead.data,
-    destinations: destRead.data,
+    nodes: dataOf(nodesFile),
+    edges: dataOf(edgesFile),
+    destinations: dataOf(destinationsFile),
   });
 
   if (!parsed.success) {

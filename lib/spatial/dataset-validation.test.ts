@@ -137,6 +137,16 @@ describe("checkDirectoryJsonIntegrity", () => {
     expect(corrupted[0].file).toContain("schema.json");
     for (const healthy of results.filter(r => !r.corrupted)) expect(healthy.error).toBeUndefined();
   });
+
+  it("skips hidden directories, so corrupted JSON inside them is not reported", () => {
+    const dir = writeDataset(fixtureRoot());
+    mkdirSync(join(dir, ".cache"));
+    writeFileSync(join(dir, ".cache", "stale.json"), "{ broken");
+    const results = checkDirectoryJsonIntegrity(dir);
+    expect(results.some(r => r.file.includes(".cache"))).toBe(false);
+    expect(results.filter(r => r.corrupted)).toEqual([]);
+    expect(validateDatasetDirectory(dir).corruptedFiles).toEqual([]);
+  });
 });
 
 describe("validateDatasetDirectory", () => {

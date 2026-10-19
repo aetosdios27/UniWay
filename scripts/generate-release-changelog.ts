@@ -76,8 +76,9 @@ export function generateReleaseNotes(directory = "data/muj", version = "v0.1.0")
 }
 
 /**
- * Pure changelog merge: prepends a version entry and replaces any earlier
- * entry for the same version, so re-running a release is idempotent.
+ * Pure changelog merge: adds a version entry above older entries (below any
+ * `## [Unreleased]` block) and replaces any earlier entry for the same version,
+ * so re-running a release is idempotent.
  */
 export function mergeChangelog(existing: string, markdown: string, version: string): string {
   const body = existing.startsWith(CHANGELOG_INTRO) ? existing.slice(CHANGELOG_INTRO.length) : existing;
@@ -86,7 +87,9 @@ export function mergeChangelog(existing: string, markdown: string, version: stri
     .map(block => block.trim())
     .filter(block => block.length > 0 && !block.startsWith(`## [${version}]`));
 
-  return blocks.length > 0 ? `${CHANGELOG_INTRO}\n${markdown}\n${blocks.join("\n\n")}\n` : `${CHANGELOG_INTRO}\n${markdown}\n`;
+  const insertAt = blocks.findIndex(block => block.startsWith("## [Unreleased]")) + 1;
+  const ordered = [...blocks.slice(0, insertAt), markdown.trimEnd(), ...blocks.slice(insertAt)];
+  return `${CHANGELOG_INTRO}\n${ordered.join("\n\n")}\n`;
 }
 
 export function upsertChangelog(markdown: string, version: string): void {

@@ -58,4 +58,34 @@ describe("mergeChangelog", () => {
     expect(merged.startsWith(intro)).toBe(true);
     expect(merged).toContain("# My notes");
   });
+
+  it("keeps Unreleased first and inserts the new version right after it", () => {
+    const existing = `${intro}\n## [Unreleased]\n\n- wip\n\n## [v0.2.0] - 2026-01-02\n\n- older\n`;
+    const merged = mergeChangelog(existing, "## [v0.3.0] - 2026-03-03\n\n- newest\n", "v0.3.0");
+    expect(merged.indexOf("## [Unreleased]")).toBeLessThan(merged.indexOf("## [v0.3.0]"));
+    expect(merged.indexOf("## [v0.3.0]")).toBeLessThan(merged.indexOf("## [v0.2.0]"));
+    expect(merged).toContain("- wip\n\n## [v0.3.0]");
+  });
+
+  it("places the new version below a lone Unreleased block", () => {
+    const merged = mergeChangelog(`${intro}\n## [Unreleased]\n\n- wip\n`, "## [v0.1.0] - 2026-01-01\n\n- first\n", "v0.1.0");
+    expect(merged).toBe(`${intro}\n## [Unreleased]\n\n- wip\n\n## [v0.1.0] - 2026-01-01\n\n- first\n`);
+  });
+
+  it("stays idempotent for the same version when Unreleased is present", () => {
+    const existing = `${intro}\n## [Unreleased]\n\n- wip\n\n## [v0.1.0] - 2026-01-01\n\n- stale content\n\n## [v0.0.9] - 2025-12-01\n\n- oldest\n`;
+    const markdown = "## [v0.1.0] - 2026-02-01\n\n- refreshed\n";
+    const once = mergeChangelog(existing, markdown, "v0.1.0");
+    const twice = mergeChangelog(once, markdown, "v0.1.0");
+    expect(twice).toBe(once);
+    expect(once).not.toContain("- stale content");
+    expect(once.split("## [v0.1.0]")).toHaveLength(2);
+    expect(once.indexOf("## [Unreleased]")).toBeLessThan(once.indexOf("## [v0.1.0]"));
+    expect(once.indexOf("## [v0.1.0]")).toBeLessThan(once.indexOf("## [v0.0.9]"));
+  });
+
+  it("leaves changelogs without an Unreleased block unchanged", () => {
+    const merged = mergeChangelog(`${intro}\n## [v0.2.0] - 2026-01-02\n\n- older\n`, "## [v0.3.0] - 2026-03-03\n\n- newest\n", "v0.3.0");
+    expect(merged).toBe(`${intro}\n## [v0.3.0] - 2026-03-03\n\n- newest\n\n## [v0.2.0] - 2026-01-02\n\n- older\n`);
+  });
 });
