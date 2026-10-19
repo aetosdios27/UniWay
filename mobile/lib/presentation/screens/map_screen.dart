@@ -4,13 +4,17 @@ import '../../core/constants/map_constants.dart';
 import '../../core/services/location_service.dart';
 import '../../data/models/campus_route.dart';
 import '../../data/models/destination.dart';
+import '../controllers/auth_controller.dart';
 import '../controllers/routing_controller.dart';
+import '../widgets/auth_modal.dart';
 import '../widgets/debug_panel.dart';
+import '../widgets/profile_badge.dart';
 import '../widgets/route_picker_card.dart';
 import '../widgets/route_status_banner.dart';
 
 class MapScreen extends StatefulWidget {
   final RoutingController? controller;
+  final AuthController? authController;
   final Widget Function(
     BuildContext context,
     void Function(MapLibreMapController controller) onMapCreated,
@@ -20,6 +24,7 @@ class MapScreen extends StatefulWidget {
   const MapScreen({
     super.key,
     this.controller,
+    this.authController,
     this.mapBuilder,
   });
 
@@ -30,6 +35,8 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   late final RoutingController _controller;
   bool _createdLocalController = false;
+  late final AuthController _authController;
+  bool _createdLocalAuthController = false;
   MapLibreMapController? _mapController;
   Line? _activeRouteLine;
   Line? _activeRouteCasing;
@@ -51,6 +58,23 @@ class _MapScreenState extends State<MapScreen> {
       _createdLocalController = true;
     }
     _controller.addListener(_onRoutingStateChanged);
+
+    if (widget.authController != null) {
+      _authController = widget.authController!;
+    } else {
+      _authController = AuthController();
+      _createdLocalAuthController = true;
+    }
+
+    _authController.initialize().then((_) {
+      if (!_disposed && !_authController.isAuthenticated && !_authController.isGuest) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!_disposed && mounted && !_authController.isAuthenticated && !_authController.isGuest) {
+            AuthModal.show(context, authController: _authController);
+          }
+        });
+      }
+    });
   }
 
   @override
@@ -60,6 +84,9 @@ class _MapScreenState extends State<MapScreen> {
     _controller.removeListener(_onRoutingStateChanged);
     if (_createdLocalController) {
       _controller.dispose();
+    }
+    if (_createdLocalAuthController) {
+      _authController.dispose();
     }
     super.dispose();
   }
@@ -312,6 +339,46 @@ class _MapScreenState extends State<MapScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.surface,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.08),
+                                  blurRadius: 6,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.near_me,
+                                  size: 18,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  'UniWay',
+                                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          ProfileBadge(authController: _authController),
+                        ],
+                      ),
+                    ),
                     RoutePickerCard(controller: _controller),
                     RouteStatusBanner(controller: _controller),
                   ],

@@ -1,7 +1,8 @@
-// Auth posture: all GET /api/* routes are public read-only. No user data, no mutations.
-// The only write endpoint (POST /api/report) accepts unauthenticated submissions.
-// If authenticated write endpoints are added, require an Authorization header validated
-// against a configured API key before this statement changes.
+// Auth posture: campus, routing, search, and POI GET routes are public and read-only.
+// User-scoped routes (GET /api/auth/me) require a signed-in session: an
+// "Authorization: Bearer <HS256 JWT>" header validated in lib/auth.ts. Auth mutations
+// (POST /api/auth/register, /login, /google) and POST /api/report accept unauthenticated
+// requests, and the auth mutations are rate limited per client address.
 //
 // CORS posture: same-origin by design. The frontend and API are served from the same
 // Next.js deployment. No Access-Control-Allow-Origin header is set, so browsers apply
@@ -19,6 +20,8 @@ export const ApiErrorCode = {
   INTERNAL_ERROR: "INTERNAL_ERROR",
   VALIDATION_ERROR: "VALIDATION_ERROR",
   PAYLOAD_TOO_LARGE: "PAYLOAD_TOO_LARGE",
+  UNAUTHORIZED: "UNAUTHORIZED",
+  CONFLICT: "CONFLICT",
 } as const;
 
 export type ApiErrorCodeType = (typeof ApiErrorCode)[keyof typeof ApiErrorCode];
@@ -149,6 +152,35 @@ export function notFound(
   const requestId = request?.headers.get("x-request-id") ?? crypto.randomUUID();
   const body: Record<string, unknown> = { error: message, code: code ?? ApiErrorCode.NOT_FOUND, requestId };
   return NextResponse.json(body, { status: 404, headers: { "X-Request-Id": requestId } });
+}
+
+export function unauthorized(
+  message = "Unauthorized",
+  code?: ApiErrorCodeType,
+  request?: Request
+): NextResponse {
+  const requestId = request?.headers.get("x-request-id") ?? crypto.randomUUID();
+  const body: Record<string, unknown> = { error: message, code: code ?? ApiErrorCode.UNAUTHORIZED, requestId };
+  return NextResponse.json(body, { status: 401, headers: { "X-Request-Id": requestId } });
+}
+
+export function conflict(
+  message: string,
+  code?: ApiErrorCodeType,
+  request?: Request
+): NextResponse {
+  const requestId = request?.headers.get("x-request-id") ?? crypto.randomUUID();
+  const body: Record<string, unknown> = { error: message, code: code ?? ApiErrorCode.CONFLICT, requestId };
+  return NextResponse.json(body, { status: 409, headers: { "X-Request-Id": requestId } });
+}
+
+// Postgres unique-constraint violation (grammar: class 23 integrity constraint violation).
+// Guarded by depth because postgres.js can wrap driver errors as `cause`.
+export function isUniqueViolation(error: unknown, depth = 0): boolean {
+  if (depth > 3 || typeof error !== "object" || error === null) return false;
+  const candidate = error as { code?: unknown; cause?: unknown };
+  if (candidate.code === "23505") return true;
+  return isUniqueViolation(candidate.cause, depth + 1);
 }
 
 export function formatZodError(error: ZodError): { field: string; message: string }[] {

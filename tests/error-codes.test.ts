@@ -1,5 +1,13 @@
 import { describe, it, expect, vi } from "vitest";
-import { ApiErrorCode, badRequest, notFound, apiError, validateBodySize } from "@/lib/api-response";
+import {
+  ApiErrorCode,
+  badRequest,
+  conflict,
+  notFound,
+  apiError,
+  unauthorized,
+  validateBodySize,
+} from "@/lib/api-response";
 
 vi.mock("@/lib/logger", () => ({ createLogger: () => ({ warn: vi.fn(), error: vi.fn(), info: vi.fn() }) }));
 vi.mock("@sentry/nextjs", () => ({ captureException: vi.fn() }));
@@ -36,6 +44,32 @@ describe("notFound", () => {
     const json = await res.json();
     expect(res.status).toBe(404);
     expect(json.code).toBe(ApiErrorCode.NOT_FOUND);
+  });
+});
+
+describe("unauthorized", () => {
+  it("returns 401 with the UNAUTHORIZED code and request id", async () => {
+    const res = unauthorized();
+    const json = await res.json();
+    expect(res.status).toBe(401);
+    expect(json.code).toBe(ApiErrorCode.UNAUTHORIZED);
+    expect(json.error).toBe("Unauthorized");
+    expect(res.headers.get("X-Request-Id")).toBe(json.requestId);
+  });
+
+  it("keeps a caller-supplied message without echoing credentials", async () => {
+    const res = unauthorized("Invalid email or password");
+    const json = await res.json();
+    expect(json.error).toBe("Invalid email or password");
+  });
+});
+
+describe("conflict", () => {
+  it("returns 409 with the CONFLICT code", async () => {
+    const res = conflict("An account with this email already exists");
+    const json = await res.json();
+    expect(res.status).toBe(409);
+    expect(json.code).toBe(ApiErrorCode.CONFLICT);
   });
 });
 
