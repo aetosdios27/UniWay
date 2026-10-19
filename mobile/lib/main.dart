@@ -1,8 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'core/services/google_sign_in_service.dart';
 import 'presentation/screens/map_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  unawaited(
+    GoogleSignInService().ensureInitialized().catchError((Object error) {}),
+  );
   runApp(const UniWayApp());
 }
 
