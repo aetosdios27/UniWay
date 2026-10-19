@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint app/ next.config.ts",
+    "lint": "eslint app/ lib/ tests/ middleware.ts next.config.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest",
     "test:run": "vitest run",

@@ -10,7 +10,9 @@ tsconfig.tsbuildinfo
 .env.production.local
 .pre-commit-config.yaml
 .cz.toml
-/docs/
+/docs/*
+!/docs/auth-setup.md
+!/docs/openapi.yaml
 
 # Sentry Config File
 .env.sentry-build-plugin

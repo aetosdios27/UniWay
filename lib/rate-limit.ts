@@ -12,9 +12,6 @@ const defaultConfig: RateLimitConfig = {
   windowMs: 60_000,
 };
 
-// Long-lived processes (self-hosted / warm serverless instances) otherwise accumulate one
-// Map entry per unique client forever. Sweeping is O(map size), so it's time-gated rather
-// than run on every request.
 const SWEEP_INTERVAL_MS = 60_000;
 let lastSweep = Date.now();
 
@@ -47,12 +44,32 @@ function checkRateLimit(
   return { allowed: true, remaining: config.maxRequests - entry.count, resetAt: entry.resetAt };
 }
 
+function clientKeyOf(request: Request): string {
+  const forwarded = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+  if (forwarded) return forwarded;
+  const realIp = request.headers.get("x-real-ip")?.trim();
+  if (realIp) return realIp;
+  return "unknown-local";
+}
+
 export function withRateLimit(
   request: Request,
   config?: RateLimitConfig
 ): NextResponse | null {
-  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  const result = checkRateLimit(ip, config);
+  return checkKey(clientKeyOf(request), config);
+}
+
+// Keyed limiter for identities narrower than the client address, e.g.
+// `login:${email}` so a brute-forcer cannot rotate client addresses to bypass a per-IP limit.
+export function withKeyedRateLimit(
+  key: string,
+  config?: RateLimitConfig
+): NextResponse | null {
+  return checkKey(key, config);
+}
+
+function checkKey(key: string, config?: RateLimitConfig): NextResponse | null {
+  const result = checkRateLimit(key, config);
 
   if (!result.allowed) {
     return NextResponse.json(

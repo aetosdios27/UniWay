@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import { campus, buildings, rooms, pois, csLecturePoi, CAMPUS_ID, ENG_BLDG_ID, ENG_101_ID } from "@/tests/fixtures/sample-campus";
+import { campus, buildings, rooms, pois, csLecturePoi, CAMPUS_ID, ENG_BLDG_ID } from "@/tests/fixtures/sample-campus";
 import { mockPolygon } from "@/tests/fixtures/geojson";
 
 export const handlers = [
