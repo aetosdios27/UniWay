@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
+import 'package:uniway_mobile/core/services/location_fix.dart';
 import 'package:uniway_mobile/core/services/location_service.dart';
 import 'package:uniway_mobile/data/models/campus_route.dart';
 import 'package:uniway_mobile/data/models/destination.dart';
@@ -23,6 +24,9 @@ class MockLocationService implements LocationService {
     }
     return LocationResult(latitude: mockLat, longitude: mockLng);
   }
+
+  @override
+  Stream<LocationFix> positionStream() => const Stream.empty();
 }
 
 class MockRoutingRepository implements RoutingRepository {

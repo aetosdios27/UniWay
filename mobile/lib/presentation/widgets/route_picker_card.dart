@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../data/models/destination.dart';
 import '../controllers/routing_controller.dart';
+import '../search/destination_search_sheet.dart';
 
 class RoutePickerCard extends StatelessWidget {
   final RoutingController controller;
+  final ValueChanged<Destination>? onDestinationFocused;
 
   static const yourLocation = Destination(
     id: 'YOUR_LOCATION',
@@ -17,12 +19,12 @@ class RoutePickerCard extends StatelessWidget {
   const RoutePickerCard({
     super.key,
     required this.controller,
+    this.onDestinationFocused,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final destinations = controller.destinations;
     final hasRoute = controller.currentRoute != null;
 
     final canSwap = controller.origin != null &&
@@ -49,9 +51,9 @@ class RoutePickerCard extends StatelessWidget {
                 Expanded(
                   child: Column(
                     children: [
-                      _buildFromDropdown(context, destinations),
+                      _buildFromField(context),
                       const SizedBox(height: 10),
-                      _buildToDropdown(context, destinations),
+                      _buildToField(context),
                     ],
                   ),
                 ),
@@ -156,115 +158,110 @@ class RoutePickerCard extends StatelessWidget {
     );
   }
 
-  Widget _buildFromDropdown(BuildContext context, List<Destination> destinations) {
-    final fromOptions = [
-      yourLocation,
-      ...destinations,
-    ];
+  String? get _blockedText {
+    if (controller.isLoadingDestinations) return 'Loading destinations…';
+    return controller.destinationsError;
+  }
 
+  Widget _buildFromField(BuildContext context) {
     final isGps = controller.isGpsOrigin;
-    final selectedFrom = isGps
-        ? yourLocation
-        : destinations.firstWhere(
-            (d) => d.id == controller.origin?.id,
-            orElse: () => yourLocation,
-          );
+    final origin = controller.origin;
+    final selectedFrom = isGps || origin == null ? yourLocation : origin;
+    final blocked = _blockedText;
 
-    return DropdownButtonFormField<Destination>(
-      initialValue: selectedFrom,
-      decoration: InputDecoration(
-        labelText: 'From',
-        prefixIcon: Icon(
-          isGps ? Icons.my_location : Icons.place_outlined,
-          color: isGps ? Colors.blue.shade700 : Colors.indigo.shade600,
-          size: 20,
-        ),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        isDense: true,
+    return _pickerField(
+      label: 'From',
+      icon: Icon(
+        isGps ? Icons.my_location : Icons.place_outlined,
+        color: isGps ? Colors.blue.shade700 : Colors.indigo.shade600,
+        size: 20,
       ),
-      isExpanded: true,
-      items: fromOptions.map((dest) {
-        final isItemGps = dest.id == yourLocation.id;
-        return DropdownMenuItem<Destination>(
-          value: dest,
-          child: Row(
-            children: [
-              Icon(
-                isItemGps ? Icons.my_location : Icons.place_outlined,
-                color: isItemGps ? Colors.blue.shade700 : Colors.grey.shade700,
-                size: 16,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  dest.name,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: isItemGps ? FontWeight.w600 : FontWeight.normal,
-                    color: isItemGps ? Colors.blue.shade900 : null,
-                  ),
-                ),
-              ),
-              if (isItemGps && controller.userLatitude != null)
-                Text(
-                  'GPS',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue.shade700,
-                  ),
-                ),
-            ],
-          ),
-        );
-      }).toList(),
-      onChanged: (selected) {
-        if (selected == null || selected.id == yourLocation.id) {
-          controller.setOrigin(null);
-        } else {
-          controller.setOrigin(selected);
-        }
-      },
+      text: blocked ?? selectedFrom.name,
+      muted: blocked != null,
+      onTap: blocked == null ? () => _pickFrom(context, selectedFrom) : null,
     );
   }
 
-  Widget _buildToDropdown(BuildContext context, List<Destination> destinations) {
-    final effectiveValue = destinations.contains(controller.destination)
-        ? controller.destination
-        : null;
+  Widget _buildToField(BuildContext context) {
+    final destination = controller.destination;
+    final blocked = _blockedText;
 
-    return DropdownButtonFormField<Destination>(
-      initialValue: effectiveValue,
-      decoration: InputDecoration(
-        labelText: 'To',
-        prefixIcon: Icon(Icons.place, color: Colors.blue.shade700, size: 20),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        isDense: true,
-      ),
-      isExpanded: true,
-      hint: const Text('Select destination', style: TextStyle(fontSize: 14)),
-      items: destinations.map((dest) {
-        return DropdownMenuItem<Destination>(
-          value: dest,
-          child: Row(
-            children: [
-              Icon(Icons.place_outlined, color: Colors.grey.shade700, size: 16),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  dest.name,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 14),
+    return _pickerField(
+      label: 'To',
+      icon: Icon(Icons.place, color: Colors.blue.shade700, size: 20),
+      text: blocked ?? destination?.name ?? 'Select destination',
+      muted: blocked != null || destination == null,
+      onTap: blocked == null ? () => _pickTo(context) : null,
+    );
+  }
+
+  Widget _pickerField({
+    required String label,
+    required Widget icon,
+    required String text,
+    required bool muted,
+    required VoidCallback? onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
+      child: InputDecorator(
+        decoration: InputDecoration(
+          labelText: label,
+          prefixIcon: icon,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          isDense: true,
+          enabled: onTap != null,
+        ),
+        isEmpty: false,
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                text,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: muted ? Colors.grey.shade600 : null,
                 ),
               ),
-            ],
-          ),
-        );
-      }).toList(),
-      onChanged: controller.setDestination,
+            ),
+            if (onTap != null)
+              Icon(Icons.search, size: 18, color: Colors.grey.shade700),
+          ],
+        ),
+      ),
     );
+  }
+
+  Future<void> _pickFrom(BuildContext context, Destination current) async {
+    final picked = await showDestinationSearchSheet(
+      context,
+      destinations: controller.destinations,
+      title: 'From',
+      selected: current,
+      extraOption: yourLocation,
+    );
+    if (picked == null) return;
+    if (picked.id == yourLocation.id) {
+      controller.setOrigin(null);
+    } else {
+      controller.setOrigin(picked);
+      onDestinationFocused?.call(picked);
+    }
+  }
+
+  Future<void> _pickTo(BuildContext context) async {
+    final picked = await showDestinationSearchSheet(
+      context,
+      destinations: controller.destinations,
+      title: 'To',
+      selected: controller.destination,
+    );
+    if (picked == null) return;
+    controller.setDestination(picked);
+    onDestinationFocused?.call(picked);
   }
 }
