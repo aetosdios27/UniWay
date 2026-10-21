@@ -411,6 +411,64 @@ void main() {
       expect(controller.addedSymbolLayers.length, symbolLayersAfterAdd);
       expect(controller.addedSymbolLayers.first['minzoom'], isNull);
     });
+
+    test('scopes dense label mode to each map controller', () async {
+      final denseMap = RecordingMapLibreController();
+      final smallMap = RecordingMapLibreController();
+      final denseDestinations =
+          generatedDestinations(denseDestinationThreshold + 10);
+      final smallDestinations = phase0Destinations();
+
+      await addDestinationLayers(
+        denseMap,
+        destinationCount: denseDestinations.length,
+      );
+      await addDestinationLayers(
+        smallMap,
+        destinationCount: smallDestinations.length,
+      );
+
+      expect(denseMap.addedSymbolLayers.last['minzoom'], labelDenseZoom);
+      expect(smallMap.addedSymbolLayers.last['minzoom'], isNull);
+
+      // Shrinking one map must not be skipped because the other map already
+      // switched density modes in between.
+      await updateDestinationSource(denseMap, smallDestinations);
+      expect(denseMap.addedSymbolLayers.last['minzoom'], isNull);
+      expect(smallMap.addedSymbolLayers.last['minzoom'], isNull);
+
+      await updateDestinationSource(smallMap, denseDestinations);
+      expect(smallMap.addedSymbolLayers.last['minzoom'], labelDenseZoom);
+      expect(denseMap.addedSymbolLayers.last['minzoom'], isNull);
+
+      await updateDestinationSource(denseMap, denseDestinations);
+      expect(denseMap.addedSymbolLayers.last['minzoom'], labelDenseZoom);
+      expect(smallMap.addedSymbolLayers.last['minzoom'], labelDenseZoom);
+
+      await updateDestinationSource(smallMap, smallDestinations);
+      expect(smallMap.addedSymbolLayers.last['minzoom'], isNull);
+      expect(denseMap.addedSymbolLayers.last['minzoom'], labelDenseZoom);
+    });
+
+    test('reapplies density after a style reload', () async {
+      final controller = RecordingMapLibreController();
+      final denseDestinations =
+          generatedDestinations(denseDestinationThreshold + 10);
+
+      await addDestinationLayers(controller);
+      await updateDestinationSource(controller, denseDestinations);
+      expect(controller.addedSymbolLayers.last['minzoom'], labelDenseZoom);
+
+      // A style reload rebuilds the label layer from the current count.
+      await addDestinationLayers(
+        controller,
+        destinationCount: denseDestinations.length,
+      );
+      expect(controller.addedSymbolLayers.last['minzoom'], labelDenseZoom);
+
+      await updateDestinationSource(controller, phase0Destinations());
+      expect(controller.addedSymbolLayers.last['minzoom'], isNull);
+    });
   });
 
   group('Destination Highlights', () {

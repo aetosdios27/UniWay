@@ -78,8 +78,14 @@ const SymbolLayerProperties destinationLabelPaint = SymbolLayerProperties(
   textOptional: true,
 );
 
-// Tracks whether the label layer is currently rendered in dense mode.
-bool _labelDense = false;
+// Tracks whether each map's label layer is currently rendered in dense mode.
+// Keying on the controller keeps independent maps from sharing density state,
+// and the weak Expando drops an entry once its controller is collected.
+final Expando<bool> _labelDenseByController =
+    Expando<bool>('destinationLabelDense');
+
+bool _isDenseDestinationCollection(int destinationCount) =>
+    destinationCount > denseDestinationThreshold;
 
 /// Builds a GeoJSON feature collection holding every destination.
 Map<String, dynamic> destinationsToFeatureCollection(
@@ -164,8 +170,9 @@ Future<void> addDestinationLayers(
       enableInteraction: false,
     );
 
-    _labelDense = destinationCount > denseDestinationThreshold;
-    await _addDestinationLabelLayer(controller);
+    final dense = _isDenseDestinationCollection(destinationCount);
+    await _addDestinationLabelLayer(controller, dense: dense);
+    _labelDenseByController[controller] = dense;
   } catch (e) {
     debugPrint('addDestinationLayers failed: $e');
   }
@@ -186,13 +193,14 @@ Future<void> updateDestinationSource(
   }
 
   // The label zoom range is a layer property, it can only be changed by
-  // recreating the label layer.
-  final dense = destinations.length > denseDestinationThreshold;
-  if (dense != _labelDense) {
-    _labelDense = dense;
+  // recreating the label layer. Only this controller's own density decides
+  // whether that is needed.
+  final dense = _isDenseDestinationCollection(destinations.length);
+  if (dense != _labelDenseByController[controller]) {
     try {
       await controller.removeLayer(MapConstants.destinationsLabelsLayerId);
-      await _addDestinationLabelLayer(controller);
+      await _addDestinationLabelLayer(controller, dense: dense);
+      _labelDenseByController[controller] = dense;
     } catch (_) {}
   }
 }
@@ -219,13 +227,14 @@ Future<void> setHighlightedDestinations(
 }
 
 Future<void> _addDestinationLabelLayer(
-  MapLibreMapController controller,
-) async {
+  MapLibreMapController controller, {
+  required bool dense,
+}) async {
   await controller.addSymbolLayer(
     MapConstants.destinationsSourceId,
     MapConstants.destinationsLabelsLayerId,
     destinationLabelPaint,
-    minzoom: _labelDense ? labelDenseZoom : null,
+    minzoom: dense ? labelDenseZoom : null,
     enableInteraction: false,
   );
 }
