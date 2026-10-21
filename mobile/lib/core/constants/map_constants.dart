@@ -21,6 +21,10 @@ class MapConstants {
   static const String destinationsSourceId = 'uniway-destinations-source';
   static const String destinationsLayerId = 'uniway-destinations-layer';
   static const String destinationsLabelsLayerId = 'uniway-destinations-labels';
+  static const String destinationsOriginLayerId =
+      'uniway-destinations-origin-layer';
+  static const String destinationsDestinationLayerId =
+      'uniway-destinations-destination-layer';
 
   static const String routeSourceId = 'uniway-active-route-source';
   static const String routeLineLayerId = 'uniway-active-route-line';

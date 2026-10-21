@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import '../../core/constants/map_constants.dart';
 import '../../core/services/location_service.dart';
+import '../../core/services/location_snapshot.dart';
 import '../../data/models/campus_route.dart';
-import '../../data/models/destination.dart';
 import '../controllers/auth_controller.dart';
 import '../controllers/routing_controller.dart';
+import '../map/destination_layers.dart';
+import '../map/route_start_connector.dart';
 import '../map/supplementary_layers.dart';
+import '../map/user_location_layer.dart';
 import '../widgets/auth_modal.dart';
 import '../widgets/debug_panel.dart';
+import '../widgets/location_status_chip.dart';
 import '../widgets/profile_badge.dart';
 import '../widgets/route_picker_card.dart';
+import '../widgets/route_start_notice.dart';
 import '../widgets/route_status_banner.dart';
 
 class MapScreen extends StatefulWidget {
@@ -33,7 +38,7 @@ class MapScreen extends StatefulWidget {
   State<MapScreen> createState() => _MapScreenState();
 }
 
-class _MapScreenState extends State<MapScreen> {
+class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
   late final RoutingController _controller;
   bool _createdLocalController = false;
   late final AuthController _authController;
@@ -41,10 +46,13 @@ class _MapScreenState extends State<MapScreen> {
   MapLibreMapController? _mapController;
   Line? _activeRouteLine;
   Line? _activeRouteCasing;
-  final List<Circle> _destinationCircles = [];
-  final List<Symbol> _destinationSymbols = [];
+  final RouteStartConnector _startConnector = RouteStartConnector();
+  UserLocationLayer? _userLocationLayer;
+  LocationSnapshot? _latestSnapshot;
   bool _styleLoaded = false;
   String _renderedDestinationsHash = '';
+  String? _highlightedOriginId;
+  String? _highlightedDestinationId;
   bool _isRedrawing = false;
   bool _redrawPending = false;
   bool _disposed = false;
@@ -59,6 +67,8 @@ class _MapScreenState extends State<MapScreen> {
       _createdLocalController = true;
     }
     _controller.addListener(_onRoutingStateChanged);
+    _controller.locationListenable.addListener(_onLocationSnapshot);
+    WidgetsBinding.instance.addObserver(this);
 
     if (widget.authController != null) {
       _authController = widget.authController!;
@@ -76,13 +86,24 @@ class _MapScreenState extends State<MapScreen> {
         });
       }
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_disposed) {
+        _controller.startLocationUpdates();
+      }
+    });
   }
 
   @override
   void dispose() {
     _disposed = true;
     _redrawPending = false;
+    WidgetsBinding.instance.removeObserver(this);
     _controller.removeListener(_onRoutingStateChanged);
+    _controller.locationListenable.removeListener(_onLocationSnapshot);
+    _controller.stopLocationUpdates();
+    _userLocationLayer?.dispose();
+    _startConnector.dispose();
     if (_createdLocalController) {
       _controller.dispose();
     }
@@ -92,17 +113,55 @@ class _MapScreenState extends State<MapScreen> {
     super.dispose();
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    _controller.onAppLifecycleChanged(state);
+  }
+
   void _onMapCreated(MapLibreMapController controller) {
     _mapController = controller;
   }
 
-  void _onStyleLoaded() {
-    _styleLoaded = true;
+  Future<void> _onStyleLoaded() async {
     final map = _mapController;
     if (map != null) {
       addSupplementaryLayers(map).catchError((_) {});
+      await addDestinationLayers(
+        map,
+        destinationCount: _controller.destinations.length,
+      ).catchError((_) {});
+      _attachUserLocationLayer(map);
     }
-    _syncMapWithState().catchError((_) {});
+    if (_disposed || !mounted) return;
+    // A style reload rebuilds the layers, so the data and the highlights have
+    // to be sent again.
+    _renderedDestinationsHash = '';
+    _highlightedOriginId = null;
+    _highlightedDestinationId = null;
+    _styleLoaded = true;
+    await _syncMapWithState().catchError((_) {});
+  }
+
+  void _attachUserLocationLayer(MapLibreMapController map) {
+    final layer = _userLocationLayer ??= UserLocationLayer(
+      sink: MapLibreUserLocationSink(map),
+    );
+    layer.attach().catchError((_) {});
+    final snapshot = _latestSnapshot;
+    if (snapshot != null) {
+      layer.update(snapshot);
+    }
+  }
+
+  void _onLocationSnapshot() {
+    final snapshot = _controller.locationListenable.value;
+    if (snapshot == null) return;
+    _latestSnapshot = snapshot;
+    _userLocationLayer?.update(snapshot);
+    final map = _mapController;
+    if (map != null) {
+      _syncStartConnector(map).catchError((_) {});
+    }
   }
 
   void _onRoutingStateChanged() {
@@ -126,13 +185,28 @@ class _MapScreenState extends State<MapScreen> {
 
         final currentDestinations = _controller.destinations;
         final currentHash = currentDestinations
-            .map((d) => '${d.id}:${d.routingNodeId}:${d.latitude}:${d.longitude}')
+            .map((d) =>
+                '${d.id}:${d.routingNodeId}:${d.latitude}:${d.longitude}:${d.name}:${d.category}')
             .join('|');
 
         if (_renderedDestinationsHash != currentHash) {
-          await _renderDestinationMarkers(map, currentDestinations);
+          await updateDestinationSource(map, currentDestinations);
           if (_disposed || !mounted) return;
           _renderedDestinationsHash = currentHash;
+        }
+
+        final originId = _controller.origin?.id;
+        final destinationId = _controller.destination?.id;
+        if (_highlightedOriginId != originId ||
+            _highlightedDestinationId != destinationId) {
+          _highlightedOriginId = originId;
+          _highlightedDestinationId = destinationId;
+          await setHighlightedDestinations(
+            map,
+            originId: originId,
+            destinationId: destinationId,
+          );
+          if (_disposed || !mounted) return;
         }
 
         final route = _controller.currentRoute;
@@ -142,58 +216,11 @@ class _MapScreenState extends State<MapScreen> {
           await _clearRoute(map);
         }
         if (_disposed || !mounted) return;
+        await _syncStartConnector(map);
+        if (_disposed || !mounted) return;
       } while (_redrawPending && !_disposed && mounted);
     } finally {
       _isRedrawing = false;
-    }
-  }
-
-  Future<void> _renderDestinationMarkers(
-    MapLibreMapController map,
-    List<Destination> destinations,
-  ) async {
-    for (final circle in _destinationCircles) {
-      if (_disposed || !mounted) return;
-      await map.removeCircle(circle);
-    }
-    _destinationCircles.clear();
-
-    for (final symbol in _destinationSymbols) {
-      if (_disposed || !mounted) return;
-      await map.removeSymbol(symbol);
-    }
-    _destinationSymbols.clear();
-
-    for (final d in destinations) {
-      if (_disposed || !mounted) return;
-      final latLng = LatLng(d.latitude, d.longitude);
-
-      final circle = await map.addCircle(
-        CircleOptions(
-          geometry: latLng,
-          circleColor: '#2563EB',
-          circleRadius: 7.0,
-          circleStrokeWidth: 2.5,
-          circleStrokeColor: '#FFFFFF',
-          circleOpacity: 0.95,
-        ),
-      );
-      _destinationCircles.add(circle);
-
-      if (_disposed || !mounted) return;
-      final symbol = await map.addSymbol(
-        SymbolOptions(
-          geometry: latLng,
-          textField: d.name,
-          textSize: 11.0,
-          textColor: '#1E293B',
-          textHaloColor: '#FFFFFF',
-          textHaloWidth: 2.0,
-          textOffset: const Offset(0, 1.2),
-          textAnchor: 'top',
-        ),
-      );
-      _destinationSymbols.add(symbol);
     }
   }
 
@@ -245,6 +272,24 @@ class _MapScreenState extends State<MapScreen> {
     _fitRouteBounds(map, route.points);
   }
 
+  Future<void> _syncStartConnector(MapLibreMapController map) async {
+    final snapshot = _latestSnapshot;
+    final route = _controller.currentRoute;
+    if (_disposed || !mounted) return;
+    if (snapshot == null ||
+        route == null ||
+        route.points.isEmpty ||
+        !_controller.isGpsOrigin) {
+      await _startConnector.clear(map);
+      return;
+    }
+    await _startConnector.update(
+      map,
+      LatLng(snapshot.latitude, snapshot.longitude),
+      route.points.first,
+    );
+  }
+
   void _fitRouteBounds(MapLibreMapController map, List<LatLng> points) {
     if (points.length < 2) return;
 
@@ -288,6 +333,18 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _recenterUser() async {
+    final snapshot = _controller.locationListenable.value;
+    if (snapshot != null) {
+      _mapController?.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(snapshot.latitude, snapshot.longitude),
+            zoom: 17.5,
+          ),
+        ),
+      );
+      return;
+    }
     if (_controller.userLatitude != null && _controller.userLongitude != null) {
       _mapController?.animateCamera(
         CameraUpdate.newCameraPosition(
@@ -301,7 +358,11 @@ class _MapScreenState extends State<MapScreen> {
       final loc = await LocationService().getCurrentLocation();
       if (_disposed || !mounted) return;
       if (loc.isSuccess && loc.latitude != null && loc.longitude != null) {
-        _controller.setUserLocation(loc.latitude!, loc.longitude!);
+        _controller.setUserLocation(
+          loc.latitude!,
+          loc.longitude!,
+          accuracyMeters: loc.accuracyMeters,
+        );
         _mapController?.animateCamera(
           CameraUpdate.newCameraPosition(
             CameraPosition(
@@ -336,7 +397,7 @@ class _MapScreenState extends State<MapScreen> {
                   ),
                   onMapCreated: _onMapCreated,
                   onStyleLoadedCallback: _onStyleLoaded,
-                  myLocationEnabled: true,
+                  myLocationEnabled: false,
                   trackCameraPosition: true,
                   compassEnabled: true,
                 ),
@@ -384,8 +445,18 @@ class _MapScreenState extends State<MapScreen> {
                         ],
                       ),
                     ),
-                    RoutePickerCard(controller: _controller),
+                    RoutePickerCard(
+                      controller: _controller,
+                      onDestinationFocused: (d) => _mapController?.animateCamera(
+                        CameraUpdate.newLatLngZoom(LatLng(d.latitude, d.longitude), 17.5),
+                      ),
+                    ),
+                    LocationStatusChip(
+                      _controller.locationListenable,
+                      reason: _controller.unavailableReason,
+                    ),
                     RouteStatusBanner(controller: _controller),
+                    RouteStartNotice(controller: _controller),
                   ],
                 ),
               ),

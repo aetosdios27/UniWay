@@ -9,21 +9,80 @@ import 'package:uniway_mobile/presentation/controllers/routing_controller.dart';
 import 'package:uniway_mobile/presentation/screens/map_screen.dart';
 
 class MockMapLibreController extends Fake implements MapLibreMapController {
-  final Completer<Circle> circleCompleter = Completer<Circle>();
+  final Completer<void> sourceCompleter = Completer<void>();
+  int setGeoJsonSourceCalls = 0;
   int addCircleCalls = 0;
-  int removeCircleCalls = 0;
+  int addSymbolCalls = 0;
   int addLineCalls = 0;
   int removeLineCalls = 0;
 
   @override
-  Future<Circle> addCircle(CircleOptions options, [Map? data]) {
+  Future<void> setGeoJsonSource(
+    String sourceId,
+    Map<String, dynamic> geojson,
+  ) {
+    setGeoJsonSourceCalls++;
+    return sourceCompleter.future;
+  }
+
+  @override
+  Future<void> addSource(String sourceId, SourceProperties properties) async {}
+
+  @override
+  Future<void> removeSource(String sourceId) async {}
+
+  @override
+  Future<void> removeLayer(String layerId) async {}
+
+  @override
+  Future<void> setFilter(String layerId, dynamic filter) async {}
+
+  @override
+  Future<void> addCircleLayer(
+    String sourceId,
+    String layerId,
+    CircleLayerProperties properties, {
+    String? belowLayerId,
+    String? sourceLayer,
+    double? minzoom,
+    double? maxzoom,
+    dynamic filter,
+    bool enableInteraction = true,
+  }) async {}
+
+  @override
+  Future<void> addSymbolLayer(
+    String sourceId,
+    String layerId,
+    SymbolLayerProperties properties, {
+    String? belowLayerId,
+    String? sourceLayer,
+    double? minzoom,
+    double? maxzoom,
+    dynamic filter,
+    bool enableInteraction = true,
+  }) async {}
+
+  @override
+  Future<Circle> addCircle(CircleOptions options, [Map? data]) async {
     addCircleCalls++;
-    return circleCompleter.future;
+    return Circle('fake_circle', options);
   }
 
   @override
   Future<void> removeCircle(Circle circle) async {
-    removeCircleCalls++;
+    addCircleCalls--;
+  }
+
+  @override
+  Future<Symbol> addSymbol(SymbolOptions options, [Map? data]) async {
+    addSymbolCalls++;
+    return Symbol('fake_symbol', options);
+  }
+
+  @override
+  Future<void> removeSymbol(Symbol symbol) async {
+    addSymbolCalls--;
   }
 
   @override
@@ -38,14 +97,6 @@ class MockMapLibreController extends Fake implements MapLibreMapController {
   }
 
   @override
-  Future<Symbol> addSymbol(SymbolOptions options, [Map? data]) async {
-    return Symbol('test_symbol', options);
-  }
-
-  @override
-  Future<void> removeSymbol(Symbol symbol) async {}
-
-  @override
   Future<bool?> animateCamera(CameraUpdate cameraUpdate, {Duration? duration}) async {
     return true;
   }
@@ -53,7 +104,15 @@ class MockMapLibreController extends Fake implements MapLibreMapController {
 
 class ErroringMockMapLibreController extends Fake implements MapLibreMapController {
   @override
-  Future<Circle> addCircle(CircleOptions options, [Map? data]) async {
+  Future<void> setGeoJsonSource(
+    String sourceId,
+    Map<String, dynamic> geojson,
+  ) async {
+    throw Exception('Simulated platform channel failure');
+  }
+
+  @override
+  Future<void> addSource(String sourceId, SourceProperties properties) async {
     throw Exception('Simulated platform channel failure');
   }
 }
@@ -137,14 +196,17 @@ void main() {
       );
 
       await tester.pump();
-      expect(mockMap.addCircleCalls, 1);
+      expect(mockMap.setGeoJsonSourceCalls, 1);
+      expect(mockMap.addCircleCalls, 0);
+      expect(mockMap.addSymbolCalls, 0);
 
       await tester.pumpWidget(const SizedBox());
 
-      mockMap.circleCompleter.complete(Circle('c1', const CircleOptions()));
+      mockMap.sourceCompleter.complete();
       await tester.pump();
 
-      expect(mockMap.addCircleCalls, 1);
+      expect(mockMap.setGeoJsonSourceCalls, 1);
+      expect(mockMap.addCircleCalls, 0);
 
       controller.dispose();
     });
