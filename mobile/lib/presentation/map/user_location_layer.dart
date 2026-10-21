@@ -75,8 +75,10 @@ const CircleLayerProperties userLocationDotPaint = CircleLayerProperties(
 
 /// Polygon approximating a circle of [meters] radius around [c].
 ///
-/// The ring is closed (first point equals last point) and uses
-/// [userLocationAccuracyVertexCount] vertices spread over the full circle.
+/// Returns [userLocationAccuracyVertexCount] distinct vertices spread evenly
+/// over the full circle, followed by a closing point that repeats the first
+/// one. The ring therefore holds `userLocationAccuracyVertexCount + 1` points
+/// and every edge, including the closing one, spans the same angle.
 List<LatLng> accuracyCirclePolygon(LatLng c, double meters) {
   if (meters <= 0) {
     return [c, c];
@@ -97,7 +99,7 @@ List<LatLng> accuracyCirclePolygon(LatLng c, double meters) {
       ),
     );
   }
-  points[points.length - 1] = points.first;
+  points.add(points.first);
   return points;
 }
 

@@ -1,31 +1,18 @@
-import 'dart:math' as math;
-
 import 'package:maplibre_gl/maplibre_gl.dart';
 
+import '../../core/utils/geo_distance.dart';
+
 const double routeStartConnectorThresholdMeters = 3.0;
-
-const double _earthRadiusMeters = 6371008.8;
-
-/// Great-circle distance between two points, in metres.
-double distanceMetersBetween(LatLng a, LatLng b) {
-  final dLat = (b.latitude - a.latitude) * math.pi / 180.0;
-  final dLng = (b.longitude - a.longitude) * math.pi / 180.0;
-  final lat1 = a.latitude * math.pi / 180.0;
-  final lat2 = b.latitude * math.pi / 180.0;
-
-  final h = math.sin(dLat / 2) * math.sin(dLat / 2) +
-      math.cos(lat1) *
-          math.cos(lat2) *
-          math.sin(dLng / 2) *
-          math.sin(dLng / 2);
-
-  return 2 * _earthRadiusMeters * math.asin(math.min(1.0, math.sqrt(h)));
-}
 
 /// Whether the raw position and the route start are far enough apart that a
 /// connector line is needed to avoid implying the route starts at the fix.
 bool shouldDrawStartConnector(LatLng user, LatLng routeStart) {
-  return distanceMetersBetween(user, routeStart) >
+  return haversineMeters(
+        user.latitude,
+        user.longitude,
+        routeStart.latitude,
+        routeStart.longitude,
+      ) >
       routeStartConnectorThresholdMeters;
 }
 

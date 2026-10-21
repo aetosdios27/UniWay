@@ -12,7 +12,7 @@ const _tierSubstring = 3;
 
 List<Destination> searchDestinations(List<Destination> all, String query) {
   if (query.trim().isEmpty) return all;
-  return DestinationSearchIndex(all).search(query);
+  return DestinationSearchIndex.of(all).search(query);
 }
 
 class DestinationSearchIndex {
@@ -117,7 +117,9 @@ class _Entry {
 
   int? tierFor(String q, String compactQuery, List<String> tokens) {
     if (keys.contains(q) || keys.contains(compactQuery)) return _tierExact;
-    if (name.startsWith(q) || compactName.startsWith(compactQuery)) return _tierPrefix;
+    if (name.startsWith(q) || compactName.startsWith(compactQuery)) {
+      return _tierPrefix;
+    }
     if (tokens.every((token) => words.any((word) => word.startsWith(token)))) {
       return _tierWordPrefix;
     }

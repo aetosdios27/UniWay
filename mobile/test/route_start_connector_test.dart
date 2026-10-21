@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
+import 'package:uniway_mobile/core/utils/geo_distance.dart';
 import 'package:uniway_mobile/presentation/map/route_start_connector.dart';
 
 class RecordingMapController extends Fake implements MapLibreMapController {
@@ -36,7 +37,15 @@ void main() {
     test('is false when the route start is within three metres', () {
       final near = offsetNorth(2);
 
-      expect(distanceMetersBetween(user, near), closeTo(2, 0.05));
+      expect(
+        haversineMeters(
+          user.latitude,
+          user.longitude,
+          near.latitude,
+          near.longitude,
+        ),
+        closeTo(2, 0.05),
+      );
       expect(shouldDrawStartConnector(user, near), isFalse);
     });
 
@@ -47,7 +56,15 @@ void main() {
     test('is true when the route start is further than three metres', () {
       final far = offsetNorth(12);
 
-      expect(distanceMetersBetween(user, far), closeTo(12, 0.1));
+      expect(
+        haversineMeters(
+          user.latitude,
+          user.longitude,
+          far.latitude,
+          far.longitude,
+        ),
+        closeTo(12, 0.1),
+      );
       expect(shouldDrawStartConnector(user, far), isTrue);
     });
   });

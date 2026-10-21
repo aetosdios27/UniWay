@@ -1,15 +1,16 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:uniway_mobile/core/services/location_fix.dart';
 import 'package:uniway_mobile/core/services/location_snapshot.dart';
+import 'package:uniway_mobile/core/utils/geo_distance.dart';
 import 'package:uniway_mobile/data/models/campus_route.dart';
 import 'package:uniway_mobile/data/models/destination.dart';
 import 'package:uniway_mobile/data/repositories/routing_repository.dart';
 import 'package:uniway_mobile/presentation/controllers/routing_controller.dart';
-import 'package:uniway_mobile/presentation/map/route_start_connector.dart';
 import 'package:uniway_mobile/presentation/map/user_location_layer.dart';
 import 'package:uniway_mobile/presentation/screens/map_screen.dart';
 import 'package:uniway_mobile/presentation/widgets/location_status_chip.dart';
@@ -73,6 +74,9 @@ LocationSnapshot snapshotAt(
   );
 }
 
+double metersBetween(LatLng a, LatLng b) =>
+    haversineMeters(a.latitude, a.longitude, b.latitude, b.longitude);
+
 double distanceToSegment(LatLng point, LatLng a, LatLng b) {
   final ax = a.longitude;
   final ay = a.latitude;
@@ -81,12 +85,12 @@ double distanceToSegment(LatLng point, LatLng a, LatLng b) {
   final dx = bx - ax;
   final dy = by - ay;
   final lengthSquared = dx * dx + dy * dy;
-  if (lengthSquared == 0) return distanceMetersBetween(point, a);
+  if (lengthSquared == 0) return metersBetween(point, a);
   final t = (((point.longitude - ax) * dx + (point.latitude - ay) * dy) /
           lengthSquared)
       .clamp(0.0, 1.0);
   final projection = LatLng(ay + t * dy, ax + t * dx);
-  return distanceMetersBetween(point, projection);
+  return metersBetween(point, projection);
 }
 
 class RecordingMapLibreController extends Fake implements MapLibreMapController {
@@ -204,7 +208,7 @@ void main() {
 
         for (final point in polygon) {
           expect(
-            distanceMetersBetween(center, point),
+            metersBetween(center, point),
             closeTo(meters, meters * 0.01),
             reason: 'vertex distance for $meters m',
           );
@@ -227,12 +231,50 @@ void main() {
       }
     });
 
-    test('returns a closed ring with 48 vertices', () {
+    test('returns 48 distinct vertices plus a closing point', () {
       final polygon = accuracyCirclePolygon(center, 30);
 
-      expect(polygon.length, 48);
+      expect(polygon.length, userLocationAccuracyVertexCount + 1);
+      expect({
+        for (final point in polygon) '${point.latitude},${point.longitude}',
+      }, hasLength(userLocationAccuracyVertexCount));
       expect(polygon.first.latitude, polygon.last.latitude);
       expect(polygon.first.longitude, polygon.last.longitude);
+    });
+
+    test('spaces every segment, including the closing edge, evenly', () {
+      final polygon = accuracyCirclePolygon(center, 30);
+      const vertices = userLocationAccuracyVertexCount;
+      const step = 2 * math.pi / vertices;
+
+      // Direction of each vertex in a local metric frame; the generator places
+      // vertex i at angle i * step, so consecutive deltas must all be equal.
+      const metersPerDegree = 6371000.0 * math.pi / 180.0;
+      final cosLat = math.cos(center.latitude * math.pi / 180.0);
+      final angles = [
+        for (final point in polygon.take(vertices))
+          math.atan2(
+            (point.longitude - center.longitude) * metersPerDegree * cosLat,
+            (point.latitude - center.latitude) * metersPerDegree,
+          ),
+      ];
+      for (var i = 0; i < angles.length; i++) {
+        var delta = angles[(i + 1) % angles.length] - angles[i];
+        if (delta < 0) delta += 2 * math.pi;
+        expect(delta, closeTo(step, 1e-6), reason: 'angular step at vertex $i');
+      }
+
+      // Equal angles mean equal chord lengths, so the closing edge (from the
+      // last distinct vertex back to the first) must match the others.
+      final chords = [
+        for (var i = 0; i < polygon.length - 1; i++)
+          metersBetween(polygon[i], polygon[i + 1]),
+      ];
+      expect(chords, hasLength(vertices));
+      for (final chord in chords) {
+        expect(chord, closeTo(chords.first, 1e-3));
+      }
+      expect(chords.first, greaterThan(0));
     });
 
     test('degrades to the center for a non positive radius', () {
