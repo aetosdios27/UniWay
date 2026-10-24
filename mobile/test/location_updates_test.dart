@@ -52,6 +52,14 @@ class FakeRoutingRepository implements RoutingRepository {
   }
 
   @override
+  Future<MapPoisResult> getMapPois({
+    required String campusId,
+    String? category,
+  }) async {
+    return const MapPoisResult(pois: [], statusCode: 200);
+  }
+
+  @override
   Future<RoutingResult> getRoute({
     required String campusId,
     Destination? origin,

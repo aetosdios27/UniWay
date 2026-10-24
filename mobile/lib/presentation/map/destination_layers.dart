@@ -1,11 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import '../../core/constants/map_constants.dart';
+import '../../core/constants/poi_icons.dart';
 import '../../data/models/destination.dart';
+import 'poi_icon_registry.dart';
 
-// Destinations are rendered as one GeoJSON source with a circle layer and a
-// label layer, so a destination list change costs a single platform channel
-// call instead of one circle plus one symbol per destination.
+// Destinations are rendered as one GeoJSON source with a symbol layer (or circle
+// fallback) and a label layer, so a destination list change costs a single
+// platform channel call instead of one circle plus one symbol per destination.
 
 // Labels are hidden below this zoom once the collection becomes dense.
 const double labelDenseZoom = 15.0;
@@ -16,7 +18,7 @@ const int denseDestinationThreshold = 50;
 // Sentinel id used by the highlight filters, no destination can match it.
 const String noHighlightId = '__uniway_no_highlight__';
 
-// Circle radius grows with the zoom level, the old fixed radius was 7.
+// Circle radius grows with the zoom level, used when icon registration fails.
 const List<Object> destinationCircleRadius = [
   'interpolate',
   ['linear'],
@@ -27,16 +29,26 @@ const List<Object> destinationCircleRadius = [
   8,
 ];
 
-// Highlight rings sit outside the marker circle.
+// Highlight rings sit just outside the marker icon (about 13px to 18px radius).
 const List<Object> destinationHighlightRadius = [
   'interpolate',
   ['linear'],
   ['zoom'],
   14,
-  8,
+  16,
   19,
-  11,
+  21,
 ];
+
+// Marker icons are drawn at 26 dp (zoom 14) growing to 34 dp (zoom 19), the size
+// Google and Apple Maps use for place markers, independent of screen density.
+List<Object> destinationIconSize(double pixelRatio) => poiIconSizeExpression(
+      pixelRatio: pixelRatio,
+      minZoom: 14,
+      minDp: 26,
+      maxZoom: 19,
+      maxDp: 34,
+    );
 
 const CircleLayerProperties destinationCirclePaint = CircleLayerProperties(
   circleRadius: destinationCircleRadius,
@@ -45,6 +57,15 @@ const CircleLayerProperties destinationCirclePaint = CircleLayerProperties(
   circleStrokeColor: '#FFFFFF',
   circleOpacity: 0.95,
 );
+
+SymbolLayerProperties destinationMarkerPaint(double pixelRatio) =>
+    SymbolLayerProperties(
+      iconImage: ['get', 'icon'],
+      iconSize: destinationIconSize(pixelRatio),
+      iconAllowOverlap: true,
+      iconIgnorePlacement: true,
+      iconAnchor: 'center',
+    );
 
 const CircleLayerProperties destinationOriginPaint = CircleLayerProperties(
   circleRadius: destinationHighlightRadius,
@@ -69,7 +90,7 @@ const SymbolLayerProperties destinationLabelPaint = SymbolLayerProperties(
   textColor: '#1E293B',
   textHaloColor: '#FFFFFF',
   textHaloWidth: 2.0,
-  textOffset: [0, 1.2],
+  textOffset: [0, 2.1],
   textAnchor: 'top',
   // Crowded collections drop labels instead of stacking them on top of each
   // other, a constant sort key keeps the placement order stable.
@@ -87,10 +108,17 @@ final Expando<bool> _labelDenseByController =
 bool _isDenseDestinationCollection(int destinationCount) =>
     destinationCount > denseDestinationThreshold;
 
+Map<String, String>? _iconProperty(String key, Set<String> registered) {
+  final icon = effectiveIconImageId(key, registered);
+  return icon == null ? null : {'icon': icon};
+}
+
 /// Builds a GeoJSON feature collection holding every destination.
 Map<String, dynamic> destinationsToFeatureCollection(
-  List<Destination> destinations,
-) {
+  List<Destination> destinations, {
+  Set<String>? registeredIcons,
+}) {
+  final registered = registeredIcons ?? kPoiIconKeys.toSet();
   return {
     'type': 'FeatureCollection',
     'features': [
@@ -106,6 +134,7 @@ Map<String, dynamic> destinationsToFeatureCollection(
             'id': destination.id,
             'name': destination.name,
             'category': destination.category,
+            ...?_iconProperty(destination.resolvedIconKey, registered),
           },
         },
     ],
@@ -138,21 +167,40 @@ Future<void> removeDestinationLayers(MapLibreMapController controller) async {
 Future<void> addDestinationLayers(
   MapLibreMapController controller, {
   int destinationCount = 0,
+  Set<String>? registeredIcons,
+  double pixelRatio = kDefaultPixelRatio,
 }) async {
   try {
     await removeDestinationLayers(controller);
 
+    final registered = registeredIcons ?? kPoiIconKeys.toSet();
+    final hasFallback = registered.contains(kPoiIconFallback);
+
     await controller.addSource(
       MapConstants.destinationsSourceId,
-      GeojsonSourceProperties(data: destinationsToFeatureCollection(const [])),
+      GeojsonSourceProperties(
+        data: destinationsToFeatureCollection(
+          const [],
+          registeredIcons: registered,
+        ),
+      ),
     );
 
-    await controller.addCircleLayer(
-      MapConstants.destinationsSourceId,
-      MapConstants.destinationsLayerId,
-      destinationCirclePaint,
-      enableInteraction: false,
-    );
+    if (hasFallback) {
+      await controller.addSymbolLayer(
+        MapConstants.destinationsSourceId,
+        MapConstants.destinationsLayerId,
+        destinationMarkerPaint(pixelRatio),
+        enableInteraction: false,
+      );
+    } else {
+      await controller.addCircleLayer(
+        MapConstants.destinationsSourceId,
+        MapConstants.destinationsLayerId,
+        destinationCirclePaint,
+        enableInteraction: false,
+      );
+    }
 
     await controller.addCircleLayer(
       MapConstants.destinationsSourceId,
@@ -181,12 +229,16 @@ Future<void> addDestinationLayers(
 /// Replaces the destination data with a single source update.
 Future<void> updateDestinationSource(
   MapLibreMapController controller,
-  List<Destination> destinations,
-) async {
+  List<Destination> destinations, {
+  Set<String>? registeredIcons,
+}) async {
   try {
     await controller.setGeoJsonSource(
       MapConstants.destinationsSourceId,
-      destinationsToFeatureCollection(destinations),
+      destinationsToFeatureCollection(
+        destinations,
+        registeredIcons: registeredIcons,
+      ),
     );
   } catch (e) {
     debugPrint('updateDestinationSource failed: $e');

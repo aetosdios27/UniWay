@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:uniway_mobile/core/constants/map_constants.dart';
 import 'package:uniway_mobile/data/models/campus_route.dart';
+import 'dart:typed_data';
 import 'package:uniway_mobile/data/models/destination.dart';
 import 'package:uniway_mobile/data/repositories/routing_repository.dart';
 import 'package:uniway_mobile/presentation/controllers/routing_controller.dart';
@@ -37,6 +38,22 @@ class RecordingMapLibreController extends Fake implements MapLibreMapController 
   Future<void> removeLayer(String layerId) async {
     calls.add('removeLayer:$layerId');
     removedLayers.add(layerId);
+  }
+
+  @override
+  Future<void> addImage(String name, Uint8List bytes, [bool sdf = false]) async {
+    calls.add('addImage:$name');
+  }
+
+  @override
+  Future<List> getLayerIds() async {
+    calls.add('getLayerIds');
+    return [];
+  }
+
+  @override
+  Future<void> setLayerVisibility(String layerId, bool visible) async {
+    calls.add('setLayerVisibility:$layerId:$visible');
   }
 
   @override
@@ -164,6 +181,14 @@ class MutableRoutingRepo implements RoutingRepository {
   }
 
   @override
+  Future<MapPoisResult> getMapPois({
+    required String campusId,
+    String? category,
+  }) async {
+    return const MapPoisResult(pois: [], statusCode: 200);
+  }
+
+  @override
   Future<RoutingResult> getRoute({
     required String campusId,
     Destination? origin,
@@ -278,6 +303,59 @@ void main() {
           .toSet();
       expect(ids.length, 10000);
     });
+
+    test('feature collection carries resolved icon property', () {
+      final destinations = [
+        const Destination(
+          id: 'D_EXPLICIT',
+          name: 'Food Court',
+          category: 'food',
+          iconKey: 'food',
+          latitude: 26.84,
+          longitude: 75.56,
+        ),
+        const Destination(
+          id: 'D_CATEGORY',
+          name: 'Central Canteen',
+          category: 'canteen',
+          latitude: 26.84,
+          longitude: 75.56,
+        ),
+        const Destination(
+          id: 'D_UNKNOWN',
+          name: 'Secret Lab',
+          category: 'mystery',
+          latitude: 26.84,
+          longitude: 75.56,
+        ),
+        const Destination(
+          id: 'D_UNREGISTERED',
+          name: 'Library Hub',
+          category: 'library',
+          iconKey: 'library',
+          latitude: 26.84,
+          longitude: 75.56,
+        ),
+      ];
+
+      final fc = destinationsToFeatureCollection(
+        destinations,
+        registeredIcons: {'default', 'food'},
+      );
+      final features = fc['features'] as List;
+
+      expect((features[0]['properties'] as Map)['icon'], 'uniway-poi-food');
+      expect((features[1]['properties'] as Map)['icon'], 'uniway-poi-food');
+      expect((features[2]['properties'] as Map)['icon'], 'uniway-poi-default');
+      expect((features[3]['properties'] as Map)['icon'], 'uniway-poi-default');
+
+      final fcNoFallback = destinationsToFeatureCollection(
+        destinations,
+        registeredIcons: {},
+      );
+      final featuresNoFallback = fcNoFallback['features'] as List;
+      expect((featuresNoFallback[0]['properties'] as Map)['icon'], isNull);
+    });
   });
 
   group('Destination Layer Controller Interaction', () {
@@ -287,19 +365,36 @@ void main() {
       await addDestinationLayers(controller);
 
       expect(controller.calls, contains('addSource:${MapConstants.destinationsSourceId}'));
+      expect(controller.addedCircleLayers.length, 2);
+      expect(controller.addedSymbolLayers.length, 2);
+
+      final circleLayerIds =
+          controller.addedCircleLayers.map((l) => l['layerId']).toList();
+      expect(circleLayerIds, contains(MapConstants.destinationsOriginLayerId));
+      expect(circleLayerIds, contains(MapConstants.destinationsDestinationLayerId));
+
+      final symbolLayerIds =
+          controller.addedSymbolLayers.map((l) => l['layerId']).toList();
+      expect(symbolLayerIds, contains(MapConstants.destinationsLayerId));
+      expect(symbolLayerIds, contains(MapConstants.destinationsLabelsLayerId));
+
+      final labelLayer = controller.addedSymbolLayers
+          .firstWhere((l) => l['layerId'] == MapConstants.destinationsLabelsLayerId);
+      expect(labelLayer['enableInteraction'], isFalse);
+      expect(labelLayer['minzoom'], isNull);
+    });
+
+    test('falls back to circle layer if fallback icon failed to register', () async {
+      final controller = RecordingMapLibreController();
+
+      await addDestinationLayers(controller, registeredIcons: {});
+
       expect(controller.addedCircleLayers.length, 3);
       expect(controller.addedSymbolLayers.length, 1);
 
       final circleLayerIds =
           controller.addedCircleLayers.map((l) => l['layerId']).toList();
       expect(circleLayerIds, contains(MapConstants.destinationsLayerId));
-      expect(circleLayerIds, contains(MapConstants.destinationsOriginLayerId));
-      expect(circleLayerIds, contains(MapConstants.destinationsDestinationLayerId));
-
-      final labelLayer = controller.addedSymbolLayers.first;
-      expect(labelLayer['layerId'], MapConstants.destinationsLabelsLayerId);
-      expect(labelLayer['enableInteraction'], isFalse);
-      expect(labelLayer['minzoom'], isNull);
     });
 
     test('is idempotent: removes the previous layers before adding them', () async {
@@ -328,12 +423,38 @@ void main() {
       await expectLater(removeDestinationLayers(controller), completes);
     });
 
-    test('renders the circle and label layers like the previous markers', () async {
+    test('renders the symbol marker and label layers, clearing label offset', () async {
       final controller = RecordingMapLibreController();
 
       await addDestinationLayers(controller);
 
-      final circle = controller.addedCircleLayers
+      final marker = controller.addedSymbolLayers
+          .firstWhere((l) => l['layerId'] == MapConstants.destinationsLayerId);
+      final markerJson =
+          (marker['properties'] as SymbolLayerProperties).toJson();
+      expect(markerJson['icon-image'], ['get', 'icon']);
+      expect(markerJson['icon-allow-overlap'], isTrue);
+      expect(markerJson['icon-ignore-placement'], isTrue);
+      expect(markerJson['icon-anchor'], 'center');
+      expect(markerJson['icon-size'], isA<List>());
+
+      final label = controller.addedSymbolLayers
+          .firstWhere((l) => l['layerId'] == MapConstants.destinationsLabelsLayerId);
+      final labelJson = (label['properties'] as SymbolLayerProperties).toJson();
+      expect(labelJson['text-field'], ['get', 'name']);
+      expect(labelJson['text-size'], 11.0);
+      expect(labelJson['text-color'], '#1E293B');
+      expect(labelJson['text-halo-color'], '#FFFFFF');
+      expect(labelJson['text-halo-width'], 2.0);
+      expect(labelJson['text-offset'], [0, 2.1]);
+      expect(labelJson['text-anchor'], 'top');
+      expect(labelJson['text-allow-overlap'], isFalse);
+      expect(labelJson['text-optional'], isTrue);
+      expect(labelJson['symbol-sort-key'], isNotNull);
+
+      final fallbackController = RecordingMapLibreController();
+      await addDestinationLayers(fallbackController, registeredIcons: {});
+      final circle = fallbackController.addedCircleLayers
           .firstWhere((l) => l['layerId'] == MapConstants.destinationsLayerId);
       final circleJson =
           (circle['properties'] as CircleLayerProperties).toJson();
@@ -342,19 +463,6 @@ void main() {
       expect(circleJson['circle-stroke-color'], '#FFFFFF');
       expect(circleJson['circle-opacity'], 0.95);
       expect(circleJson['circle-radius'], isA<List>());
-
-      final label = controller.addedSymbolLayers.first;
-      final labelJson = (label['properties'] as SymbolLayerProperties).toJson();
-      expect(labelJson['text-field'], ['get', 'name']);
-      expect(labelJson['text-size'], 11.0);
-      expect(labelJson['text-color'], '#1E293B');
-      expect(labelJson['text-halo-color'], '#FFFFFF');
-      expect(labelJson['text-halo-width'], 2.0);
-      expect(labelJson['text-offset'], [0, 1.2]);
-      expect(labelJson['text-anchor'], 'top');
-      expect(labelJson['text-allow-overlap'], isFalse);
-      expect(labelJson['text-optional'], isTrue);
-      expect(labelJson['symbol-sort-key'], isNotNull);
     });
   });
 
@@ -373,8 +481,8 @@ void main() {
       expect(controller.setGeoJsonSourceCalls, 5);
       expect(controller.addCircleCalls, 0);
       expect(controller.addSymbolCalls, 0);
-      expect(controller.addedCircleLayers.length, 3);
-      expect(controller.addedSymbolLayers.length, 1);
+      expect(controller.addedCircleLayers.length, 2);
+      expect(controller.addedSymbolLayers.length, 2);
     });
 
     test('sends the destination collection as a single feature collection', () async {

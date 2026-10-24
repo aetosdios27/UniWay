@@ -6,7 +6,10 @@ import '../../core/services/location_snapshot.dart';
 import '../../data/models/campus_route.dart';
 import '../controllers/auth_controller.dart';
 import '../controllers/routing_controller.dart';
+import '../map/basemap_pois.dart';
 import '../map/destination_layers.dart';
+import '../map/poi_icon_registry.dart';
+import '../map/poi_layers.dart';
 import '../map/route_start_connector.dart';
 import '../map/supplementary_layers.dart';
 import '../map/user_location_layer.dart';
@@ -50,7 +53,9 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
   UserLocationLayer? _userLocationLayer;
   LocationSnapshot? _latestSnapshot;
   bool _styleLoaded = false;
+  Set<String> _registeredPoiIcons = const {};
   String _renderedDestinationsHash = '';
+  String _renderedMapPoisHash = '';
   String? _highlightedOriginId;
   String? _highlightedDestinationId;
   bool _isRedrawing = false;
@@ -125,10 +130,24 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
   Future<void> _onStyleLoaded() async {
     final map = _mapController;
     if (map != null) {
+      if (kHideBasemapPois) {
+        await hideBasemapPois(map).catchError((_) {});
+      }
+      _registeredPoiIcons =
+          await registerPoiIcons(map).catchError((_) => <String>{});
+      if (!mounted) return;
+      final pixelRatio = MediaQuery.devicePixelRatioOf(context);
       addSupplementaryLayers(map).catchError((_) {});
       await addDestinationLayers(
         map,
         destinationCount: _controller.destinations.length,
+        registeredIcons: _registeredPoiIcons,
+        pixelRatio: pixelRatio,
+      ).catchError((_) {});
+      await addPoiLayers(
+        map,
+        registeredIcons: _registeredPoiIcons,
+        pixelRatio: pixelRatio,
       ).catchError((_) {});
       _attachUserLocationLayer(map);
     }
@@ -136,6 +155,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
     // A style reload rebuilds the layers, so the data and the highlights have
     // to be sent again.
     _renderedDestinationsHash = '';
+    _renderedMapPoisHash = '';
     _highlightedOriginId = null;
     _highlightedDestinationId = null;
     _styleLoaded = true;
@@ -186,13 +206,33 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
         final currentDestinations = _controller.destinations;
         final currentHash = currentDestinations
             .map((d) =>
-                '${d.id}:${d.routingNodeId}:${d.latitude}:${d.longitude}:${d.name}:${d.category}')
+                '${d.id}:${d.routingNodeId}:${d.latitude}:${d.longitude}:${d.name}:${d.category}:${d.resolvedIconKey}')
             .join('|');
 
         if (_renderedDestinationsHash != currentHash) {
-          await updateDestinationSource(map, currentDestinations);
+          await updateDestinationSource(
+            map,
+            currentDestinations,
+            registeredIcons: _registeredPoiIcons,
+          );
           if (_disposed || !mounted) return;
           _renderedDestinationsHash = currentHash;
+        }
+
+        final currentPois = _controller.mapPois;
+        final currentPoisHash = currentPois
+            .map((p) =>
+                '${p.id}:${p.latitude}:${p.longitude}:${p.name}:${p.category}:${p.resolvedIconKey}')
+            .join('|');
+
+        if (_renderedMapPoisHash != currentPoisHash) {
+          await updatePoiSource(
+            map,
+            currentPois,
+            registeredIcons: _registeredPoiIcons,
+          );
+          if (_disposed || !mounted) return;
+          _renderedMapPoisHash = currentPoisHash;
         }
 
         final originId = _controller.origin?.id;

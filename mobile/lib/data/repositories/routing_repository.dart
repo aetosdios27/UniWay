@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import '../../core/constants/api_constants.dart';
 import '../models/campus_route.dart';
 import '../models/destination.dart';
+import '../models/map_poi.dart';
 
 class RoutingResult {
   final CampusRoute? route;
@@ -27,6 +28,20 @@ class DestinationsResult {
 
   const DestinationsResult({
     this.destinations = const [],
+    this.errorMessage,
+    required this.statusCode,
+  });
+
+  bool get isSuccess => errorMessage == null && statusCode == 200;
+}
+
+class MapPoisResult {
+  final List<MapPoi> pois;
+  final String? errorMessage;
+  final int statusCode;
+
+  const MapPoisResult({
+    this.pois = const [],
     this.errorMessage,
     required this.statusCode,
   });
@@ -81,6 +96,60 @@ class RoutingRepository {
     } catch (e) {
       return DestinationsResult(
         destinations: const [],
+        errorMessage: e.toString(),
+        statusCode: 0,
+      );
+    }
+  }
+
+  Future<MapPoisResult> getMapPois({
+    required String campusId,
+    String? category,
+  }) async {
+    var uri = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.mapPoisEndpoint(campusId)}',
+    );
+    if (category != null && category.trim().isNotEmpty) {
+      uri = uri.replace(queryParameters: {'category': category.trim()});
+    }
+
+    try {
+      final response = await _client.get(
+        uri,
+        headers: {
+          'Accept': 'application/json',
+          'x-request-id': 'flutter-${DateTime.now().millisecondsSinceEpoch}',
+        },
+      ).timeout(ApiConstants.requestTimeout);
+
+      if (response.statusCode == 200) {
+        final decoded = json.decode(response.body) as Map<String, dynamic>;
+        final data = decoded['data'] as List<dynamic>? ?? [];
+        final parsed = data
+            .map((item) => MapPoi.fromJson(item as Map<String, dynamic>))
+            .toList();
+        return MapPoisResult(
+          pois: parsed,
+          statusCode: 200,
+        );
+      }
+
+      String message = 'Failed to load map POIs (${response.statusCode})';
+      try {
+        final decoded = json.decode(response.body) as Map<String, dynamic>;
+        if (decoded.containsKey('error') && decoded['error'] is String) {
+          message = decoded['error'] as String;
+        }
+      } catch (_) {}
+
+      return MapPoisResult(
+        pois: const [],
+        errorMessage: message,
+        statusCode: response.statusCode,
+      );
+    } catch (e) {
+      return MapPoisResult(
+        pois: const [],
         errorMessage: e.toString(),
         statusCode: 0,
       );

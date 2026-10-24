@@ -8,6 +8,7 @@ import '../../core/services/location_service.dart';
 import '../../core/services/location_snapshot.dart';
 import '../../data/models/campus_route.dart';
 import '../../data/models/destination.dart';
+import '../../data/models/map_poi.dart';
 import '../../data/repositories/routing_repository.dart';
 
 const locationPublishInterval = Duration(milliseconds: 200);
@@ -21,6 +22,7 @@ class RoutingController extends ChangeNotifier {
   final Duration lostTimeout;
 
   List<Destination> _destinations = const [];
+  List<MapPoi> _mapPois = const [];
   Destination? _origin;
   Destination? _destination;
   CampusRoute? _currentRoute;
@@ -35,6 +37,7 @@ class RoutingController extends ChangeNotifier {
   int _activeRouteRequestId = 0;
   int _activeDestinationsRequestId = 0;
   int _destinationsRevision = 0;
+  int _mapPoisRevision = 0;
   bool _disposed = false;
 
   final LocationFilter _locationFilter = LocationFilter();
@@ -72,6 +75,8 @@ class RoutingController extends ChangeNotifier {
     _destinationsError = null;
     notifyListeners();
 
+    unawaited(_loadMapPois(requestId));
+
     final result = await _repository.getDestinations(campusId: campusId);
     if (_disposed || requestId != _activeDestinationsRequestId) return;
 
@@ -103,7 +108,24 @@ class RoutingController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Map POIs are decorative, so a slow or failing request never delays or breaks destinations.
+  Future<void> _loadMapPois(int requestId) async {
+    final MapPoisResult result;
+    try {
+      result = await _repository.getMapPois(campusId: campusId);
+    } catch (_) {
+      return;
+    }
+    if (_disposed || requestId != _activeDestinationsRequestId) return;
+
+    _mapPois = result.isSuccess ? result.pois : const [];
+    if (result.isSuccess) _mapPoisRevision++;
+    notifyListeners();
+  }
+
   List<Destination> get destinations => _destinations;
+  List<MapPoi> get mapPois => _mapPois;
+  int get mapPoisRevision => _mapPoisRevision;
   Destination? get origin {
     if (_origin != null) return _origin;
     final lat = userLatitude;

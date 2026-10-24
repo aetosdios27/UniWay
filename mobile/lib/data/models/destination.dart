@@ -1,13 +1,20 @@
+import '../../core/constants/poi_icons.dart';
+
 class Destination {
   final String id;
   final String routingNodeId;
   final String name;
   final String category;
+  final String? iconKey;
   final double latitude;
   final double longitude;
   final List<String> tags;
 
   String get roomId => routingNodeId;
+
+  /// Resolves the icon key from [iconKey] or [category], falling back to 'default'.
+  String get resolvedIconKey =>
+      resolvePoiIconKey(iconKey: iconKey, category: category);
 
   const Destination({
     required this.id,
@@ -15,6 +22,7 @@ class Destination {
     String? roomId,
     required this.name,
     required this.category,
+    this.iconKey,
     required this.latitude,
     required this.longitude,
     this.tags = const [],
@@ -63,11 +71,25 @@ class Destination {
       throw FormatException('Destination $id missing valid geographic coordinates');
     }
 
+    final rawCategory = json['category'];
+    final rawType = json['type'];
+    final category = (rawCategory is String && rawCategory.trim().isNotEmpty)
+        ? rawCategory.trim()
+        : ((rawType is String && rawType.trim().isNotEmpty)
+            ? rawType.trim()
+            : 'destination');
+
+    final rawIconKey = json['icon_key'] ?? json['iconKey'];
+    final iconKey = (rawIconKey is String && rawIconKey.trim().isNotEmpty)
+        ? rawIconKey.trim()
+        : null;
+
     return Destination(
       id: id,
       routingNodeId: node,
       name: name,
-      category: (json['type'] ?? json['category'] ?? 'destination') as String,
+      category: category,
+      iconKey: iconKey,
       latitude: lat,
       longitude: lng,
       tags: (json['tags'] as List<dynamic>?)?.map((t) => t.toString()).toList() ?? [],
@@ -81,6 +103,7 @@ class Destination {
       'room_id': roomId,
       'name': name,
       'category': category,
+      if (iconKey != null) 'icon_key': iconKey,
       'latitude': latitude,
       'longitude': longitude,
       'tags': tags,

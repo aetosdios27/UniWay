@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -33,6 +34,15 @@ class MockMapLibreController extends Fake implements MapLibreMapController {
 
   @override
   Future<void> removeLayer(String layerId) async {}
+
+  @override
+  Future<void> addImage(String name, Uint8List bytes, [bool sdf = false]) async {}
+
+  @override
+  Future<List> getLayerIds() async => [];
+
+  @override
+  Future<void> setLayerVisibility(String layerId, bool visible) async {}
 
   @override
   Future<void> setFilter(String layerId, dynamic filter) async {}
@@ -125,6 +135,14 @@ class TestRoutingRepo implements RoutingRepository {
   @override
   Future<DestinationsResult> getDestinations({required String campusId}) async {
     return DestinationsResult(destinations: destinations, statusCode: 200);
+  }
+
+  @override
+  Future<MapPoisResult> getMapPois({
+    required String campusId,
+    String? category,
+  }) async {
+    return const MapPoisResult(pois: [], statusCode: 200);
   }
 
   @override

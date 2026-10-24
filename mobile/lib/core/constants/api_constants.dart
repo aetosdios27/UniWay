@@ -18,6 +18,7 @@ class ApiConstants {
   static String routeEndpoint(String campusId) => '/api/campus/$campusId/route';
   static String nodeRouteEndpoint(String campusId) => '/api/campus/$campusId/node-route';
   static String destinationsEndpoint(String campusId) => '/api/campus/$campusId/destinations';
+  static String mapPoisEndpoint(String campusId) => '/api/campus/$campusId/map-pois';
   static String poisEndpoint(String campusId) => '/api/campus/$campusId/pois';
   static const String authRegisterEndpoint = '/api/auth/register';
   static const String authLoginEndpoint = '/api/auth/login';
