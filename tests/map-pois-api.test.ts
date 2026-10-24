@@ -101,6 +101,22 @@ describe("GET /api/campus/[id]/map-pois", () => {
     expect(response.status).toBe(200);
     expect(fetchMapPois).toHaveBeenCalledWith(campusId, "food");
   });
+
+  it.each(["category=", "category=%20", "category=%20%20%09"])(
+    "treats blank category %s as no filter",
+    async (query) => {
+      vi.mocked(fetchMapPois).mockResolvedValueOnce([]);
+      const response = await mapPoisGet(poiRequest(query), params);
+      expect(response.status).toBe(200);
+      expect(fetchMapPois).toHaveBeenCalledWith(campusId, undefined);
+    },
+  );
+
+  it("trims whitespace around a category before filtering", async () => {
+    vi.mocked(fetchMapPois).mockResolvedValueOnce([]);
+    await mapPoisGet(poiRequest("category=%20food%20"), params);
+    expect(fetchMapPois).toHaveBeenCalledWith(campusId, "food");
+  });
 });
 
 describe("GET /api/campus/[id]/destinations with new fields", () => {

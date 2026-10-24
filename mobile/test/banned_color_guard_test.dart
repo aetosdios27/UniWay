@@ -7,6 +7,9 @@ void main() {
       r"Colors\.(white|black|grey|green|red|orange|blue|amber)|Color\(0x",
     );
 
+    // Map layers take their colours from MapPalette as hex strings, so no
+    // Color literal belongs in lib/presentation/map either.
+    //
     // Explicit allow-list. debug_panel.dart is intentionally a dark HUD, and
     // route_status_banner.dart is a solid red banner with white text that is
     // readable on both the light and the dark map, so neither follows the theme.
@@ -18,6 +21,7 @@ void main() {
     final targetDirs = [
       Directory("lib/presentation/widgets"),
       Directory("lib/presentation/search"),
+      Directory("lib/presentation/map"),
     ];
 
     test("no banned light-only color literals exist in swept presentation files", () {

@@ -45,32 +45,6 @@ CircleLayerProperties poiFallbackCirclePaintFor(MapPalette palette) => CircleLay
   circleOpacity: 0.9,
 );
 
-SymbolLayerProperties poiSymbolPaint(double pixelRatio) => SymbolLayerProperties(
-  iconImage: ['get', 'icon'],
-  iconSize: poiIconSize(pixelRatio),
-  iconAllowOverlap: true,
-  iconIgnorePlacement: true,
-  iconAnchor: 'center',
-  textField: ['get', 'name'],
-  textFont: ['Noto Sans Regular'],
-  textSize: 10.0,
-  textColor: '#334155',
-  textHaloColor: '#FFFFFF',
-  textHaloWidth: 1.5,
-  textOffset: [0, 1.5],
-  textAnchor: 'top',
-  textOptional: true,
-  symbolSortKey: 1,
-);
-
-const CircleLayerProperties poiFallbackCirclePaint = CircleLayerProperties(
-  circleRadius: 5.0,
-  circleColor: '#64748B',
-  circleStrokeWidth: 1.5,
-  circleStrokeColor: '#FFFFFF',
-  circleOpacity: 0.9,
-);
-
 Map<String, String>? _iconProperty(String key, Set<String> registered) {
   final icon = effectiveIconImageId(key, registered);
   return icon == null ? null : {'icon': icon};

@@ -14,11 +14,10 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       return badRequest("Invalid campus ID", undefined, undefined, request);
     }
     const { searchParams } = new URL(request.url);
-    const rawCategory = searchParams.get("category");
-    if (rawCategory !== null && rawCategory.length > 50) {
+    const category = searchParams.get("category")?.trim() || undefined;
+    if (category !== undefined && category.length > 50) {
       return badRequest("category must be at most 50 characters", undefined, undefined, request);
     }
-    const category = rawCategory ?? undefined;
     return successResponse(await fetchMapPois(id, category), 200, 300);
   } catch (error) {
     return apiError(error, "Failed to fetch map POIs", request);

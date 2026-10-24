@@ -94,14 +94,6 @@ SymbolLayerProperties destinationLabelPaintFor(MapPalette palette) =>
       textOptional: true,
     );
 
-const CircleLayerProperties destinationCirclePaint = CircleLayerProperties(
-  circleRadius: destinationCircleRadius,
-  circleColor: '#2563EB',
-  circleStrokeWidth: 2.5,
-  circleStrokeColor: '#FFFFFF',
-  circleOpacity: 0.95,
-);
-
 SymbolLayerProperties destinationMarkerPaint(double pixelRatio) =>
     SymbolLayerProperties(
       iconImage: ['get', 'icon'],
@@ -110,38 +102,6 @@ SymbolLayerProperties destinationMarkerPaint(double pixelRatio) =>
       iconIgnorePlacement: true,
       iconAnchor: 'center',
     );
-
-const CircleLayerProperties destinationOriginPaint = CircleLayerProperties(
-  circleRadius: destinationHighlightRadius,
-  circleColor: '#16A34A',
-  circleOpacity: 0.0,
-  circleStrokeWidth: 3.0,
-  circleStrokeColor: '#16A34A',
-);
-
-const CircleLayerProperties destinationDestinationPaint = CircleLayerProperties(
-  circleRadius: destinationHighlightRadius,
-  circleColor: '#DC2626',
-  circleOpacity: 0.0,
-  circleStrokeWidth: 3.0,
-  circleStrokeColor: '#DC2626',
-);
-
-const SymbolLayerProperties destinationLabelPaint = SymbolLayerProperties(
-  textField: ['get', 'name'],
-  textFont: ['Noto Sans Regular'],
-  textSize: 11.0,
-  textColor: '#1E293B',
-  textHaloColor: '#FFFFFF',
-  textHaloWidth: 2.0,
-  textOffset: [0, 2.1],
-  textAnchor: 'top',
-  // Crowded collections drop labels instead of stacking them on top of each
-  // other, a constant sort key keeps the placement order stable.
-  symbolSortKey: 0,
-  textAllowOverlap: false,
-  textOptional: true,
-);
 
 // Tracks whether each map's label layer is currently rendered in dense mode.
 // Keying on the controller keeps independent maps from sharing density state,
