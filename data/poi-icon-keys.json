@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "fallback": "default",
+  "keys": ["default", "academic", "dome", "food", "entrance", "amenities", "auditorium", "sports"]
+}

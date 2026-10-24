@@ -219,4 +219,52 @@ describe("validateDatasetDirectory", () => {
       totalDestinations: 7,
     });
   });
+  it("validates optional pois.geojson when present and reports totalPois", () => {
+    const dir = writeDataset(fixtureRoot(), {
+      extraFiles: {
+        "pois.geojson": JSON.stringify({
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              properties: {
+                id: "POI_01",
+                name: "Test POI",
+                category: "academic",
+                icon_key: "academic",
+                tags: ["lab"],
+                routing_node_id: "OUT_TEST_0_001",
+              },
+              geometry: { type: "Point", coordinates: [75.564, 26.842] },
+            },
+          ],
+        }),
+      },
+    });
+    const report = validateDatasetDirectory(dir);
+    expect(report.valid).toBe(true);
+    expect(report.stats.totalPois).toBe(1);
+  });
+
+  it("accepts empty features array in pois.geojson", () => {
+    const dir = writeDataset(fixtureRoot(), {
+      extraFiles: {
+        "pois.geojson": JSON.stringify({ type: "FeatureCollection", features: [] }),
+      },
+    });
+    const report = validateDatasetDirectory(dir);
+    expect(report.valid).toBe(true);
+    expect(report.stats.totalPois).toBe(0);
+  });
+
+  it("reports a 0-byte pois.geojson as a corrupted JSON file", () => {
+    const dir = writeDataset(fixtureRoot(), {
+      extraFiles: { "pois.geojson": "" },
+    });
+    const report = validateDatasetDirectory(dir);
+    expect(report.valid).toBe(false);
+    expect(report.corruptedFiles).toHaveLength(1);
+    expect(report.corruptedFiles[0].file).toContain("pois.geojson");
+    expect(report.errors[0]).toContain("Corrupted JSON");
+  });
 });

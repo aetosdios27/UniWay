@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { sql } from "../lib/db";
 import { importQgisDataset } from "../lib/spatial/import-qgis";
@@ -7,8 +7,13 @@ async function main() {
   const [campusId, directory = "data/muj"] = process.argv.slice(2);
   if (!campusId) throw new Error("Usage: bun scripts/import-qgis.ts <existing-campus-uuid> [directory]");
   const read = (name: string) => JSON.parse(readFileSync(join(directory, `${name}.geojson`), "utf8"));
+  const poisPath = join(directory, "pois.geojson");
+  const pois = existsSync(poisPath) ? JSON.parse(readFileSync(poisPath, "utf8")) : undefined;
   const result = await importQgisDataset(campusId, {
-    nodes: read("nodes"), edges: read("edges"), destinations: read("destinations"),
+    nodes: read("nodes"),
+    edges: read("edges"),
+    destinations: read("destinations"),
+    ...(pois !== undefined ? { pois } : {}),
   });
   console.log(JSON.stringify(result, null, 2));
 }

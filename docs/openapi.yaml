@@ -245,6 +245,87 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
 
+  /api/campus/{id}/destinations:
+    get:
+      summary: List routing destinations in a campus
+      operationId: listDestinations
+      tags: [Routing]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Campus UUID
+      responses:
+        "200":
+          description: List of routing destinations
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: "public, max-age=300, s-maxage=300, stale-while-revalidate=86400"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Destination"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /api/campus/{id}/map-pois:
+    get:
+      summary: List map points of interest in a campus
+      operationId: listMapPois
+      tags: [POIs]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Campus UUID
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+            maxLength: 50
+          description: Filter by category
+      responses:
+        "200":
+          description: List of map points of interest
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: "public, max-age=300, s-maxage=300, stale-while-revalidate=86400"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/MapPOI"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
   /api/pois/{id}:
     get:
       summary: Get POI detail with room and building context
@@ -969,6 +1050,77 @@ components:
           type: string
         category:
           type: string
+
+    Destination:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "DEST_01"
+        name:
+          type: string
+          example: "Dome Building"
+        type:
+          type: string
+          enum: [destination]
+        routing_node_id:
+          type: string
+          example: "OUT_ADM_0_092"
+        category:
+          type: string
+          nullable: true
+          example: "dome"
+        icon_key:
+          type: string
+          nullable: true
+          example: "dome"
+        tags:
+          type: array
+          items:
+            type: string
+          example: []
+        geom:
+          $ref: "#/components/schemas/GeoJSONPoint"
+
+    MapPOI:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "poi_01"
+        name:
+          type: string
+          example: "Main Gate"
+        category:
+          type: string
+          example: "entrance"
+        icon_key:
+          type: string
+          nullable: true
+          example: "entrance"
+        tags:
+          type: array
+          items:
+            type: string
+          example: []
+        routing_node_id:
+          type: string
+          nullable: true
+          example: "OUT_LIB_0_091"
+        geom:
+          $ref: "#/components/schemas/GeoJSONPoint"
+
+    PoiIconKey:
+      type: string
+      enum:
+        - default
+        - academic
+        - dome
+        - food
+        - entrance
+        - amenities
+        - auditorium
+        - sports
 
     # ── Reports ────────────────────────────────────────────────
     CreateObstructionReportRequest:

@@ -16,6 +16,7 @@ export interface DatasetValidationReport {
     nodesFile: string;
     edgesFile: string;
     destinationsFile: string;
+    poisFile?: string;
   };
   corruptedFiles: FileCorruptionResult[];
   errors: string[];
@@ -27,6 +28,7 @@ export interface DatasetValidationReport {
     missingNids: number[];
     totalEdges: number;
     totalDestinations: number;
+    totalPois: number;
     componentsCount: number;
   };
 }
@@ -86,6 +88,8 @@ export function validateDatasetDirectory(directory: string): DatasetValidationRe
   const nodesFile = join(directory, "nodes.geojson");
   const edgesFile = join(directory, "edges.geojson");
   const destinationsFile = join(directory, "destinations.geojson");
+  const poisFile = join(directory, "pois.geojson");
+  const hasPois = existsSync(poisFile);
 
   const integrity = checkDirectoryJsonIntegrity(directory);
   const corruptedFiles = integrity.filter(f => f.corrupted);
@@ -112,6 +116,7 @@ export function validateDatasetDirectory(directory: string): DatasetValidationRe
     missingNids: [],
     totalEdges: 0,
     totalDestinations: 0,
+    totalPois: 0,
     componentsCount: 0,
   };
 
@@ -119,7 +124,12 @@ export function validateDatasetDirectory(directory: string): DatasetValidationRe
     return {
       valid: false,
       directory,
-      files: { nodesFile, edgesFile, destinationsFile },
+      files: {
+        nodesFile,
+        edgesFile,
+        destinationsFile,
+        ...(hasPois ? { poisFile } : {}),
+      },
       corruptedFiles,
       errors,
       warnings,
@@ -131,6 +141,7 @@ export function validateDatasetDirectory(directory: string): DatasetValidationRe
     nodes: dataOf(nodesFile),
     edges: dataOf(edgesFile),
     destinations: dataOf(destinationsFile),
+    ...(hasPois ? { pois: dataOf(poisFile) } : {}),
   });
 
   if (!parsed.success) {
@@ -140,7 +151,12 @@ export function validateDatasetDirectory(directory: string): DatasetValidationRe
     return {
       valid: false,
       directory,
-      files: { nodesFile, edgesFile, destinationsFile },
+      files: {
+        nodesFile,
+        edgesFile,
+        destinationsFile,
+        ...(hasPois ? { poisFile } : {}),
+      },
       corruptedFiles,
       errors,
       warnings,
@@ -157,7 +173,12 @@ export function validateDatasetDirectory(directory: string): DatasetValidationRe
   return {
     valid: errors.length === 0,
     directory,
-    files: { nodesFile, edgesFile, destinationsFile },
+    files: {
+      nodesFile,
+      edgesFile,
+      destinationsFile,
+      ...(hasPois ? { poisFile } : {}),
+    },
     corruptedFiles,
     errors,
     warnings,

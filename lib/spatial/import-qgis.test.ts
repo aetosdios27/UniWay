@@ -14,11 +14,44 @@ const campusId = "11111111-1111-4111-8111-111111111111";
 beforeEach(() => { vi.clearAllMocks(); tx.mockReset(); tx.mockResolvedValue([{ id: campusId }]); });
 
 it("imports every feature in one transaction and returns the known warnings", async () => {
-  expect(await importQgisDataset(campusId, data)).toMatchObject({ nodes: 118, edges: 153, destinations: 7 });
+  expect(await importQgisDataset(campusId, data)).toMatchObject({ nodes: 118, edges: 153, destinations: 7, pois: 0 });
   expect(begin).toHaveBeenCalledTimes(1);
   expect(tx).toHaveBeenCalledTimes(4);
   const edgeFeatures = JSON.parse(tx.mock.calls[2][2]);
   expect(edgeFeatures).toEqual(data.edges.features);
+});
+
+it("imports POIs into campus_pois when present in the dataset", async () => {
+  const withPois = structuredClone(data);
+  (withPois as Record<string, unknown>).pois = {
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        properties: {
+          id: "POI_01",
+          name: "Main Cafeteria",
+          category: "food",
+          icon_key: "food",
+          tags: ["canteen"],
+          routing_node_id: "OUT_ADM_0_092",
+        },
+        geometry: { type: "Point", coordinates: [75.565927, 26.8416371] },
+      },
+    ],
+  };
+
+  const result = await importQgisDataset(campusId, withPois);
+  expect(result).toMatchObject({
+    nodes: 118,
+    edges: 153,
+    destinations: 7,
+    pois: 1,
+  });
+  expect(tx).toHaveBeenCalledTimes(5);
+  const poiFeatures = JSON.parse(tx.mock.calls[4][2]);
+  expect(poiFeatures).toHaveLength(1);
+  expect(poiFeatures[0].properties.id).toBe("POI_01");
 });
 
 it("rejects invalid IDs and missing references before starting a transaction", async () => {

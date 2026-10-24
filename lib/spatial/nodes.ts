@@ -26,7 +26,8 @@ export async function fetchNodeEdges(campusId: string) {
 
 export async function fetchRoutingDestinations(campusId: string) {
   const rows = await sql`
-    SELECT id, name, type, routing_node_id, ST_AsGeoJSON(geom, 15)::json AS geom
+    SELECT id, name, type, routing_node_id, category, icon_key, COALESCE(tags, '{}') AS tags,
+      ST_AsGeoJSON(geom, 15)::json AS geom
     FROM routing_destinations WHERE campus_id = ${campusId} ORDER BY name, id
   `;
   return z.array(DestinationSchema).parse(rows);

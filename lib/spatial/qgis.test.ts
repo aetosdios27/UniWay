@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { checkNodeNames, checkSequentialNids, QgisDatasetSchema, validateQgisDataset, type QgisDataset } from "./qgis";
+import { checkNodeNames, checkSequentialNids, PoiFeatureCollectionSchema, PoiFeatureSchema, QgisDatasetSchema, validateQgisDataset, type QgisDataset } from "./qgis";
 
 const read = (name: string) => JSON.parse(readFileSync(`data/muj/${name}.geojson`, "utf8"));
 const raw = { nodes: read("nodes"), edges: read("edges"), destinations: read("destinations") };
@@ -158,5 +158,107 @@ describe("checkNodeNames", () => {
     const withWrongLoc = testNode(7, { node_id: "OUT_POLICY_0_007" });
     expect(checkNodeNames([withWrongNid])[0]).toContain("id 'OUT_TEST_0_006', but properties (loc: 'TEST', floor_id: '0', nid: 5) require 'OUT_TEST_0_005'");
     expect(checkNodeNames([withWrongLoc])[0]).toContain("require 'OUT_TEST_0_007'");
+  });
+});
+
+describe("POI and destination schemas and dataset validation", () => {
+  it("accepts destinations with valid category, icon_key, and default tags", () => {
+    const data = validSample();
+    expect(data.destinations.features[0].properties.category).toBe("dome");
+    expect(data.destinations.features[0].properties.icon_key).toBe("dome");
+    expect(data.destinations.features[0].properties.tags).toEqual([]);
+  });
+
+  it("accepts an optional pois FeatureCollection that is empty", () => {
+    const data = validSample();
+    data.pois = { type: "FeatureCollection", features: [] };
+    const validated = validateQgisDataset(data);
+    expect(validated.errors).toEqual([]);
+    expect(validated.stats.totalPois).toBe(0);
+  });
+
+  it("accepts valid POIs and validates icon_key", () => {
+    const data = validSample();
+    data.pois = PoiFeatureCollectionSchema.parse({
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          properties: {
+            id: "POI_01",
+            name: "Main Cafeteria",
+            category: "food",
+            icon_key: "food",
+            tags: ["canteen", "snacks"],
+            routing_node_id: "OUT_ADM_0_092",
+          },
+          geometry: { type: "Point", coordinates: [75.565, 26.841] },
+        },
+      ],
+    });
+    const validated = validateQgisDataset(data);
+    expect(validated.errors).toEqual([]);
+    expect(validated.stats.totalPois).toBe(1);
+  });
+
+  it("rejects unknown icon_key with clear message listing allowed keys", () => {
+    const invalid = {
+      type: "Feature",
+      properties: {
+        id: "POI_BAD",
+        name: "Bad POI",
+        category: "food",
+        icon_key: "non_existent_key",
+        routing_node_id: "OUT_ADM_0_092",
+      },
+      geometry: { type: "Point", coordinates: [75.565, 26.841] },
+    };
+    const result = PoiFeatureSchema.safeParse(invalid);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues[0].message).toContain("Invalid icon_key");
+      expect(result.error.issues[0].message).toContain("default, academic");
+    }
+  });
+
+  it("rejects duplicate poi ids", () => {
+    const data = validSample();
+    const poi = {
+      type: "Feature" as const,
+      properties: {
+        id: "POI_DUP",
+        name: "Duplicate POI",
+        category: "dome",
+        routing_node_id: "OUT_ADM_0_092",
+      },
+      geometry: { type: "Point" as const, coordinates: [75.565, 26.841] as [number, number] },
+    };
+    data.pois = PoiFeatureCollectionSchema.parse({
+      type: "FeatureCollection",
+      features: [poi, poi],
+    });
+    const validated = validateQgisDataset(data);
+    expect(validated.errors).toContain("Duplicate poi id: POI_DUP");
+  });
+
+  it("rejects routing_node_id referencing a missing node in POIs", () => {
+    const data = validSample();
+    data.pois = PoiFeatureCollectionSchema.parse({
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          properties: {
+            id: "POI_MISSING",
+            name: "Missing Node POI",
+            category: "food",
+            routing_node_id: "OUT_MISSING_0_999",
+          },
+          geometry: { type: "Point", coordinates: [75.565, 26.841] },
+        },
+      ],
+    });
+    const validated = validateQgisDataset(data);
+    expect(validated.errors).toContain("POI POI_MISSING references a missing node");
   });
 });

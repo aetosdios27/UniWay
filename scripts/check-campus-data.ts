@@ -12,6 +12,7 @@ console.log(`  • NID Sequential Range: ${report.stats.minNid} to ${report.stat
 console.log(`  • Missing / Skipped NIDs: ${report.stats.missingNids.length === 0 ? "0 (Fully Sequential)" : `❌ ${report.stats.missingNids.join(", ")}`}`);
 console.log(`  • Routing Edges: ${report.stats.totalEdges}`);
 console.log(`  • Destinations: ${report.stats.totalDestinations}`);
+console.log(`  • Campus POIs: ${report.stats.totalPois}`);
 console.log(`  • Graph Components: ${report.stats.componentsCount}`);
 
 if (report.corruptedFiles.length > 0) {

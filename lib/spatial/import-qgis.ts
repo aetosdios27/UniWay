@@ -38,15 +38,50 @@ export async function importQgisDataset(campusId: string, input: unknown) {
         floor_id = EXCLUDED.floor_id, edge_type = EXCLUDED.edge_type, geom = EXCLUDED.geom
     `;
     await tx`
-      INSERT INTO routing_destinations (campus_id, id, name, type, routing_node_id, geom)
+      INSERT INTO routing_destinations (campus_id, id, name, type, routing_node_id, geom, category, icon_key, tags)
       SELECT ${campusId}, p->>'id', p->>'name', p->>'type', p->>'routing_node_id',
-        ST_SetSRID(ST_GeomFromGeoJSON(f->>'geometry'), 4326)
+        ST_SetSRID(ST_GeomFromGeoJSON(f->>'geometry'), 4326),
+        p->>'category',
+        p->>'icon_key',
+        COALESCE(ARRAY(SELECT jsonb_array_elements_text(p->'tags')), '{}'::text[])
       FROM jsonb_array_elements(${JSON.stringify(data.destinations.features)}::text::jsonb) f,
         LATERAL (SELECT f->'properties' AS p) props
       ON CONFLICT (campus_id, id) DO UPDATE SET
-        name = EXCLUDED.name, type = EXCLUDED.type, routing_node_id = EXCLUDED.routing_node_id, geom = EXCLUDED.geom
+        name = EXCLUDED.name,
+        type = EXCLUDED.type,
+        routing_node_id = EXCLUDED.routing_node_id,
+        geom = EXCLUDED.geom,
+        category = EXCLUDED.category,
+        icon_key = EXCLUDED.icon_key,
+        tags = EXCLUDED.tags
     `;
+
+    if (data.pois && data.pois.features.length > 0) {
+      await tx`
+        INSERT INTO campus_pois (campus_id, id, name, category, icon_key, tags, routing_node_id, geom)
+        SELECT ${campusId}, p->>'id', p->>'name', p->>'category', p->>'icon_key',
+          COALESCE(ARRAY(SELECT jsonb_array_elements_text(p->'tags')), '{}'::text[]),
+          p->>'routing_node_id',
+          ST_SetSRID(ST_GeomFromGeoJSON(f->>'geometry'), 4326)
+        FROM jsonb_array_elements(${JSON.stringify(data.pois.features)}::text::jsonb) f,
+          LATERAL (SELECT f->'properties' AS p) props
+        ON CONFLICT (campus_id, id) DO UPDATE SET
+          name = EXCLUDED.name,
+          category = EXCLUDED.category,
+          icon_key = EXCLUDED.icon_key,
+          tags = EXCLUDED.tags,
+          routing_node_id = EXCLUDED.routing_node_id,
+          geom = EXCLUDED.geom
+      `;
+    }
   });
-  return { campusId, nodes: data.nodes.features.length, edges: data.edges.features.length,
-    destinations: data.destinations.features.length, warnings };
+
+  return {
+    campusId,
+    nodes: data.nodes.features.length,
+    edges: data.edges.features.length,
+    destinations: data.destinations.features.length,
+    pois: data.pois?.features.length ?? 0,
+    warnings,
+  };
 }

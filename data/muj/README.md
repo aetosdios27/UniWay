@@ -9,6 +9,14 @@ Every old/new node geometry matched exactly before this translation. Original
 Downloads files were not modified. Edge IDs (E00001 etc.) and destination IDs
 (DEST_01 etc.) remain text; edge_type is walkway in this export.
 
+Destinations support optional `category` (string), `icon_key` (matching `data/poi-icon-keys.json`),
+and `tags` (string array, default `[]`) properties.
+
+An optional `pois.geojson` layer (FeatureCollection of Point features) can be placed in
+this directory to define campus points of interest with properties `id`, `name`, `category`,
+and optional `icon_key`, `tags`, and `routing_node_id`. If omitted, the campus data checker
+and QGIS importer proceed without POI records.
+
 Run: bun scripts/check-campus-data.ts
 
 Known issues are warnings, not import blockers. E00143 has Point geometry, connecting

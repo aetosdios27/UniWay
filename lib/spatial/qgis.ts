@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { PoiIconKeySchema } from "@/lib/poi-icons";
 import { RoutingLineStringSchema, RoutingNodeIdSchema, RoutingNodesFileSchema, RoutingPointSchema } from "@/lib/schemas/db";
 
 export const EdgeFeatureSchema = z.object({
@@ -23,14 +24,38 @@ export const DestinationFeatureSchema = z.object({
     name: z.string().min(1),
     type: z.literal("destination"),
     routing_node_id: RoutingNodeIdSchema,
+    category: z.string().min(1).nullable().optional().transform(v => v ?? null),
+    icon_key: PoiIconKeySchema.nullable().optional().transform(v => v ?? null),
+    tags: z.array(z.string()).nullish().transform(v => v ?? []),
   }),
   geometry: RoutingPointSchema,
 });
+
+export const PoiFeatureSchema = z.object({
+  type: z.literal("Feature"),
+  properties: z.object({
+    id: z.string().min(1),
+    name: z.string().min(1),
+    category: z.string().min(1),
+    icon_key: PoiIconKeySchema.nullable().optional().transform(v => v ?? null),
+    tags: z.array(z.string()).nullish().transform(v => v ?? []),
+    routing_node_id: RoutingNodeIdSchema.nullable().optional().transform(v => v ?? null),
+  }),
+  geometry: RoutingPointSchema,
+});
+export type PoiFeature = z.infer<typeof PoiFeatureSchema>;
+
+export const PoiFeatureCollectionSchema = z.object({
+  type: z.literal("FeatureCollection"),
+  features: z.array(PoiFeatureSchema),
+});
+export type PoiFeatureCollection = z.infer<typeof PoiFeatureCollectionSchema>;
 
 export const QgisDatasetSchema = z.object({
   nodes: RoutingNodesFileSchema,
   edges: z.object({ type: z.literal("FeatureCollection"), features: z.array(EdgeFeatureSchema).min(1) }),
   destinations: z.object({ type: z.literal("FeatureCollection"), features: z.array(DestinationFeatureSchema).min(1) }),
+  pois: PoiFeatureCollectionSchema.optional(),
 });
 export type QgisDataset = z.infer<typeof QgisDatasetSchema>;
 
@@ -213,6 +238,7 @@ export function validateQgisDataset(data: QgisDataset) {
     ...duplicateIds(nids, "nid"),
     ...duplicateIds(data.edges.features.map(f => f.properties.edge_id), "edge_id"),
     ...duplicateIds(data.destinations.features.map(f => f.properties.id), "destination id"),
+    ...(data.pois ? duplicateIds(data.pois.features.map(f => f.properties.id), "poi id") : []),
     ...checkNodeNames(data.nodes.features),
     ...(!nidSequence.isSequential ? [missingNidsError(nidSequence)] : []),
     ...checkEdges(data, nodes, adjacency, warnings),
@@ -220,6 +246,13 @@ export function validateQgisDataset(data: QgisDataset) {
   for (const destination of data.destinations.features) {
     if (!nodes.has(destination.properties.routing_node_id)) {
       errors.push(`Destination ${destination.properties.id} references a missing node`);
+    }
+  }
+  if (data.pois) {
+    for (const poi of data.pois.features) {
+      if (poi.properties.routing_node_id && !nodes.has(poi.properties.routing_node_id)) {
+        errors.push(`POI ${poi.properties.id} references a missing node`);
+      }
     }
   }
   const groups = components(adjacency);
@@ -236,6 +269,7 @@ export function validateQgisDataset(data: QgisDataset) {
       missingNids: nidSequence.missingNids,
       totalEdges: data.edges.features.length,
       totalDestinations: data.destinations.features.length,
+      totalPois: data.pois?.features.length ?? 0,
     },
   };
 }

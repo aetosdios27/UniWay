@@ -8,7 +8,9 @@
         "id": "DEST_01",
         "name": "Dome Building",
         "type": "destination",
-        "routing_node_id": "OUT_ADM_0_092"
+        "routing_node_id": "OUT_ADM_0_092",
+        "category": "dome",
+        "icon_key": "dome"
       },
       "geometry": {
         "type": "Point",
@@ -24,7 +26,9 @@
         "id": "DEST_02",
         "name": "Library",
         "type": "destination",
-        "routing_node_id": "OUT_LIB_0_091"
+        "routing_node_id": "OUT_LIB_0_091",
+        "category": "academic",
+        "icon_key": "academic"
       },
       "geometry": {
         "type": "Point",
@@ -40,7 +44,9 @@
         "id": "DEST_03",
         "name": "Academic Building 1",
         "type": "destination",
-        "routing_node_id": "OUT_AB1_0_062"
+        "routing_node_id": "OUT_AB1_0_062",
+        "category": "academic",
+        "icon_key": "academic"
       },
       "geometry": {
         "type": "Point",
@@ -56,7 +62,9 @@
         "id": "DEST_04",
         "name": "Old Mess",
         "type": "destination",
-        "routing_node_id": "OUT_EAT_0_118"
+        "routing_node_id": "OUT_EAT_0_118",
+        "category": "food",
+        "icon_key": "food"
       },
       "geometry": {
         "type": "Point",
@@ -72,7 +80,9 @@
         "id": "DEST_05",
         "name": "Academic Building 2",
         "type": "destination",
-        "routing_node_id": "OUT_AB2_0_076"
+        "routing_node_id": "OUT_AB2_0_076",
+        "category": "academic",
+        "icon_key": "academic"
       },
       "geometry": {
         "type": "Point",
@@ -88,7 +98,9 @@
         "id": "DEST_06",
         "name": "LHC",
         "type": "destination",
-        "routing_node_id": "OUT_LHC_0_117"
+        "routing_node_id": "OUT_LHC_0_117",
+        "category": "academic",
+        "icon_key": "academic"
       },
       "geometry": {
         "type": "Point",
@@ -104,7 +116,9 @@
         "id": "DEST_07",
         "name": "Academic Building 3",
         "type": "destination",
-        "routing_node_id": "OUT_AB3_0_088"
+        "routing_node_id": "OUT_AB3_0_088",
+        "category": "academic",
+        "icon_key": "academic"
       },
       "geometry": {
         "type": "Point",
