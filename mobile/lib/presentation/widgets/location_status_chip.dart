@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/services/location_fix.dart';
 import '../../core/services/location_snapshot.dart';
+import '../theme/uniway_theme.dart';
 
 class LocationStatus {
   final String label;
@@ -21,37 +22,38 @@ class LocationStatus {
 /// Resolves the chip content for the current snapshot and failure reason.
 LocationStatus resolveLocationStatus(
   LocationSnapshot? snapshot,
-  LocationUnavailableReason? reason,
-) {
+  LocationUnavailableReason? reason, [
+  UniWayColors colors = UniWayColors.light,
+]) {
   final effectiveReason = snapshot?.unavailableReason ?? reason;
 
   switch (effectiveReason) {
     case LocationUnavailableReason.serviceDisabled:
-      return const LocationStatus(
+      return LocationStatus(
         label: 'Location is off',
         semanticsLabel: 'Location is turned off on this device.',
-        color: Color(0xFF64748B),
+        color: colors.danger,
         icon: Icons.location_disabled,
       );
     case LocationUnavailableReason.permissionDenied:
-      return const LocationStatus(
+      return LocationStatus(
         label: 'Location permission needed',
         semanticsLabel: 'Location permission is needed to show your position.',
-        color: Color(0xFFD97706),
+        color: colors.danger,
         icon: Icons.lock_outline,
       );
     case LocationUnavailableReason.permissionDeniedForever:
-      return const LocationStatus(
+      return LocationStatus(
         label: 'Enable location in Settings',
         semanticsLabel: 'Enable location in Settings to show your position.',
-        color: Color(0xFFDC2626),
+        color: colors.danger,
         icon: Icons.settings,
       );
     case LocationUnavailableReason.signalLost:
-      return const LocationStatus(
+      return LocationStatus(
         label: 'Signal lost — showing last known position',
         semanticsLabel: 'GPS signal lost. Showing the last known position.',
-        color: Color(0xFF9CA3AF),
+        color: colors.neutral,
         icon: Icons.location_off,
       );
     case null:
@@ -59,19 +61,19 @@ LocationStatus resolveLocationStatus(
   }
 
   if (snapshot == null) {
-    return const LocationStatus(
+    return LocationStatus(
       label: 'Locating…',
       semanticsLabel: 'Locating your position.',
-      color: Color(0xFF64748B),
+      color: colors.neutral,
       icon: Icons.my_location,
     );
   }
 
   if (snapshot.isStale || snapshot.quality == LocationQuality.lost) {
-    return const LocationStatus(
+    return LocationStatus(
       label: 'Signal lost — showing last known position',
       semanticsLabel: 'GPS signal lost. Showing the last known position.',
-      color: Color(0xFF9CA3AF),
+      color: colors.neutral,
       icon: Icons.location_off,
     );
   }
@@ -83,7 +85,7 @@ LocationStatus resolveLocationStatus(
         label: 'GPS good · ±$meters m',
         semanticsLabel:
             'GPS signal is good. Your position is accurate to within $meters metres.',
-        color: const Color(0xFF2563EB),
+        color: colors.you,
         icon: Icons.gps_fixed,
       );
     case LocationQuality.fair:
@@ -91,7 +93,7 @@ LocationStatus resolveLocationStatus(
         label: 'GPS fair · ±$meters m',
         semanticsLabel:
             'GPS signal is fair. Your position is accurate to within $meters metres.',
-        color: const Color(0xFFF59E0B),
+        color: colors.warning,
         icon: Icons.gps_not_fixed,
       );
     case LocationQuality.poor:
@@ -99,14 +101,14 @@ LocationStatus resolveLocationStatus(
         label: 'Weak GPS · ±$meters m (location approximate)',
         semanticsLabel:
             'GPS signal is weak. Your position is accurate to within $meters metres and may be approximate.',
-        color: const Color(0xFFF97316),
+        color: colors.poor,
         icon: Icons.warning_amber_rounded,
       );
     case LocationQuality.lost:
-      return const LocationStatus(
+      return LocationStatus(
         label: 'Signal lost — showing last known position',
         semanticsLabel: 'GPS signal lost. Showing the last known position.',
-        color: Color(0xFF9CA3AF),
+        color: colors.neutral,
         icon: Icons.location_off,
       );
   }
@@ -124,10 +126,13 @@ class LocationStatusChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = UniWayColors.of(context);
+
     return ValueListenableBuilder<LocationSnapshot?>(
       valueListenable: listenable,
       builder: (context, snapshot, _) {
-        final status = resolveLocationStatus(snapshot, reason);
+        final status = resolveLocationStatus(snapshot, reason, colors);
         return Semantics(
           container: true,
           liveRegion: true,
@@ -137,7 +142,7 @@ class LocationStatusChip extends StatelessWidget {
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
+                color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: status.color.withValues(alpha: 0.5),
@@ -145,7 +150,7 @@ class LocationStatusChip extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.08),
+                    color: theme.colorScheme.shadow.withValues(alpha: 0.08),
                     blurRadius: 6,
                     offset: const Offset(0, 2),
                   ),

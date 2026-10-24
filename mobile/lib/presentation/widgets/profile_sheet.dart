@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../controllers/auth_controller.dart';
+import '../controllers/theme_controller.dart';
 import 'auth_modal.dart';
 
 class ProfileSheet extends StatelessWidget {
@@ -19,10 +20,11 @@ class ProfileSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final themeController = ThemeScope.maybeOf(context);
     final user = authController.user;
     final isAuthenticated = authController.isAuthenticated;
-    final displayName = isAuthenticated ? (user?.name ?? 'UniWay User') : 'Guest User';
-    final initial = displayName.isNotEmpty ? displayName[0].toUpperCase() : '?';
+    final displayName = isAuthenticated ? (user?.name ?? "UniWay User") : "Guest User";
+    final initial = displayName.isNotEmpty ? displayName[0].toUpperCase() : "?";
 
     return Material(
       color: theme.colorScheme.surface,
@@ -71,8 +73,8 @@ class ProfileSheet extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         isAuthenticated
-                            ? (user?.email ?? '')
-                            : 'Sign in to save favorite places and report hazards',
+                            ? (user?.email ?? "")
+                            : "Sign in to save favorite places and report hazards",
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -85,16 +87,58 @@ class ProfileSheet extends StatelessWidget {
             const SizedBox(height: 20),
             Divider(height: 1, color: theme.colorScheme.outlineVariant.withValues(alpha: 0.6)),
             const SizedBox(height: 10),
+            if (themeController != null) ...[
+              Text(
+                "Appearance",
+                style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 8),
+              Semantics(
+                label: "Appearance mode",
+                child: SegmentedButton<ThemeMode>(
+                  segments: const [
+                    ButtonSegment<ThemeMode>(
+                      value: ThemeMode.system,
+                      icon: Icon(Icons.brightness_auto),
+                      label: Text("System"),
+                      tooltip: "System appearance",
+                    ),
+                    ButtonSegment<ThemeMode>(
+                      value: ThemeMode.light,
+                      icon: Icon(Icons.light_mode),
+                      label: Text("Light"),
+                      tooltip: "Light appearance",
+                    ),
+                    ButtonSegment<ThemeMode>(
+                      value: ThemeMode.dark,
+                      icon: Icon(Icons.dark_mode),
+                      label: Text("Dark"),
+                      tooltip: "Dark appearance",
+                    ),
+                  ],
+                  selected: {themeController.mode},
+                  showSelectedIcon: false,
+                  onSelectionChanged: (selected) {
+                    if (selected.isNotEmpty) {
+                      themeController.setMode(selected.first);
+                    }
+                  },
+                ),
+              ),
+              const SizedBox(height: 12),
+              Divider(height: 1, color: theme.colorScheme.outlineVariant.withValues(alpha: 0.6)),
+              const SizedBox(height: 10),
+            ],
             if (isAuthenticated) ...[
               _FeatureTile(
                 icon: Icons.bookmark_outline,
-                title: 'Saved Places',
-                subtitle: 'Locations you navigate to often',
+                title: "Saved Places",
+                subtitle: "Locations you navigate to often",
                 onTap: () {
                   Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Favorites are coming in Phase 2'),
+                      content: Text("Favorites are coming in Phase 2"),
                       behavior: SnackBarBehavior.floating,
                     ),
                   );
@@ -102,13 +146,13 @@ class ProfileSheet extends StatelessWidget {
               ),
               _FeatureTile(
                 icon: Icons.report_problem_outlined,
-                title: 'Report Hazard',
-                subtitle: 'Blocked paths, repairs, accessibility barriers',
+                title: "Report Hazard",
+                subtitle: "Blocked paths, repairs, accessibility barriers",
                 onTap: () {
                   Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Hazard reporting is coming in Phase 3'),
+                      content: Text("Hazard reporting is coming in Phase 3"),
                       behavior: SnackBarBehavior.floating,
                     ),
                   );
@@ -121,7 +165,7 @@ class ProfileSheet extends StatelessWidget {
                   if (context.mounted) Navigator.of(context).pop();
                 },
                 icon: const Icon(Icons.logout),
-                label: const Text('Sign Out'),
+                label: const Text("Sign Out"),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: theme.colorScheme.error,
                   side: BorderSide(
@@ -140,7 +184,7 @@ class ProfileSheet extends StatelessWidget {
                   AuthModal.show(context, authController: authController);
                 },
                 icon: const Icon(Icons.login),
-                label: const Text('Sign In or Register'),
+                label: const Text("Sign In or Register"),
                 style: FilledButton.styleFrom(
                   minimumSize: const Size.fromHeight(48),
                   shape: RoundedRectangleBorder(
@@ -150,7 +194,7 @@ class ProfileSheet extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Keep browsing as guest'),
+                child: const Text("Keep browsing as guest"),
               ),
             ],
             const SizedBox(height: 12),

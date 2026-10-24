@@ -1,3 +1,4 @@
+import '../theme/uniway_theme.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -199,6 +200,8 @@ class _DestinationTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void pick() => Navigator.pop(context, destination);
+    final theme = Theme.of(context);
+    final colors = UniWayColors.of(context);
 
     return Semantics(
       label: destination.name,
@@ -209,7 +212,7 @@ class _DestinationTile extends StatelessWidget {
       child: ListTile(
         leading: Icon(
           isGps ? Icons.my_location : Icons.place_outlined,
-          color: isGps ? Colors.blue.shade700 : Colors.grey.shade700,
+          color: isGps ? colors.you : theme.colorScheme.onSurfaceVariant,
         ),
         title: Text(destination.name),
         subtitle: Text(destination.category),

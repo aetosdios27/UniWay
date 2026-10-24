@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../data/models/destination.dart';
 import '../controllers/routing_controller.dart';
 import '../search/destination_search_sheet.dart';
+import '../theme/uniway_theme.dart';
 
 class RoutePickerCard extends StatelessWidget {
   final RoutingController controller;
@@ -25,6 +26,7 @@ class RoutePickerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colors = UniWayColors.of(context);
     final hasRoute = controller.currentRoute != null;
 
     final canSwap = controller.origin != null &&
@@ -78,7 +80,7 @@ class RoutePickerCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: Colors.orange.shade800,
+                    color: colors.warning,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -89,19 +91,19 @@ class RoutePickerCard extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
-                  color: Colors.green.shade50,
+                  color: colors.successContainer,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.green.shade200),
+                  border: Border.all(color: colors.success.withValues(alpha: 0.4)),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.directions_walk, size: 18, color: Colors.green.shade800),
+                    Icon(Icons.directions_walk, size: 18, color: colors.onSuccessContainer),
                     const SizedBox(width: 6),
                     Text(
                       '${controller.currentRoute!.formattedDistance} • ${controller.currentRoute!.formattedDuration}',
                       style: theme.textTheme.labelMedium?.copyWith(
-                        color: Colors.green.shade800,
+                        color: colors.onSuccessContainer,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -168,30 +170,35 @@ class RoutePickerCard extends StatelessWidget {
     final origin = controller.origin;
     final selectedFrom = isGps || origin == null ? yourLocation : origin;
     final blocked = _blockedText;
+    final theme = Theme.of(context);
+    final colors = UniWayColors.of(context);
 
     return _pickerField(
       label: 'From',
       icon: Icon(
         isGps ? Icons.my_location : Icons.place_outlined,
-        color: isGps ? Colors.blue.shade700 : Colors.indigo.shade600,
+        color: isGps ? colors.you : theme.colorScheme.primary,
         size: 20,
       ),
       text: blocked ?? selectedFrom.name,
       muted: blocked != null,
       onTap: blocked == null ? () => _pickFrom(context, selectedFrom) : null,
+      theme: theme,
     );
   }
 
   Widget _buildToField(BuildContext context) {
     final destination = controller.destination;
     final blocked = _blockedText;
+    final theme = Theme.of(context);
 
     return _pickerField(
       label: 'To',
-      icon: Icon(Icons.place, color: Colors.blue.shade700, size: 20),
+      icon: Icon(Icons.place, color: theme.colorScheme.primary, size: 20),
       text: blocked ?? destination?.name ?? 'Select destination',
       muted: blocked != null || destination == null,
       onTap: blocked == null ? () => _pickTo(context) : null,
+      theme: theme,
     );
   }
 
@@ -201,6 +208,7 @@ class RoutePickerCard extends StatelessWidget {
     required String text,
     required bool muted,
     required VoidCallback? onTap,
+    required ThemeData theme,
   }) {
     return InkWell(
       onTap: onTap,
@@ -224,12 +232,12 @@ class RoutePickerCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: 14,
-                  color: muted ? Colors.grey.shade600 : null,
+                  color: muted ? theme.colorScheme.onSurfaceVariant : null,
                 ),
               ),
             ),
             if (onTap != null)
-              Icon(Icons.search, size: 18, color: Colors.grey.shade700),
+              Icon(Icons.search, size: 18, color: theme.colorScheme.onSurfaceVariant),
           ],
         ),
       ),

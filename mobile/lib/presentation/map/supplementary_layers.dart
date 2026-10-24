@@ -2,11 +2,46 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import '../../core/constants/map_constants.dart';
+import 'map_palette.dart';
 
 // Library is 3 floors, height unknown: render_height 12 and render_min_height 0 (approximation).
 const double libraryRenderHeight = 12.0;
 const double libraryRenderMinHeight = 0.0;
 const String belowBuildingLayerId = 'boundary_3';
+
+FillLayerProperties fillBuildingPaintFor(MapPalette palette) => FillLayerProperties(
+  fillColor: palette.buildingFill,
+  fillOutlineColor: [
+    'interpolate',
+    ['linear'],
+    ['zoom'],
+    13,
+    palette.buildingOutlineLowZoom,
+    14,
+    palette.buildingOutline,
+  ],
+);
+
+FillExtrusionLayerProperties fillExtrusionBuildingPaintFor(MapPalette palette) =>
+    FillExtrusionLayerProperties(
+      fillExtrusionBase: const ['get', 'render_min_height'],
+      fillExtrusionColor: palette.buildingExtrusion,
+      fillExtrusionHeight: const ['get', 'render_height'],
+      fillExtrusionOpacity: 0.8,
+    );
+
+SymbolLayerProperties symbolBuildingLabelPropertiesFor(MapPalette palette) =>
+    SymbolLayerProperties(
+      textField: const ['get', 'name'],
+      textFont: const ['Noto Sans Italic'],
+      textSize: 12.0,
+      textColor: palette.buildingLabelText,
+      textHaloColor: palette.buildingLabelHalo,
+      textHaloWidth: 1.0,
+      textHaloBlur: 0.5,
+      textAnchor: 'center',
+      textMaxWidth: 9.0,
+    );
 
 const fillBuildingPaint = FillLayerProperties(
   fillColor: 'hsl(35,8%,85%)',
@@ -132,6 +167,7 @@ Future<void> removeSupplementaryLayers(MapLibreMapController controller) async {
 Future<void> addSupplementaryLayers(
   MapLibreMapController controller, {
   AssetBundle? bundle,
+  MapPalette palette = MapPalette.light,
 }) async {
   try {
     await removeSupplementaryLayers(controller);
@@ -151,31 +187,31 @@ Future<void> addSupplementaryLayers(
     await controller.addFillLayer(
       MapConstants.campusGeometrySourceId,
       MapConstants.campusBuildingsLayerId,
-      fillBuildingPaint,
+      fillBuildingPaintFor(palette),
       belowLayerId: belowBuildingLayerId,
       minzoom: 13.0,
       maxzoom: 14.0,
-      filter: ['==', r'$type', 'Polygon'],
+      filter: ['==', r'', 'Polygon'],
       enableInteraction: false,
     );
 
     await controller.addFillExtrusionLayer(
       MapConstants.campusGeometrySourceId,
       MapConstants.campusBuildings3dLayerId,
-      fillExtrusionBuildingPaint,
+      fillExtrusionBuildingPaintFor(palette),
       belowLayerId: belowBuildingLayerId,
       minzoom: 14.0,
-      filter: ['==', r'$type', 'Polygon'],
+      filter: ['==', r'', 'Polygon'],
       enableInteraction: false,
     );
 
     await controller.addSymbolLayer(
       MapConstants.campusGeometrySourceId,
       MapConstants.campusBuildingsLabelLayerId,
-      symbolBuildingLabelProperties,
+      symbolBuildingLabelPropertiesFor(palette),
       belowLayerId: belowBuildingLayerId,
       minzoom: 14.0,
-      filter: ['==', r'$type', 'Point'],
+      filter: ['==', r'', 'Point'],
       enableInteraction: false,
     );
   } catch (_) {}

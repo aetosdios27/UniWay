@@ -9,6 +9,9 @@ class MapConstants {
   static const String openFreeMapBrightStyle =
       'https://tiles.openfreemap.org/styles/bright';
 
+  static const String darkStyleAsset =
+      'assets/map/uniway_dark_style.json';
+
   static const double mujLatitude = 26.8435;
   static const double mujLongitude = 75.5645;
   static const double defaultZoom = 16.5;

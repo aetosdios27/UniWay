@@ -1,18 +1,23 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import '../../core/constants/map_constants.dart';
 import '../../core/services/location_service.dart';
+import 'package:flutter/services.dart';
 import '../../core/services/location_snapshot.dart';
 import '../../data/models/campus_route.dart';
 import '../controllers/auth_controller.dart';
 import '../controllers/routing_controller.dart';
 import '../map/basemap_pois.dart';
+import '../map/map_palette.dart';
+import '../map/map_style.dart';
 import '../map/destination_layers.dart';
 import '../map/poi_icon_registry.dart';
 import '../map/poi_layers.dart';
 import '../map/route_start_connector.dart';
 import '../map/supplementary_layers.dart';
 import '../map/user_location_layer.dart';
+import '../theme/uniway_theme.dart';
 import '../widgets/auth_modal.dart';
 import '../widgets/debug_panel.dart';
 import '../widgets/location_status_chip.dart';
@@ -24,11 +29,7 @@ import '../widgets/route_status_banner.dart';
 class MapScreen extends StatefulWidget {
   final RoutingController? controller;
   final AuthController? authController;
-  final Widget Function(
-    BuildContext context,
-    void Function(MapLibreMapController controller) onMapCreated,
-    void Function() onStyleLoaded,
-  )? mapBuilder;
+  final Function? mapBuilder;
 
   const MapScreen({
     super.key,
@@ -61,6 +62,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
   bool _isRedrawing = false;
   bool _redrawPending = false;
   bool _disposed = false;
+  Brightness? _lastBrightness;
 
   @override
   void initState() {
@@ -100,6 +102,27 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final brightness = Theme.of(context).brightness;
+    if (_lastBrightness != null && _lastBrightness != brightness) {
+      _handleBrightnessChange();
+    }
+    _lastBrightness = brightness;
+  }
+
+  void _handleBrightnessChange() {
+    _styleLoaded = false;
+    _forgetStaleAnnotationHandles();
+  }
+
+  void _forgetStaleAnnotationHandles() {
+    _activeRouteLine = null;
+    _activeRouteCasing = null;
+    _startConnector.reset();
+  }
+
+  @override
   void dispose() {
     _disposed = true;
     _redrawPending = false;
@@ -129,6 +152,8 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
 
   Future<void> _onStyleLoaded() async {
     final map = _mapController;
+    final brightness = Theme.of(context).brightness;
+    final palette = MapPalette.forBrightness(brightness);
     if (map != null) {
       if (kHideBasemapPois) {
         await hideBasemapPois(map).catchError((_) {});
@@ -137,19 +162,21 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
           await registerPoiIcons(map).catchError((_) => <String>{});
       if (!mounted) return;
       final pixelRatio = MediaQuery.devicePixelRatioOf(context);
-      addSupplementaryLayers(map).catchError((_) {});
+      addSupplementaryLayers(map, palette: palette).catchError((_) {});
       await addDestinationLayers(
         map,
         destinationCount: _controller.destinations.length,
         registeredIcons: _registeredPoiIcons,
         pixelRatio: pixelRatio,
+        palette: palette,
       ).catchError((_) {});
       await addPoiLayers(
         map,
         registeredIcons: _registeredPoiIcons,
         pixelRatio: pixelRatio,
+        palette: palette,
       ).catchError((_) {});
-      _attachUserLocationLayer(map);
+      _attachUserLocationLayer(map, palette);
     }
     if (_disposed || !mounted) return;
     // A style reload rebuilds the layers, so the data and the highlights have
@@ -162,14 +189,21 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
     await _syncMapWithState().catchError((_) {});
   }
 
-  void _attachUserLocationLayer(MapLibreMapController map) {
-    final layer = _userLocationLayer ??= UserLocationLayer(
-      sink: MapLibreUserLocationSink(map),
-    );
-    layer.attach().catchError((_) {});
+  void _attachUserLocationLayer(MapLibreMapController map, MapPalette palette) {
+    if (_userLocationLayer == null) {
+      _userLocationLayer = UserLocationLayer(
+        sink: MapLibreUserLocationSink(map, palette: palette),
+      );
+    } else {
+      final sink = _userLocationLayer!.sink;
+      if (sink is MapLibreUserLocationSink) {
+        sink.palette = palette;
+      }
+    }
+    _userLocationLayer!.attach().catchError((_) {});
     final snapshot = _latestSnapshot;
     if (snapshot != null) {
-      layer.update(snapshot);
+      _userLocationLayer!.update(snapshot);
     }
   }
 
@@ -179,8 +213,10 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
     _latestSnapshot = snapshot;
     _userLocationLayer?.update(snapshot);
     final map = _mapController;
-    if (map != null) {
-      _syncStartConnector(map).catchError((_) {});
+    if (map != null && _styleLoaded) {
+      final brightness = Theme.of(context).brightness;
+      final palette = MapPalette.forBrightness(brightness);
+      _syncStartConnector(map, palette: palette).catchError((_) {});
     }
   }
 
@@ -200,8 +236,10 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
     _isRedrawing = true;
     try {
       do {
-        if (_disposed || !mounted) return;
+        if (_disposed || !mounted || !_styleLoaded) return;
         _redrawPending = false;
+        final brightness = Theme.of(context).brightness;
+        final palette = MapPalette.forBrightness(brightness);
 
         final currentDestinations = _controller.destinations;
         final currentHash = currentDestinations
@@ -214,8 +252,9 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
             map,
             currentDestinations,
             registeredIcons: _registeredPoiIcons,
+            palette: palette,
           );
-          if (_disposed || !mounted) return;
+          if (_disposed || !mounted || !_styleLoaded) return;
           _renderedDestinationsHash = currentHash;
         }
 
@@ -231,7 +270,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
             currentPois,
             registeredIcons: _registeredPoiIcons,
           );
-          if (_disposed || !mounted) return;
+          if (_disposed || !mounted || !_styleLoaded) return;
           _renderedMapPoisHash = currentPoisHash;
         }
 
@@ -246,21 +285,24 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
             originId: originId,
             destinationId: destinationId,
           );
-          if (_disposed || !mounted) return;
+          if (_disposed || !mounted || !_styleLoaded) return;
         }
 
         final route = _controller.currentRoute;
         if (route != null) {
-          await _drawRoute(map, route);
+          await _drawRoute(map, route, palette: palette);
         } else {
           await _clearRoute(map);
         }
-        if (_disposed || !mounted) return;
-        await _syncStartConnector(map);
-        if (_disposed || !mounted) return;
-      } while (_redrawPending && !_disposed && mounted);
+        if (_disposed || !mounted || !_styleLoaded) return;
+        await _syncStartConnector(map, palette: palette);
+        if (_disposed || !mounted || !_styleLoaded) return;
+      } while (_redrawPending && !_disposed && mounted && _styleLoaded);
     } finally {
       _isRedrawing = false;
+      if (_redrawPending && !_disposed && mounted && _styleLoaded) {
+        unawaited(_syncMapWithState());
+      }
     }
   }
 
@@ -269,53 +311,68 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
       final casing = _activeRouteCasing!;
       _activeRouteCasing = null;
       if (_disposed || !mounted) return;
-      await map.removeLine(casing);
+      try {
+        await map.removeLine(casing);
+      } catch (_) {}
     }
     if (_activeRouteLine != null) {
       final line = _activeRouteLine!;
       _activeRouteLine = null;
       if (_disposed || !mounted) return;
-      await map.removeLine(line);
+      try {
+        await map.removeLine(line);
+      } catch (_) {}
     }
   }
 
-  Future<void> _drawRoute(MapLibreMapController map, CampusRoute route) async {
+  Future<void> _drawRoute(
+    MapLibreMapController map,
+    CampusRoute route, {
+    required MapPalette palette,
+  }) async {
     if (route.points.isEmpty || _disposed || !mounted) return;
 
     await _clearRoute(map);
-    if (_disposed || !mounted) return;
+    if (_disposed || !mounted || !_styleLoaded) return;
 
-    _activeRouteCasing = await map.addLine(
-      LineOptions(
-        geometry: route.points,
-        lineColor: '#1E40AF',
-        lineWidth: 8.0,
-        lineOpacity: 0.5,
-        lineJoin: 'round',
-      ),
-    );
+    try {
+      _activeRouteCasing = await map.addLine(
+        LineOptions(
+          geometry: route.points,
+          lineColor: palette.routeCasing,
+          lineWidth: 8.0,
+          lineOpacity: palette.routeCasingOpacity,
+          lineJoin: 'round',
+        ),
+      );
+    } catch (_) {}
 
-    if (_disposed || !mounted) return;
+    if (_disposed || !mounted || !_styleLoaded) return;
 
-    _activeRouteLine = await map.addLine(
-      LineOptions(
-        geometry: route.points,
-        lineColor: '#2563EB',
-        lineWidth: 5.0,
-        lineOpacity: 0.95,
-        lineJoin: 'round',
-      ),
-    );
+    try {
+      _activeRouteLine = await map.addLine(
+        LineOptions(
+          geometry: route.points,
+          lineColor: palette.routeLine,
+          lineWidth: 5.0,
+          lineOpacity: palette.routeLineOpacity,
+          lineJoin: 'round',
+        ),
+      );
+    } catch (_) {}
 
-    if (_disposed || !mounted) return;
+    if (_disposed || !mounted || !_styleLoaded) return;
 
     _fitRouteBounds(map, route.points);
   }
 
-  Future<void> _syncStartConnector(MapLibreMapController map) async {
+  Future<void> _syncStartConnector(
+    MapLibreMapController map, {
+    MapPalette palette = MapPalette.light,
+  }) async {
     final snapshot = _latestSnapshot;
     final route = _controller.currentRoute;
-    if (_disposed || !mounted) return;
+    if (_disposed || !mounted || !_styleLoaded) return;
     if (snapshot == null ||
         route == null ||
         route.points.isEmpty ||
@@ -327,6 +384,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
       map,
       LatLng(snapshot.latitude, snapshot.longitude),
       route.points.first,
+      palette: palette,
     );
   }
 
@@ -415,32 +473,58 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
     }
   }
 
+  Widget _buildMap(BuildContext context, String styleString) {
+    final builder = widget.mapBuilder;
+    if (builder != null) {
+      if (builder is Widget Function(BuildContext, void Function(MapLibreMapController), void Function(), String)) {
+        return builder(context, _onMapCreated, _onStyleLoaded, styleString);
+      }
+      if (builder is Widget Function(BuildContext, void Function(MapLibreMapController), void Function())) {
+        return builder(context, _onMapCreated, _onStyleLoaded);
+      }
+      try {
+        return (builder as dynamic)(context, _onMapCreated, _onStyleLoaded, styleString) as Widget;
+      } catch (_) {
+        return (builder as dynamic)(context, _onMapCreated, _onStyleLoaded) as Widget;
+      }
+    }
+    return MapLibreMap(
+      styleString: styleString,
+      initialCameraPosition: const CameraPosition(
+        target: LatLng(
+          MapConstants.mujLatitude,
+          MapConstants.mujLongitude,
+        ),
+        zoom: MapConstants.defaultZoom,
+      ),
+      onMapCreated: _onMapCreated,
+      onStyleLoadedCallback: _onStyleLoaded,
+      myLocationEnabled: false,
+      trackCameraPosition: true,
+      compassEnabled: true,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListenableBuilder(
-        listenable: _controller,
-        builder: (context, _) {
-          return Stack(
-            children: [
-              if (widget.mapBuilder != null)
-                widget.mapBuilder!(context, _onMapCreated, _onStyleLoaded)
-              else
-                MapLibreMap(
-                  styleString: MapConstants.openFreeMapLibertyStyle,
-                  initialCameraPosition: const CameraPosition(
-                    target: LatLng(
-                      MapConstants.mujLatitude,
-                      MapConstants.mujLongitude,
-                    ),
-                    zoom: MapConstants.defaultZoom,
-                  ),
-                  onMapCreated: _onMapCreated,
-                  onStyleLoadedCallback: _onStyleLoaded,
-                  myLocationEnabled: false,
-                  trackCameraPosition: true,
-                  compassEnabled: true,
-                ),
+    final brightness = Theme.of(context).brightness;
+    final isDark = brightness == Brightness.dark;
+    final fabBackground =
+        isDark ? Theme.of(context).colorScheme.surfaceContainerHigh : Colors.white;
+    final fabForeground = isDark ? UniWayColors.of(context).you : Colors.blue.shade800;
+    final overlayStyle = brightness == Brightness.dark
+        ? SystemUiOverlayStyle.light
+        : SystemUiOverlayStyle.dark;
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: overlayStyle,
+      child: Scaffold(
+        body: ListenableBuilder(
+          listenable: _controller,
+          builder: (context, _) {
+            return Stack(
+              children: [
+                _buildMap(context, mapStyleFor(brightness)),
               SafeArea(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -457,7 +541,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
                               borderRadius: BorderRadius.circular(20),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.08),
+                                  color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.08),
                                   blurRadius: 6,
                                   offset: const Offset(0, 2),
                                 ),
@@ -508,8 +592,8 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
                   children: [
                     FloatingActionButton.small(
                       heroTag: 'recenterUser',
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.blue.shade800,
+                      backgroundColor: fabBackground,
+                      foregroundColor: fabForeground,
                       onPressed: _recenterUser,
                       tooltip: 'My Location',
                       child: const Icon(Icons.my_location),
@@ -517,8 +601,8 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
                     const SizedBox(height: 8),
                     FloatingActionButton.small(
                       heroTag: 'recenterMuj',
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.blue.shade800,
+                      backgroundColor: fabBackground,
+                      foregroundColor: fabForeground,
                       onPressed: _recenterMuj,
                       tooltip: 'Center on MUJ',
                       child: const Icon(Icons.school),
@@ -538,6 +622,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
           );
         },
       ),
-    );
+    ),
+  );
   }
 }

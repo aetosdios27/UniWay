@@ -1,3 +1,4 @@
+import 'map_palette.dart';
 import 'package:flutter/foundation.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
@@ -16,6 +17,33 @@ List<Object> poiIconSize(double pixelRatio) => poiIconSizeExpression(
       maxZoom: 19,
       maxDp: 28,
     );
+
+
+SymbolLayerProperties poiSymbolPaintFor(double pixelRatio, MapPalette palette) => SymbolLayerProperties(
+  iconImage: const ['get', 'icon'],
+  iconSize: poiIconSize(pixelRatio),
+  iconAllowOverlap: true,
+  iconIgnorePlacement: true,
+  iconAnchor: 'center',
+  textField: const ['get', 'name'],
+  textFont: const ['Noto Sans Regular'],
+  textSize: 10.0,
+  textColor: palette.poiLabelText,
+  textHaloColor: palette.poiLabelHalo,
+  textHaloWidth: 1.5,
+  textOffset: const [0, 1.5],
+  textAnchor: 'top',
+  textOptional: true,
+  symbolSortKey: 1,
+);
+
+CircleLayerProperties poiFallbackCirclePaintFor(MapPalette palette) => CircleLayerProperties(
+  circleRadius: 5.0,
+  circleColor: palette.poiFallbackCircle,
+  circleStrokeWidth: 1.5,
+  circleStrokeColor: palette.poiFallbackCircleStroke,
+  circleOpacity: 0.9,
+);
 
 SymbolLayerProperties poiSymbolPaint(double pixelRatio) => SymbolLayerProperties(
   iconImage: ['get', 'icon'],
@@ -89,6 +117,7 @@ Future<void> addPoiLayers(
   MapLibreMapController controller, {
   Set<String>? registeredIcons,
   double pixelRatio = kDefaultPixelRatio,
+  MapPalette palette = MapPalette.light,
 }) async {
   try {
     await removePoiLayers(controller);
@@ -107,7 +136,7 @@ Future<void> addPoiLayers(
       await controller.addSymbolLayer(
         MapConstants.poisSourceId,
         MapConstants.poisLayerId,
-        poiSymbolPaint(pixelRatio),
+        poiSymbolPaintFor(pixelRatio, palette),
         minzoom: poiMinZoom,
         enableInteraction: false,
       );
@@ -115,7 +144,7 @@ Future<void> addPoiLayers(
       await controller.addCircleLayer(
         MapConstants.poisSourceId,
         MapConstants.poisLayerId,
-        poiFallbackCirclePaint,
+        poiFallbackCirclePaintFor(palette),
         minzoom: poiMinZoom,
         enableInteraction: false,
       );

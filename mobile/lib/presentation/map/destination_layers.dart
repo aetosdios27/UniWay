@@ -1,3 +1,4 @@
+import 'map_palette.dart';
 import 'package:flutter/foundation.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import '../../core/constants/map_constants.dart';
@@ -48,6 +49,49 @@ List<Object> destinationIconSize(double pixelRatio) => poiIconSizeExpression(
       minDp: 26,
       maxZoom: 19,
       maxDp: 34,
+    );
+
+
+CircleLayerProperties destinationCirclePaintFor(MapPalette palette) =>
+    CircleLayerProperties(
+      circleRadius: destinationCircleRadius,
+      circleColor: palette.destinationCircleFill,
+      circleStrokeWidth: 2.5,
+      circleStrokeColor: palette.destinationCircleStroke,
+      circleOpacity: 0.95,
+    );
+
+CircleLayerProperties destinationOriginPaintFor(MapPalette palette) =>
+    CircleLayerProperties(
+      circleRadius: destinationHighlightRadius,
+      circleColor: palette.destinationOriginRing,
+      circleOpacity: 0.0,
+      circleStrokeWidth: 3.0,
+      circleStrokeColor: palette.destinationOriginRing,
+    );
+
+CircleLayerProperties destinationDestinationPaintFor(MapPalette palette) =>
+    CircleLayerProperties(
+      circleRadius: destinationHighlightRadius,
+      circleColor: palette.destinationDestinationRing,
+      circleOpacity: 0.0,
+      circleStrokeWidth: 3.0,
+      circleStrokeColor: palette.destinationDestinationRing,
+    );
+
+SymbolLayerProperties destinationLabelPaintFor(MapPalette palette) =>
+    SymbolLayerProperties(
+      textField: const ['get', 'name'],
+      textFont: const ['Noto Sans Regular'],
+      textSize: 11.0,
+      textColor: palette.destinationLabelText,
+      textHaloColor: palette.destinationLabelHalo,
+      textHaloWidth: 2.0,
+      textOffset: const [0, 2.1],
+      textAnchor: 'top',
+      symbolSortKey: 0,
+      textAllowOverlap: false,
+      textOptional: true,
     );
 
 const CircleLayerProperties destinationCirclePaint = CircleLayerProperties(
@@ -169,6 +213,7 @@ Future<void> addDestinationLayers(
   int destinationCount = 0,
   Set<String>? registeredIcons,
   double pixelRatio = kDefaultPixelRatio,
+  MapPalette palette = MapPalette.light,
 }) async {
   try {
     await removeDestinationLayers(controller);
@@ -197,7 +242,7 @@ Future<void> addDestinationLayers(
       await controller.addCircleLayer(
         MapConstants.destinationsSourceId,
         MapConstants.destinationsLayerId,
-        destinationCirclePaint,
+        destinationCirclePaintFor(palette),
         enableInteraction: false,
       );
     }
@@ -205,7 +250,7 @@ Future<void> addDestinationLayers(
     await controller.addCircleLayer(
       MapConstants.destinationsSourceId,
       MapConstants.destinationsOriginLayerId,
-      destinationOriginPaint,
+      destinationOriginPaintFor(palette),
       filter: destinationIdFilter(null),
       enableInteraction: false,
     );
@@ -213,13 +258,13 @@ Future<void> addDestinationLayers(
     await controller.addCircleLayer(
       MapConstants.destinationsSourceId,
       MapConstants.destinationsDestinationLayerId,
-      destinationDestinationPaint,
+      destinationDestinationPaintFor(palette),
       filter: destinationIdFilter(null),
       enableInteraction: false,
     );
 
     final dense = _isDenseDestinationCollection(destinationCount);
-    await _addDestinationLabelLayer(controller, dense: dense);
+    await _addDestinationLabelLayer(controller, dense: dense, palette: palette);
     _labelDenseByController[controller] = dense;
   } catch (e) {
     debugPrint('addDestinationLayers failed: $e');
@@ -231,6 +276,7 @@ Future<void> updateDestinationSource(
   MapLibreMapController controller,
   List<Destination> destinations, {
   Set<String>? registeredIcons,
+  MapPalette palette = MapPalette.light,
 }) async {
   try {
     await controller.setGeoJsonSource(
@@ -251,7 +297,7 @@ Future<void> updateDestinationSource(
   if (dense != _labelDenseByController[controller]) {
     try {
       await controller.removeLayer(MapConstants.destinationsLabelsLayerId);
-      await _addDestinationLabelLayer(controller, dense: dense);
+      await _addDestinationLabelLayer(controller, dense: dense, palette: palette);
       _labelDenseByController[controller] = dense;
     } catch (_) {}
   }
@@ -281,11 +327,12 @@ Future<void> setHighlightedDestinations(
 Future<void> _addDestinationLabelLayer(
   MapLibreMapController controller, {
   required bool dense,
+  MapPalette palette = MapPalette.light,
 }) async {
   await controller.addSymbolLayer(
     MapConstants.destinationsSourceId,
     MapConstants.destinationsLabelsLayerId,
-    destinationLabelPaint,
+    destinationLabelPaintFor(palette),
     minzoom: dense ? labelDenseZoom : null,
     enableInteraction: false,
   );

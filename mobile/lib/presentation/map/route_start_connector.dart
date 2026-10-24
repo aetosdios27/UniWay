@@ -1,6 +1,7 @@
 import 'package:maplibre_gl/maplibre_gl.dart';
 
 import '../../core/utils/geo_distance.dart';
+import 'map_palette.dart';
 
 const double routeStartConnectorThresholdMeters = 3.0;
 
@@ -23,11 +24,18 @@ class RouteStartConnector {
   MapLibreMapController? _map;
   bool _disposed = false;
 
+  /// Forgets the line handle without calling [removeLine] on the map.
+  /// Used after a style reload when the underlying style destroyed the line.
+  void reset() {
+    _line = null;
+  }
+
   Future<void> update(
     MapLibreMapController map,
     LatLng user,
-    LatLng routeStart,
-  ) async {
+    LatLng routeStart, {
+    MapPalette palette = MapPalette.light,
+  }) async {
     if (_disposed) return;
     _map = map;
 
@@ -40,7 +48,14 @@ class RouteStartConnector {
     final line = _line;
     if (line != null) {
       try {
-        await map.updateLine(line, LineOptions(geometry: geometry));
+        await map.updateLine(
+          line,
+          LineOptions(
+            geometry: geometry,
+            lineColor: palette.connectorColor,
+            lineOpacity: palette.connectorOpacity,
+          ),
+        );
       } catch (_) {}
       return;
     }
@@ -49,9 +64,9 @@ class RouteStartConnector {
       _line = await map.addLine(
         LineOptions(
           geometry: geometry,
-          lineColor: '#64748B',
+          lineColor: palette.connectorColor,
           lineWidth: 1.5,
-          lineOpacity: 0.45,
+          lineOpacity: palette.connectorOpacity,
           lineJoin: 'round',
         ),
       );

@@ -39,10 +39,10 @@ class RouteStatusBanner extends StatelessWidget {
           ),
           TextButton(
             onPressed: controller.fetchRoute,
-            child: const Text(
+            child: Text(
               'Retry',
               style: TextStyle(
-                color: Colors.amber,
+                color: Colors.amber.shade200,
                 fontWeight: FontWeight.bold,
               ),
             ),

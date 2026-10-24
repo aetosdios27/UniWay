@@ -22,7 +22,7 @@ class ProfileBadge extends StatelessWidget {
         final initial = displayName.isNotEmpty ? displayName[0].toUpperCase() : '?';
 
         return Material(
-          color: Colors.transparent,
+          type: MaterialType.transparency,
           child: InkWell(
             onTap: () => ProfileSheet.show(context, authController: authController),
             borderRadius: BorderRadius.circular(22),
@@ -38,7 +38,7 @@ class ProfileBadge extends StatelessWidget {
                 ),
                 shadows: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.10),
+                    color: theme.colorScheme.shadow.withValues(alpha: 0.10),
                     blurRadius: 10,
                     offset: const Offset(0, 3),
                   ),
@@ -64,8 +64,10 @@ class ProfileBadge extends StatelessWidget {
                   const SizedBox(width: 8),
                   Text(
                     displayName,
-                    style: theme.textTheme.labelMedium
-                        ?.copyWith(fontWeight: FontWeight.w600),
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.onSurface,
+                    ),
                   ),
                 ],
               ),

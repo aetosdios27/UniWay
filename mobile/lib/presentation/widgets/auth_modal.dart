@@ -158,7 +158,7 @@ class _AuthModalState extends State<AuthModal> {
             borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.15),
+                color: theme.colorScheme.shadow.withValues(alpha: 0.15),
                 blurRadius: 24,
                 offset: const Offset(0, -6),
               ),

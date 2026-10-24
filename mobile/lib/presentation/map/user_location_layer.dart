@@ -1,3 +1,4 @@
+import 'map_palette.dart';
 import 'dart:async';
 import 'dart:math' as math;
 
@@ -64,6 +65,51 @@ const LineLayerProperties userLocationAccuracyLostPaint = LineLayerProperties(
   lineOpacity: 0.45,
   lineDasharray: [2, 2],
 );
+
+
+List<dynamic> userLocationQualityColorExpressionFor(MapPalette palette) => [
+  'match',
+  ['get', 'quality'],
+  'good',
+  palette.userLocationGood,
+  'fair',
+  palette.userLocationFair,
+  'poor',
+  palette.userLocationPoor,
+  'lost',
+  palette.userLocationLost,
+  palette.userLocationGood,
+];
+
+FillLayerProperties userLocationAccuracyFillPaintFor(MapPalette palette) =>
+    FillLayerProperties(
+      fillColor: userLocationQualityColorExpressionFor(palette),
+      fillOpacity: userLocationAccuracyOpacityExpression,
+    );
+
+LineLayerProperties userLocationAccuracyOutlinePaintFor(MapPalette palette) =>
+    LineLayerProperties(
+      lineColor: userLocationQualityColorExpressionFor(palette),
+      lineWidth: 1.2,
+      lineOpacity: 0.5,
+    );
+
+LineLayerProperties userLocationAccuracyLostPaintFor(MapPalette palette) =>
+    LineLayerProperties(
+      lineColor: userLocationQualityColorExpressionFor(palette),
+      lineWidth: 1.2,
+      lineOpacity: 0.45,
+      lineDasharray: const [2, 2],
+    );
+
+CircleLayerProperties userLocationDotPaintFor(MapPalette palette) =>
+    CircleLayerProperties(
+      circleRadius: 7,
+      circleColor: userLocationQualityColorExpressionFor(palette),
+      circleOpacity: 0.95,
+      circleStrokeWidth: 2.5,
+      circleStrokeColor: palette.userLocationDotRing,
+    );
 
 const CircleLayerProperties userLocationDotPaint = CircleLayerProperties(
   circleRadius: 7,
@@ -168,8 +214,12 @@ abstract class UserLocationMapSink {
 
 class MapLibreUserLocationSink implements UserLocationMapSink {
   final MapLibreMapController controller;
+  MapPalette palette;
 
-  const MapLibreUserLocationSink(this.controller);
+  MapLibreUserLocationSink(
+    this.controller, {
+    this.palette = MapPalette.light,
+  });
 
   @override
   Future<void> addSource(String sourceId) async {
@@ -200,7 +250,7 @@ class MapLibreUserLocationSink implements UserLocationMapSink {
       await controller.addFillLayer(
         sourceId,
         userLocationAccuracyFillLayerId,
-        userLocationAccuracyFillPaint,
+        userLocationAccuracyFillPaintFor(palette),
         belowLayerId: belowBuildingLayerId,
         filter: ['==', r'$type', 'Polygon'],
         enableInteraction: false,
@@ -210,7 +260,7 @@ class MapLibreUserLocationSink implements UserLocationMapSink {
       await controller.addLineLayer(
         sourceId,
         userLocationAccuracyOutlineLayerId,
-        userLocationAccuracyOutlinePaint,
+        userLocationAccuracyOutlinePaintFor(palette),
         belowLayerId: belowBuildingLayerId,
         filter: ['all', ['==', r'$type', 'Polygon'], ['!=', 'quality', 'lost']],
         enableInteraction: false,
@@ -220,7 +270,7 @@ class MapLibreUserLocationSink implements UserLocationMapSink {
       await controller.addLineLayer(
         sourceId,
         userLocationAccuracyLostLayerId,
-        userLocationAccuracyLostPaint,
+        userLocationAccuracyLostPaintFor(palette),
         belowLayerId: belowBuildingLayerId,
         filter: ['all', ['==', r'$type', 'Polygon'], ['==', 'quality', 'lost']],
         enableInteraction: false,
@@ -230,7 +280,7 @@ class MapLibreUserLocationSink implements UserLocationMapSink {
       await controller.addCircleLayer(
         sourceId,
         userLocationDotLayerId,
-        userLocationDotPaint,
+        userLocationDotPaintFor(palette),
         belowLayerId: belowBuildingLayerId,
         filter: ['==', r'$type', 'Point'],
         enableInteraction: false,

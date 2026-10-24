@@ -26,3 +26,4 @@ flutter:
   assets:
     - assets/geo/supplementary_layer.geojson
     - assets/icons/poi/
+    - assets/map/

@@ -18,7 +18,8 @@
     "import:campus": "dotenv -e .env.local -- bun scripts/import-campus.ts",
     "validate:spatial": "dotenv -e .env.local -- bun scripts/validate-spatial.ts",
     "validate:campus-data": "bun scripts/check-campus-data.ts",
-    "release:notes": "bun scripts/generate-release-changelog.ts"
+    "release:notes": "bun scripts/generate-release-changelog.ts",
+    "build:dark-style": "bun scripts/build-dark-style.ts"
   },
   "dependencies": {
     "@sentry/nextjs": "^10",

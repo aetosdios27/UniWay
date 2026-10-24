@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import '../controllers/routing_controller.dart';
+import "package:flutter/material.dart";
+import "../controllers/routing_controller.dart";
 
 class DebugPanel extends StatefulWidget {
   final RoutingController controller;
@@ -22,9 +22,16 @@ class _DebugPanelState extends State<DebugPanel> {
     final theme = Theme.of(context);
 
     return Card(
-      elevation: 4,
+      elevation: 6,
+      shadowColor: theme.colorScheme.shadow,
       color: Colors.grey.shade900.withValues(alpha: 0.92),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+          width: 1,
+        ),
+      ),
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -43,7 +50,7 @@ class _DebugPanelState extends State<DebugPanel> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'Phase 0 Debug HUD',
+                    "Phase 0 Debug HUD",
                     style: theme.textTheme.labelMedium?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -61,33 +68,36 @@ class _DebugPanelState extends State<DebugPanel> {
               ),
             ),
             if (_expanded) ...[
-              const Divider(color: Colors.grey, height: 16),
-              _buildDebugRow('Origin', c.origin?.name ?? 'None'),
-              _buildDebugRow('Origin Node/Room', c.origin?.roomId ?? '-'),
-              _buildDebugRow('Destination', c.destination?.name ?? 'None'),
-              _buildDebugRow('Destination Node/Room', c.destination?.roomId ?? '-'),
+              Divider(
+                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+                height: 16,
+              ),
+              _buildDebugRow("Origin", c.origin?.name ?? "None"),
+              _buildDebugRow("Origin Node/Room", c.origin?.roomId ?? "-"),
+              _buildDebugRow("Destination", c.destination?.name ?? "None"),
+              _buildDebugRow("Destination Node/Room", c.destination?.roomId ?? "-"),
               _buildDebugRow(
-                'Calculated Distance',
+                "Calculated Distance",
                 c.currentRoute != null
-                    ? '${c.currentRoute!.distanceMeters.toStringAsFixed(2)} m'
-                    : 'N/A',
+                    ? "${c.currentRoute!.distanceMeters.toStringAsFixed(2)} m"
+                    : "N/A",
               ),
               _buildDebugRow(
-                'Waypoints',
+                "Waypoints",
                 c.currentRoute != null
-                    ? '${c.currentRoute!.points.length} nodes'
-                    : 'N/A',
+                    ? "${c.currentRoute!.points.length} nodes"
+                    : "N/A",
               ),
               _buildDebugRow(
-                'HTTP Status',
-                c.statusCode != null ? '${c.statusCode}' : (c.isLoading ? 'In flight' : '-'),
+                "HTTP Status",
+                c.statusCode != null ? "${c.statusCode}" : (c.isLoading ? "In flight" : "-"),
               ),
               _buildDebugRow(
-                'API Latency',
-                c.latencyMs != null ? '${c.latencyMs} ms' : '-',
+                "API Latency",
+                c.latencyMs != null ? "${c.latencyMs} ms" : "-",
               ),
               if (c.errorMessage != null)
-                _buildDebugRow('Error', c.errorMessage!, isError: true),
+                _buildDebugRow("Error", c.errorMessage!, isError: true),
             ],
           ],
         ),
@@ -97,17 +107,17 @@ class _DebugPanelState extends State<DebugPanel> {
 
   Widget _buildStatusChip(RoutingController c) {
     Color bg = Colors.grey.shade700;
-    String label = 'IDLE';
+    String label = "IDLE";
 
     if (c.isLoading) {
       bg = Colors.blue.shade700;
-      label = 'ROUTING...';
+      label = "ROUTING...";
     } else if (c.errorMessage != null) {
       bg = Colors.red.shade700;
-      label = 'ERROR';
+      label = "ERROR";
     } else if (c.currentRoute != null) {
       bg = Colors.green.shade700;
-      label = 'ROUTE OK (${c.currentRoute!.formattedDistance})';
+      label = "ROUTE OK (${c.currentRoute!.formattedDistance})";
     }
 
     return Container(
@@ -140,7 +150,7 @@ class _DebugPanelState extends State<DebugPanel> {
               style: TextStyle(
                 color: Colors.grey.shade400,
                 fontSize: 11,
-                fontFamily: 'monospace',
+                fontFamily: "monospace",
               ),
             ),
           ),
@@ -150,7 +160,7 @@ class _DebugPanelState extends State<DebugPanel> {
               style: TextStyle(
                 color: isError ? Colors.red.shade300 : Colors.white,
                 fontSize: 11,
-                fontFamily: 'monospace',
+                fontFamily: "monospace",
                 fontWeight: isError ? FontWeight.bold : FontWeight.normal,
               ),
             ),
