@@ -9,6 +9,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { darkenStyle } from "../lib/map-style/dark-style";
+import { parseStyleJson, resolveStyleOutput, resolveStyleSource } from "../lib/map-style/style-input";
 
 interface CliArgs {
   source: string;
@@ -41,9 +42,9 @@ Usage:
   bun scripts/build-dark-style.ts [options]
 
 Options:
-  --source, -s <url-or-path>  Source style URL or local file path
+  --source, -s <url-or-path>  OpenFreeMap HTTPS URL or local file path
                               (default: https://tiles.openfreemap.org/styles/liberty)
-  --out, -o <path>            Output destination file path
+  --out, -o <path>            Repository .json output path
                               (default: mobile/assets/map/uniway_dark_style.json)
   --help, -h                  Show this help message
 `);
@@ -56,13 +57,15 @@ Options:
   return { source, out };
 }
 
-async function loadSourceJson(source: string): Promise<Record<string, unknown>> {
+async function loadSourceJson(source: string) {
+  const location = resolveStyleSource(source);
   let rawText = "";
 
-  if (source.startsWith("http://") || source.startsWith("https://")) {
+  if (location.kind === "url") {
     let response: Response;
     try {
-      response = await fetch(source, {
+      response = await fetch(location.value, {
+        redirect: "error",
         headers: {
           "User-Agent": "UniWayDarkStyleGenerator/1.0 (+https://github.com/uniway)",
           Accept: "application/json",
@@ -94,15 +97,16 @@ async function loadSourceJson(source: string): Promise<Record<string, unknown>> 
   }
 
   try {
-    return JSON.parse(rawText) as Record<string, unknown>;
+    return parseStyleJson(rawText);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
-    throw new Error(`Failed to parse style JSON from "${source}": ${message}`);
+    throw new Error(`Failed to validate style JSON from "${source}": ${message}`);
   }
 }
 
 async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2));
+  const outResolved = resolveStyleOutput(process.cwd(), args.out);
 
   console.log(`📥 Loading source map style from: ${args.source}`);
   const sourceStyle = await loadSourceJson(args.source);
@@ -110,7 +114,15 @@ async function main(): Promise<void> {
   console.log(`🎨 Generating UniWay Dark style...`);
   const darkStyle = darkenStyle(sourceStyle);
 
-  const outResolved = path.resolve(process.cwd(), args.out);
+  // Check the nearest existing ancestor as well, so a symlink cannot redirect
+  // an otherwise contained output path outside the repository.
+  let existing = outResolved;
+  while (!fs.existsSync(existing)) existing = path.dirname(existing);
+  resolveStyleOutput(
+    fs.realpathSync(process.cwd()),
+    path.resolve(fs.realpathSync(existing), path.relative(existing, outResolved))
+  );
+
   fs.mkdirSync(path.dirname(outResolved), { recursive: true });
 
   const formattedJson = JSON.stringify(darkStyle, null, 2) + "\n";
