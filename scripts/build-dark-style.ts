@@ -114,19 +114,26 @@ async function main(): Promise<void> {
   console.log(`🎨 Generating UniWay Dark style...`);
   const darkStyle = darkenStyle(sourceStyle);
 
-  // Check the nearest existing ancestor as well, so a symlink cannot redirect
-  // an otherwise contained output path outside the repository.
-  let existing = outResolved;
-  while (!fs.existsSync(existing)) existing = path.dirname(existing);
+  // Create the directory first so there is no check-then-write window, then
+  // confirm its real path is still inside the repository (symlinks resolved).
+  fs.mkdirSync(path.dirname(outResolved), { recursive: true });
   resolveStyleOutput(
     fs.realpathSync(process.cwd()),
-    path.resolve(fs.realpathSync(existing), path.relative(existing, outResolved))
+    path.join(fs.realpathSync(path.dirname(outResolved)), path.basename(outResolved))
   );
 
-  fs.mkdirSync(path.dirname(outResolved), { recursive: true });
-
   const formattedJson = JSON.stringify(darkStyle, null, 2) + "\n";
-  fs.writeFileSync(outResolved, formattedJson, "utf-8");
+  // O_NOFOLLOW makes the open fail if the output itself is a symlink.
+  const fd = fs.openSync(
+    outResolved,
+    fs.constants.O_WRONLY | fs.constants.O_CREAT | fs.constants.O_TRUNC | fs.constants.O_NOFOLLOW,
+    0o644
+  );
+  try {
+    fs.writeFileSync(fd, formattedJson, "utf-8");
+  } finally {
+    fs.closeSync(fd);
+  }
 
   const layersCount = Array.isArray(darkStyle.layers) ? darkStyle.layers.length : 0;
   console.log(`✅ Dark style written to: ${path.relative(process.cwd(), outResolved)} (${layersCount} layers)`);
